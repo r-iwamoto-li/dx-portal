@@ -1,22 +1,271 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta charset="utf-8" />
-    <title>常識を疑え - Question the norm, reconstruct the standard</title>
-    <link rel="stylesheet" href="globals.css" />
-    <link rel="stylesheet" href="styleguide.css" />
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <main class="frame">
-      <header class="div">
-        <h1 class="text-wrapper">常識を疑え<br />"標準" を 再定義</h1>
-        <p class="p">Question the norm, reconstruct the standard</p>
-      </header>
-      <button class="button" type="button" aria-label="お問い合せ - Contact us">
-        <span class="label">お問い合せ</span>
-      </button>
-    </main>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DX推進ポータル</title>
+  <meta name="description" content="Link innovation | DX推進ポータル" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b0f1a;
+      --surface:#ffffff;
+      --text:#121416;
+      --muted:#6b7280;
+      --brand:#2563eb;
+      --brand-2:#8b5cf6;
+      --shadow:0 10px 30px rgba(2,6,23,.14);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:"Inter","Noto Sans JP", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:#f7f9fc;
+      line-height:1.6;
+    }
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1200px;margin:0 auto;padding:0 20px}
+
+    /* ===== Top Nav ===== */
+    .topnav-wrap{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.75);backdrop-filter: blur(10px);border-bottom:1px solid rgba(15,23,42,.06)}
+    .topnav{display:flex;gap:14px;align-items:center;justify-content:center;padding:10px 8px}
+    .pill{
+      display:flex;gap:24px;align-items:center;justify-content:center;
+      background:#f4f6fb;border:1px solid rgba(15,23,42,.06);
+      border-radius:46px;padding:8px 14px;box-shadow: var(--shadow);
+    }
+    .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 14px;border-radius:28px;font-size:12px;color:#3b4252;font-weight:600;transition: all .2s ease}
+    .nav-item:hover{background:#fff}
+    .nav-item.active{background:linear-gradient(135deg,rgba(37,99,235,.12),rgba(139,92,246,.12));color:var(--brand);box-shadow:0 6px 16px rgba(37,99,235,.18)}
+    .nav-ico{width:22px;height:22px;display:grid;place-items:center}
+
+    /* ===== Hero ===== */
+    .hero{position:relative;isolation:isolate}
+    .hero-media{
+      position:relative;height:420px;overflow:hidden;background:#0f1226;border-bottom-left-radius:24px;border-bottom-right-radius:24px
+    }
+    .hero-media img{
+      position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.9;transform:scale(1.02)
+    }
+    .hero-media::after{
+      /* color overlay */
+      content:"";position:absolute;inset:0;
+      background: radial-gradient(1200px 480px at 20% 20%, rgba(37,99,235,.35), transparent 50%),
+                  radial-gradient(900px 420px at 80% 30%, rgba(139,92,246,.35), transparent 55%),
+                  linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.85) 82%);
+      pointer-events:none
+    }
+    .hero-inner{position:relative;z-index:1}
+    .hero-grid{display:grid;grid-template-columns:1.25fr .9fr;gap:48px;align-items:center;margin-top:-320px;padding:0 0 48px}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid rgba(15,23,42,.06);backdrop-filter: blur(6px);font-size:12px;font-weight:700;letter-spacing:.06em}
+    .hero h1{font-family:"Noto Sans JP";font-size:48px;line-height:1.2;margin:16px 0 10px;letter-spacing:.02em}
+    .hero p.sub{color:#2f3947;font-weight:500}
+    .cta{margin-top:24px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;background:#111827;color:#fff;font-weight:700;box-shadow:var(--shadow)}
+    .btn:hover{opacity:.9}
+
+    .mv-copy{background:rgba(255,255,255,.86);border:1px solid rgba(15,23,42,.06);backdrop-filter: blur(6px);padding:18px 22px;border-radius:18px;box-shadow:var(--shadow)}
+    .mv-copy h3{margin:0 0 10px;font-size:16px}
+    .mv-copy dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:10px 18px}
+    .mv-copy dt{font-weight:800}
+    .mv-copy dd{margin:0;color:#334155}
+
+    /* ===== Main sections ===== */
+    main{padding:56px 0}
+    .grid-2{display:grid;grid-template-columns:1.1fr 1fr;gap:32px}
+    h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
+
+    /* Left: Projects */
+    .card{background:#fff;border:1px solid rgba(15,23,42,.06);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .list{padding:8px 0;margin:0}
+    .list li{list-style:none;display:flex;align-items:center;gap:12px;padding:14px 16px}
+    .list li + li{border-top:1px dashed rgba(15,23,42,.08)}
+    .dot{width:8px;height:8px;border-radius:999px;background:linear-gradient(135deg,var(--brand),var(--brand-2))}
+    .title{font-weight:700}
+    .badge{margin-left:auto;font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid rgba(15,23,42,.08);background:#111827;color:#fff}
+
+    /* Right: Announcements / Comments */
+    .toolbar{display:flex;align-items:center;gap:10px;justify-content:flex-end}
+    .select{position:relative}
+    .select select{appearance:none;border:1px solid rgba(15,23,42,.12);padding:8px 32px 8px 12px;border-radius:10px;background:#fff;font-weight:600}
+    .select svg{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;pointer-events:none}
+
+    .comment{display:grid;grid-template-columns:48px 1fr;gap:14px;padding:16px}
+    .comment + .comment{border-top:1px dashed rgba(15,23,42,.08)}
+    .avatar{width:48px;height:48px;border-radius:999px;background:#e5e7eb;display:grid;place-items:center;font-weight:800;color:#374151}
+    .c-name{font-weight:700}
+    .c-meta{color:#6b7280;font-size:12px}
+    .actions{display:flex;gap:12px;font-size:13px}
+    .stars{margin-left:auto;display:flex;gap:4px}
+    .star{width:16px;height:16px}
+
+    /* Footer */
+    footer{padding:28px 0 56px;color:#6b7280;text-align:center}
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .hero-media{height:380px}
+      .hero-grid{grid-template-columns:1fr;gap:24px;margin-top:-300px}
+      .mv-copy{order:-1}
+      .grid-2{grid-template-columns:1fr}
+    }
+    @media (max-width: 560px){
+      .nav-item{gap:2px;padding:8px 10px}
+      .nav-ico{width:20px;height:20px}
+      .hero h1{font-size:36px}
+    }
+  </style>
+</head>
+<body>
+  <!-- ===== Top Navigation ===== -->
+  <div class="topnav-wrap">
+    <nav class="topnav container">
+      <div class="pill">
+        <a class="nav-item active" href="#home" aria-current="page">
+          <span class="nav-ico" aria-hidden="true">
+            <!-- Home -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+          </span>
+          <span>HOME</span>
+        </a>
+        <a class="nav-item" href="#projects">
+          <span class="nav-ico" aria-hidden="true">
+            <!-- Folder -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h5l2 3h11v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 7V5a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v3"/></svg>
+          </span>
+          <span>プロジェクト</span>
+        </a>
+        <a class="nav-item" href="#narrative">
+          <span class="nav-ico" aria-hidden>
+            <!-- Bar chart -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><rect x="7" y="10" width="4" height="7" rx="1"/><rect x="13" y="6" width="4" height="11" rx="1"/><rect x="1" y="13" width="4" height="4" rx="1" transform="translate(4 0)"/></svg>
+          </span>
+          <span>ナレッジ</span>
+        </a>
+        <a class="nav-item" href="#contact">
+          <span class="nav-ico" aria-hidden>
+            <!-- Bell -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
+          </span>
+          <span>問合せ</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <!-- ===== Hero ===== -->
+  <section id="home" class="hero">
+    <div class="hero-media">
+      <!-- Replace src with your asset (e.g. /assets/hero-abstract.jpg) -->
+      <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=1600&auto=format&fit=crop" alt="Abstract colorful background" />
+    </div>
+    <div class="hero-inner container">
+      <div class="hero-grid">
+        <div>
+          <span class="eyebrow">DX Innovation</span>
+          <h1>常識を疑え<br>“<strong>標準</strong>”を再定義</h1>
+          <p class="sub">Question the norm, reconstruct the standard</p>
+          <div class="cta"><a class="btn" href="#contact">お問い合せ</a></div>
+        </div>
+        <div class="mv-copy">
+          <h3>Mission / Vision / Value</h3>
+          <dl>
+            <dt>Mission</dt>
+            <dd>デジタルの力で業務を再構築し、組織の可能性を余さず引き出す。</dd>
+            <dt>Vision</dt>
+            <dd>すべての業務と人を“デジタルネイティブ化”し、進化し続ける企業を目指す。</dd>
+            <dt>Value</dt>
+            <dd>挑戦を称え、共創を楽しみ、成果にこだわる。</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Main ===== -->
+  <main class="container">
+    <div class="grid-2">
+      <!-- Projects -->
+      <section id="projects">
+        <h2>進行中プロジェクト</h2>
+        <div class="card">
+          <ul class="list">
+            <li><span class="dot"></span> <span class="title">Personal Info</span> <span class="badge">進行中</span></li>
+            <li><span class="dot"></span> <span class="title">Login and security</span> <span class="badge">進行中</span></li>
+            <li><span class="dot"></span> <span class="title">My payments</span></li>
+            <li><span class="dot"></span> <span class="title">My voucher</span></li>
+            <li><span class="dot"></span> <span class="title">My points</span></li>
+            <li><span class="dot"></span> <span class="title">My orders</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Announcements / Comments -->
+      <section aria-labelledby="news-title">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <h2 id="news-title">お知らせ</h2>
+          <div class="toolbar">
+            <div class="select">
+              <select aria-label="ソート">
+                <option>Newest</option>
+                <option>Oldest</option>
+                <option>Most liked</option>
+              </select>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="card" role="list">
+          <article class="comment" role="listitem">
+            <div class="avatar" aria-hidden="true">OB</div>
+            <div>
+              <div style="display:flex;align-items:center;gap:12px">
+                <span class="c-name">Osbaldo Beahan</span>
+                <span class="c-meta">about 1 hour ago</span>
+                <div class="stars" aria-label="rating: 5 of 5">
+                  <!-- simple stars -->
+                  <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
+                  <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
+                  <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
+                  <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
+                  <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
+                </div>
+              </div>
+              <p style="margin:.4rem 0 0.6rem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id neque mattis molestie eget phasellus tellus amet duis in.</p>
+              <div class="actions"><a href="#">Like</a> <a href="#">Reply</a></div>
+            </div>
+          </article>
+
+          <article class="comment" role="listitem">
+            <div class="avatar" aria-hidden="true">OB</div>
+            <div>
+              <div style="display:flex;align-items:center;gap:12px">
+                <span class="c-name">Osbaldo Beahan</span>
+                <span class="c-meta">about 1 hour ago</span>
+                <div class="stars" aria-label="rating: 4 of 5">
+                  <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
+                  <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
+                  <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
+                  <svg class="star" viewBox="0 0 24 24" fill="currentColor" opacity=".35"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
+                  <svg class="star" viewBox="0 0 24 24" fill="currentColor" opacity=".35"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
+                </div>
+              </div>
+              <p style="margin:.4rem 0 0.6rem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id neque mattis molestie eget phasellus tellus amet duis in.</p>
+              <div class="actions"><a href="#">Like</a> <a href="#">Reply</a></div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer>
+    <div class="container">Copyright © 2020. All rights reserved.</div>
+  </footer>
+</body>
 </html>
