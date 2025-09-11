@@ -1,44 +1,152 @@
-.image {
-  width: 1580px;
-  height: 1658px;
+.frame {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 52px;
+  position: relative;
 }
 
-.image .old-home {
-  position: fixed;
-  width: 1562px;
-  height: 1658px;
-  top: 0;
-  left: 0;
-  aspect-ratio: 0.95;
-  object-fit: cover;
+.frame .div {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.frame .text-wrapper {
+  position: relative;
+  width: 591px;
+  height: 196px;
+  margin-top: -1.00px;
+  font-family: "DM Sans-Bold", Helvetica;
+  font-weight: 700;
+  color: #131416;
+  font-size: 64px;
+  letter-spacing: -1.28px;
+  line-height: 96px;
+}
+
+.frame .p {
+  position: relative;
+  width: 549px;
+  height: 49px;
+  font-family: var(--body-2-font-family);
+  font-weight: var(--body-2-font-weight);
+  color: #000000;
+  font-size: var(--body-2-font-size);
+  letter-spacing: var(--body-2-letter-spacing);
+  line-height: var(--body-2-line-height);
+  font-style: var(--body-2-font-style);
+}
+
+.frame .button {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  width: 192px;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 24px;
+  position: relative;
+  flex: 0 0 auto;
+  background-color: #131416;
+  border-radius: 90px;
+}
+
+.frame .label {
+  position: relative;
+  width: fit-content;
+  margin-top: -1.00px;
+  font-family: "DM Sans-Bold", Helvetica;
+  font-weight: 700;
+  color: #fbfcfc;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 16px;
+  white-space: nowrap;
 }
 /* Original CSS code should be injected here */
 
-.image {
-  width: 100%;
-  max-width: 1580px;
-  height: 100vh;
-  min-height: 1658px;
-  margin: 0 auto;
-  overflow: hidden;
+.frame {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 52px;
+  position: relative;
 }
 
-.image .old-home {
-  position: fixed;
-  width: 100%;
-  max-width: 1562px;
-  height: 100vh;
-  min-height: 1658px;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  aspect-ratio: 0.95;
-  object-fit: cover;
+.frame .div {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+  position: relative;
+  flex: 0 0 auto;
 }
 
-@media (max-width: 1580px) {
-  .image .old-home {
-    left: 0;
-    transform: none;
-  }
+.frame .text-wrapper {
+  position: relative;
+  max-width: 591px;
+  margin-top: -1.00px;
+  font-family: "DM Sans-Bold", Helvetica;
+  font-weight: 700;
+  color: #131416;
+  font-size: 64px;
+  letter-spacing: -1.28px;
+  line-height: 96px;
+}
+
+.frame .p {
+  position: relative;
+  max-width: 549px;
+  font-family: var(--body-2-font-family);
+  font-weight: var(--body-2-font-weight);
+  color: #000000;
+  font-size: var(--body-2-font-size);
+  letter-spacing: var(--body-2-letter-spacing);
+  line-height: var(--body-2-line-height);
+  font-style: var(--body-2-font-style);
+}
+
+.frame .button {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  min-width: 192px;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 24px;
+  position: relative;
+  flex: 0 0 auto;
+  background-color: #131416;
+  border-radius: 90px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.frame .button:hover {
+  background-color: #2a2c2f;
+}
+
+.frame .button:active {
+  background-color: #0a0b0c;
+}
+
+.frame .label {
+  position: relative;
+  width: fit-content;
+  margin-top: -1.00px;
+  font-family: "DM Sans-Bold", Helvetica;
+  font-weight: 700;
+  color: #fbfcfc;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 0;
+  line-height: 16px;
+  white-space: nowrap;
 }
