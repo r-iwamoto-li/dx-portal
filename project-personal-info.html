@@ -22,7 +22,7 @@
     .nav-ico{width:22px;height:22px;display:grid;place-items:center}
     footer{padding:28px 0 56px;color:#6b7280;text-align:center}
 
-    /* ==== sub hero (上段の薄グレー帯) ==== */
+    /* ==== sub hero ==== */
     .subhero{background:#eef2f6;border-bottom:1px solid rgba(15,23,42,.06)}
     .subhero-inner{display:grid;grid-template-columns:280px 1fr;gap:40px;align-items:center;padding:48px 0}
     .placeholder{width:100%;aspect-ratio:16/10;border-radius:12px;background:#959dad22;border:2px dashed #959dad66;display:grid;place-items:center;color:#6b7280;font-weight:700}
@@ -34,15 +34,26 @@
     main{padding:56px 0}
     .detail-grid{display:grid;grid-template-columns:320px 1fr;gap:40px}
     .card{background:#fff;border:1px solid rgba(15,23,42,.06);border-radius:16px;box-shadow:var(--shadow)}
+
+    /* ==== sidenav (tab) ==== */
     .sidenav{padding:10px}
-    .sidenav a{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;color:#111827;font-weight:600}
-    .sidenav a:hover{background:#f3f4f6}
-    .sidenav a.active{background:linear-gradient(135deg,rgba(37,99,235,.09),rgba(139,92,246,.09));color:#1f3aa2}
+    .sidenav button{
+      width:100%; display:flex; align-items:center; gap:10px;
+      padding:12px 14px; border-radius:12px; color:#111827; font-weight:600;
+      background:transparent; border:none; text-align:left; cursor:pointer;
+    }
+    .sidenav button:hover{background:#f3f4f6}
+    .sidenav button[aria-selected="true"]{
+      background:linear-gradient(135deg,rgba(37,99,235,.09),rgba(139,92,246,.09));color:#1f3aa2
+    }
     .sidenav .icon{width:18px;height:18px;opacity:.8}
 
+    /* ==== content ==== */
     h2{font-family:"Noto Sans JP";font-size:28px;margin:0 0 18px}
     .section{padding:22px}
     .section + .section{border-top:1px dashed rgba(15,23,42,.08)}
+    .tabpanel{display:block}
+    .tabpanel.hidden{display:none}
 
     /* ==== form ==== */
     .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -103,8 +114,8 @@
       </div>
       <div class="lead">
         <div class="chip">人事</div>
-        <h1>ステークホルダー</h1>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sapien, est felis, sagittis viverra nulla mattis scelerisque.</p>
+        <h1>Personal Info</h1>
+        <p>このプロジェクトの概要テキスト。XXX XXX XXX。</p>
       </div>
     </div>
   </section>
@@ -112,22 +123,50 @@
   <!-- ==== Main ==== -->
   <main class="container">
     <div class="detail-grid">
-      <!-- left: sidenav -->
+      <!-- left: sidenav / tablist -->
       <aside class="card">
-        <nav class="sidenav">
-          <a class="active" href="#">ステークホルダー</a>
-          <a href="#">概要</a>
-          <a href="#">活動履歴</a>
-          <a href="#">ロードマップ</a>
-          <a href="#">関連資料</a>
-          <a href="#">My orders</a>
+        <nav class="sidenav" role="tablist" aria-label="Project sections">
+          <!-- 順番: 概要 / ステークホルダー / 活動履歴 / ロードマップ / 成果 -->
+          <button type="button" role="tab" aria-selected="true" aria-controls="tab-overview"  id="tabbtn-overview"  data-target="tab-overview">概要</button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="tab-stake"     id="tabbtn-stake"     data-target="tab-stake">ステークホルダー</button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="tab-activity"  id="tabbtn-activity"  data-target="tab-activity">活動履歴</button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="tab-roadmap"   id="tabbtn-roadmap"   data-target="tab-roadmap">ロードマップ</button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="tab-outcome"   id="tabbtn-outcome"   data-target="tab-outcome">成果</button>
         </nav>
       </aside>
 
-      <!-- right: form -->
+      <!-- right: tabpanels -->
       <section class="card">
-        <div class="section">
-          <h2>Account info</h2>
+        <!-- 概要（フォーム構成／値はXXX） -->
+        <div class="section tabpanel" id="tab-overview" role="tabpanel" aria-labelledby="tabbtn-overview">
+          <h2>概要</h2>
+          <div class="grid-2">
+            <div class="input-group">
+              <label>PROJECT NAME</label>
+              <input class="input" value="XXX" />
+            </div>
+            <div class="input-group">
+              <label>OWNER</label>
+              <input class="input" value="XXX" />
+            </div>
+            <div class="input-group">
+              <label>START DATE</label>
+              <input class="input" value="XXX" />
+            </div>
+            <div class="input-group">
+              <label>STATUS</label>
+              <input class="input" value="XXX" />
+            </div>
+          </div>
+          <div class="input-group">
+            <label>DESCRIPTION</label>
+            <input class="input" value="XXX XXX XXX" />
+          </div>
+        </div>
+
+        <!-- ステークホルダー（元のフォーム） -->
+        <div class="section tabpanel hidden" id="tab-stake" role="tabpanel" aria-labelledby="tabbtn-stake">
+          <h2>ステークホルダー</h2>
           <div class="grid-2">
             <div class="input-group">
               <label>DISPLAY NAME</label>
@@ -146,9 +185,7 @@
               <input class="input" value="sunieux@gmail.com" />
             </div>
           </div>
-        </div>
 
-        <div class="section">
           <h2>Social</h2>
           <div class="grid-2">
             <div class="input-group">
@@ -168,13 +205,106 @@
             <button class="btn btn-light">Cancel</button>
           </div>
         </div>
+
+        <!-- 活動履歴（ステークホルダーと同じ項目構成／値はXXX） -->
+        <div class="section tabpanel hidden" id="tab-activity" role="tabpanel" aria-labelledby="tabbtn-activity">
+          <h2>活動履歴</h2>
+          <div class="grid-2">
+            <div class="input-group">
+              <label>DISPLAY NAME</label>
+              <input class="input" value="XXX" />
+            </div>
+            <div class="input-group">
+              <label>REAL NAME</label>
+              <input class="input" value="XXX" />
+            </div>
+            <div class="input-group">
+              <label>PHONE</label>
+              <input class="input" value="XXX" />
+            </div>
+            <div class="input-group">
+              <label>EMAIL</label>
+              <input class="input" value="XXX" />
+            </div>
+          </div>
+
+          <h2>Social</h2>
+          <div class="grid-2">
+            <div class="input-group">
+              <label>WEBSITE</label>
+              <input class="input" value="XXX" />
+            </div>
+            <div class="input-group" style="display:flex; gap:8px; align-items:flex-end">
+              <div style="flex:1">
+                <label>TWITTER</label>
+                <input class="input" value="XXX" />
+              </div>
+              <button class="btn btn-light verify">Verify account</button>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn">Save changes</button>
+            <button class="btn btn-light">Cancel</button>
+          </div>
+        </div>
+
+        <!-- ロードマップ（簡易プレースホルダ） -->
+        <div class="section tabpanel hidden" id="tab-roadmap" role="tabpanel" aria-labelledby="tabbtn-roadmap">
+          <h2>ロードマップ</h2>
+          <div class="grid-2">
+            <div class="input-group"><label>Q1</label><input class="input" value="XXX" /></div>
+            <div class="input-group"><label>Q2</label><input class="input" value="XXX" /></div>
+            <div class="input-group"><label>Q3</label><input class="input" value="XXX" /></div>
+            <div class="input-group"><label>Q4</label><input class="input" value="XXX" /></div>
+          </div>
+        </div>
+
+        <!-- 成果（簡易プレースホルダ） -->
+        <div class="section tabpanel hidden" id="tab-outcome" role="tabpanel" aria-labelledby="tabbtn-outcome">
+          <h2>成果</h2>
+          <div class="grid-2">
+            <div class="input-group"><label>KPI-1</label><input class="input" value="XXX" /></div>
+            <div class="input-group"><label>KPI-2</label><input class="input" value="XXX" /></div>
+            <div class="input-group"><label>Deliverable</label><input class="input" value="XXX" /></div>
+            <div class="input-group"><label>Notes</label><input class="input" value="XXX" /></div>
+          </div>
+        </div>
       </section>
     </div>
   </main>
 
-  <!-- ==== Footer（indexと同じ） ==== -->
+  <!-- ==== Footer ==== -->
   <footer>
     <div class="container">Copyright © 2020. All rights reserved.</div>
   </footer>
+
+  <!-- ==== Tab Switcher ==== -->
+  <script>
+    // タブ切り替え（アクセシブル）
+    const buttons = document.querySelectorAll('[role="tab"]');
+    const panels  = document.querySelectorAll('.tabpanel');
+    function activate(id){
+      panels.forEach(p => p.classList.toggle('hidden', p.id !== id));
+      buttons.forEach(b => {
+        const on = b.dataset.target === id;
+        b.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+    }
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => activate(btn.dataset.target));
+      btn.addEventListener('keydown', e => {
+        // ←→キーで移動
+        if(e.key === 'ArrowDown' || e.key === 'ArrowRight'){ e.preventDefault();
+          const next = btn.nextElementSibling || buttons[0]; next.focus();
+        }
+        if(e.key === 'ArrowUp' || e.key === 'ArrowLeft'){ e.preventDefault();
+          const prev = btn.previousElementSibling || buttons[buttons.length-1]; prev.focus();
+        }
+      });
+    });
+    // 初期表示
+    activate('tab-overview');
+  </script>
 </body>
 </html>
+
