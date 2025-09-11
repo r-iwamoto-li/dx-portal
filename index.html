@@ -1,131 +1,111 @@
-
 <!DOCTYPE html>
-<html lang="ja">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Slack運用ルール</title>
-    <style>
-        body {
-            font-family: "Segoe UI", sans-serif;
-            background-color: #f9f9f9;
-            color: #2e2e2e;
-            margin: 0;
-            padding: 2rem;
-        }
-        h1 {
-            text-align: center;
-            color: #3a3a3a;
-            font-size: 2.4rem;
-            margin-bottom: 2rem;
-        }
-        h2 {
-            background-color: #e0e7ef;
-            padding: 0.6rem 1rem;
-            border-left: 5px solid #4a90e2;
-            margin-top: 2rem;
-            color: #2a2a2a;
-            font-size: 1.4rem;
-        }
-        ul {
-            font-size: 1.1rem;
-            padding-left: 2rem;
-        }
-        li {
-            margin-bottom: 0.5rem;
-            line-height: 1.6;
-        }
-    </style>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="お問い合わせの詳細文です" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>お問い合わせフォーム</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <h1>Slack運用ルール</h1>
-
-    <h2>基本姿勢</h2>
-    <ul>
-        <li>Slackはコミュニケーションツールです。</li>
-        <li>オフラインで挨拶されたら返すのと同じように、Slackでも「おはよう」や「今大丈夫？」にはリアクションや返事を意識しましょう。</li>
-        <li>絵文字リアクションは積極的に使いましょう。</li>
-        <li>「おはよう☀️」や「おつかれさま🍻」の文化も大事。</li>
-    </ul>
-
-    <h2>氏名と表示名の設定</h2>
-    <ul>
-        <li>「氏名」にはローマ字か英語表記で氏名を登録（例：test.taro）。</li>
-        <li>「表示名」にはカタカナか漢字氏名を登録（例：テスト太郎）。</li>
-        <li>漢字氏名をお持ちでない方は、どちらも英語表記にしてください。</li>
-    </ul>
-
-    <h2>DirectMessage（DM）の扱い</h2>
-    <ul>
-        <li>原則チャンネルでオープンに会話しましょう。DMで業務（依頼や相談）の取り扱いは <span style="color: red; font-weight: bold;">禁止</span>。</li>
-        <li>機微な内容や1:1の雑談・相談はDM可。</li>
-        <li>特に上司は部下に作業依頼をする時にDMを使うことを <span style="color: red; font-weight: bold;">禁止</span> します。業務の見える化を意識しましょう。</li>
-    </ul>
-    <p style="font-size: 1.05rem; padding-left: 2rem;">
-        ※DMはログに出力されず、管理者も内容が見えません。そのため、重要な業務指示ややりとりが履歴として出せなくなってしまいます。
-    </p>
-
-    <h2>リアクション</h2>
-    <ul>
-        <li>基本、即レスを心がけること。特にリモートワークの場合は強く意識してください。</li>
-        <li>👀🙆‍♀️などリアクションだけでもOK。</li>
-        <li>緊急時は @メンション＋内容明記。</li>
-        <li>絵文字リアクションゼロの無言スタイルはNG（温度感が伝わらず、冷たく見える）。</li>
-    </ul>
-
-    <h2>チャンネル命名</h2>
-    <ul>
-        <li>プロジェクト系: pj-（例: pj-hotel-dx）</li>
-        <li>部署・チーム: team-（例: team-sales）</li>
-        <li>お知らせ系: info-（例: info-it）</li>
-        <li>雑談・交流系: zatsu-（例: zatsu-dx）</li>
-        <li>一時的な相談系: help-（例: help-aws）</li>
-    </ul>
-
-    <h2>スレッド運用</h2>
-    <ul>
-        <li>投稿には極力スレッドで返信。</li>
-        <li>スレッド外に出すときは「再掲」や「まとめ」といった明記をしてください。</li>
-    </ul>
-    <p style="font-size: 1.05rem; padding-left: 2rem;">
-        スレッドを使う理由：<br>
-        ・やりとりの文脈が整理されて、他の人にも見やすくなるため<br>
-        ・通知の適切な管理のため<br>
-        ・元のメンションが切れてしまい、誰に話しかけているかが分かりづらくなるため<br>
-        ・検索や振り返りがしやすく、議事録的にも有用なため
-    </p>
-
-    <h2>こういうときどうする？</h2>
-    <ul>
-        <li>👩‍💻誰かに質問したいとき：まずはチャンネルで質問＋メンションで呼びかけてみよう！</li>
-        <li>📌大事な資料を共有したとき：URLと簡単な説明をセットで投稿＋ピン留め推奨！</li>
-        <li>🧵話が長くなりそうなとき：1投稿目に「長くなるのでスレッドに書きますね」って一言添えると親切♡</li>
-    </ul>
-
-    <h2>ピン留め</h2>
-    <ul>
-        <li>重要情報はピン📌（例：定例日程、手順書）。</li>
-        <li>ピンしすぎ注意（最大100件）。</li>
-    </ul>
-
-    <h2>連携Bot</h2>
-    <ul>
-        <li>必要なBotはチャンネルに招待可能だが、事前に管理者の承認を得ること。</li>
-        <li>管理者不明な場合は上長に確認。</li>
-    </ul>
-
-    <h2>チャンネルのアーカイブ</h2>
-    <ul>
-        <li>不要チャンネルは棚卸しをしてアーカイブしていきますが、利用用途が終了したチャンネルはチャンネル作成者、主管担当者が積極的にアーカイブしてください（アーカイブしても検索にはヒットします）。</li>
-        <li>チャンネル作成者が不明、退職している場合は管理者に依頼をしてください。</li>
-    </ul>
-
-    <h2>通知設定のおすすめ（Tips）</h2>
-    <ul>
-        <li>Slackでは通知を個人で柔軟にカスタマイズできます。</li>
-        <li>「@メンション」通知は見逃さないようにオンにしておくことをおすすめします。</li>
-        <li>重要なキーワード（例：緊急、至急、自分の名前など）をキーワード通知に登録しておくと便利です。</li>
-        <li>チャンネルごとの通知設定も、業務に応じて最適化してください。</li>
-    </ul>
-
+    <header>
+        <div class="header-wrapper">
+            <a href="https://solution.pro-vision.jp/">
+                <img class="header-logo"
+                    src="https://provision-transaction.s3.ap-northeast-1.amazonaws.com/marketing/02_mail/HDX/form/logoWhite__x.png">
+            </a>
+        </div>
+    </header>
+    <main>
+        <div class="">
+            <div class="title-area" style="padding: 2rem 0;">
+                <div class="main-wrapper">
+                    <h2 class="form-title-en">Contact</h2>
+                    <h2 class="form-title-ja" style="font-size:1.5em; margin-bottom: 0.4em;">お問い合わせフォーム</h2>
+                    <p class="form-title-auxiliary">お見積り依頼やサービスについてのご質問など、お気軽にお問合せください。</p>
+                </div>
+            </div>
+            <div class="contents-wrappre">
+                <div class="container">
+                    <div class="left-column">
+                        <h3 class="service-title">脆弱性診断サービス</h3>
+                        <p class="service-description">
+                            「もし攻撃されたら…」<br class="sp-new-line">その不安に、今こそ備えを！<br class="pc-new-line">
+                            ホワイトハッカーによる実践的セキュリティ診断
+                        </p>
+                        <img class="service-image"
+                            src="https://provision-transaction.s3.ap-northeast-1.amazonaws.com/marketing/02_mail/HDX/SecurityScorecard/SecurityScorecardServiceForm.png">
+                        <ul class="business-information-lists">
+                            <li class="phone-number">Tel.045-872-4000</li>
+                            <li class="business-hours">営業時間/09:00 ~ 18:00</li>
+                            <li class="regular-closing-day">定休日/土曜日・日曜日・祝日</li>
+                        </ul>
+                    </div>
+                    <div class="right-column">
+                        <form action="#" method="post"id="pardot-form"><!--actionは空にしてある-->
+                            <div class="form-field  last_name required">
+                                <label for="1068932_534862pi_1068932_534862">お名前(姓)</label>
+                                <input type="text" name="1068932_534862pi_1068932_534862"
+                                    id="1068932_534862pi_1068932_534862" value="" class="text" size="30" maxlength="80"
+                                    onchange="" onfocus="" placeholder="例）田中">
+                            </div>
+                            <div class="form-field  first_name required">
+                                <label for="1068932_534865pi_1068932_534865">お名前(名)</label>
+                                <input type="text" name="1068932_534865pi_1068932_534865"
+                                    id="1068932_534865pi_1068932_534865" value="" class="text" size="30" maxlength="40"
+                                    onchange="" onfocus="" placeholder="例）太郎">
+                            </div>
+                            <div class="form-field  company required">
+                                <label for="1068932_534868pi_1068932_534868">会社名</label>
+                                <input type="text" name="1068932_534868pi_1068932_534868"
+                                    id="1068932_534868pi_1068932_534868" value="" class="text" size="30" maxlength="255"
+                                    onchange="" onfocus="" placeholder="例）株式会社ProVision">
+                            </div>
+                            <div class="form-field  email required">
+                                <label for="1068932_534871pi_1068932_534871">メール</label>
+                                <input type="text" name="1068932_534871pi_1068932_534871"
+                                    id="1068932_534871pi_1068932_534871" value="" class="text" size="30" maxlength="255"
+                                    onchange="" onfocus="" placeholder="例）example@sample.com">
+                            </div>
+                            <div class="form-field  phone required">
+                                <label for="1068932_534874pi_1068932_534874">電話番号</label>
+                                <input type="text" name="1068932_534874pi_1068932_534874"
+                                    id="1068932_534874pi_1068932_534874" value="" class="text" size="30" maxlength="40"
+                                    onchange="" onfocus="" placeholder="例）0000000000">
+                            </div>
+                            <div class="form-field  comments required">
+                                <label for="1068932_534877pi_1068932_534877">お問い合わせ内容</label>
+                                <textarea name="1068932_534877pi_1068932_534877" id="1068932_534877pi_1068932_534877"
+                                    onchange="" cols="40" rows="10" class="standard"
+                                    placeholder="お問い合わせ内容をご記載ください"></textarea>
+                            </div>
+                            <div class="form-field  CustomObject1718092319464 required">
+                                <label for="1068932_534880pi_1068932_534880">当社の個人情報保護方針に同意の上、送信してください。</label>
+                                <span class="value"><span><input type="checkbox"
+                                            name="1068932_534880pi_1068932_534880_6663358"
+                                            id="1068932_534880pi_1068932_534880_6663358" value="6663358"
+                                            onchange=""><label class="inline"
+                                            for="1068932_534880pi_1068932_534880_6663358">同意</label></span></span>
+                                <small><a class="privacy-link" href="https://www.pro-vision.jp/privacy/"target="_top">個人情報保護方針</a>に同意する</small>
+                            </div>
+                            <p style="position:absolute; width:190px; left:-9999px; top: -9999px;visibility:hidden;">
+                                <label for="pi_extra_field">Comments</label>
+                                <input type="text" name="pi_extra_field" id="pi_extra_field">
+                            </p>
+                            <div class="submit">
+                                <input type="submit" value="送信">
+                          </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+    </main>
+    <footer>
+        <small class="copy">© ProVision Inc. All Rights Reserved.</small>
+    </footer>
+    <script src="common.js" defer></script>
 </body>
 </html>
