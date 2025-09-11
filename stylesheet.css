@@ -1,1 +1,44 @@
+.image {
+  width: 1580px;
+  height: 1658px;
+}
 
+.image .old-home {
+  position: fixed;
+  width: 1562px;
+  height: 1658px;
+  top: 0;
+  left: 0;
+  aspect-ratio: 0.95;
+  object-fit: cover;
+}
+/* Original CSS code should be injected here */
+
+.image {
+  width: 100%;
+  max-width: 1580px;
+  height: 100vh;
+  min-height: 1658px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.image .old-home {
+  position: fixed;
+  width: 100%;
+  max-width: 1562px;
+  height: 100vh;
+  min-height: 1658px;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  aspect-ratio: 0.95;
+  object-fit: cover;
+}
+
+@media (max-width: 1580px) {
+  .image .old-home {
+    left: 0;
+    transform: none;
+  }
+}
