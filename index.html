@@ -118,6 +118,17 @@
       .nav-ico{width:20px;height:20px}
       .hero h1{font-size:36px}
     }
+    /* clickable row for project list */
+    .list li { padding: 0; } /* 既存の li padding を0にしてリンク側に持たせる */
+    .project-link{
+      display:flex; align-items:center; gap:12px; padding:14px 16px;
+      border-radius:12px; outline: none;
+      transition: background .18s ease, transform .06s ease;
+    }
+    .project-link:hover{ background: rgba(37,99,235,.06); transform: translateY(-1px); }
+    .project-link:active{ transform: translateY(0); }
+    .project-link:focus-visible{ box-shadow: 0 0 0 3px rgba(37,99,235,.35); background:#fff; }
+
   </style>
 </head>
 <body>
