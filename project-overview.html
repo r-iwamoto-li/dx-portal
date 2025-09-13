@@ -72,43 +72,6 @@
       .detail-grid{grid-template-columns:1fr}
     }
 
-          /* === Activity Log (3 columns) === */
-      .activity-table{
-        display:grid;
-        grid-template-columns: 140px 160px 1fr; /* 日付 / 対応者 / 活動内容(広め) */
-        border-top:1px solid rgba(15,23,42,.08);
-      }
-      .activity-header,
-      .activity-row{
-        display:contents; /* 行をgridに乗せる */
-      }
-      .activity-table > div{
-        padding:12px 16px;
-        border-bottom:1px dashed rgba(15,23,42,.08);
-        background:#fff;
-      }
-      .activity-head{
-        font-size:12px; font-weight:800; letter-spacing:.06em; color:#6b7280;
-        background:#f9fafb;
-      }
-      .activity-date{white-space:nowrap;}
-      .activity-owner{white-space:nowrap; font-weight:600;}
-      .activity-content{
-        /* 内容が長い想定：折り返し＋セル内スクロール */
-        max-height: 160px;          /* 必要に応じて高さ調整 */
-        overflow:auto;
-        white-space:pre-wrap;        /* 改行・空白維持しつつ折り返し */
-        word-break:break-word;       /* 長いURL等で崩れないように */
-        line-height:1.65;
-      }
-      
-      /* モバイル：2段に畳む（内容を広く） */
-      @media (max-width: 640px){
-        .activity-table{grid-template-columns: 120px 1fr;}
-        .activity-row .activity-owner{grid-column:1/2}
-        .activity-row .activity-content{grid-column:1/3}
-      }
-
   </style>
 </head>
 <body>
@@ -228,45 +191,23 @@
         <!-- 活動履歴（ステークホルダーと同じ項目構成／値はXXX） -->
         <div class="section tabpanel hidden" id="tab-activity" role="tabpanel" aria-labelledby="tabbtn-activity">
           <h2>活動履歴</h2>
-        
-          <div class="activity-table" role="table" aria-label="活動履歴一覧">
-            <!-- Header -->
-            <div class="activity-header activity-head" role="columnheader">日付</div>
-            <div class="activity-header activity-head" role="columnheader">対応者</div>
-            <div class="activity-header activity-head" role="columnheader">活動内容</div>
-        
-            <!-- Row 1 -->
-            <div class="activity-row activity-date" role="cell">2025/08/21</div>
-            <div class="activity-row activity-owner" role="cell">岩本 陸</div>
-            <div class="activity-row activity-content" role="cell">
-              経営ダッシュボードの要件ヒアリング。KPI定義のドラフト作成（売上、粗利、受注高、在庫回転、稼働率 など）。
-              DataMart構成の叩き台を共有し、週次レビュー体制を合意。XXX
+          <div class="grid-2">
+            <div class="input-group">
+              <label>DISPLAY NAME</label>
+              <input class="input" value="XXX" />
             </div>
-        
-            <!-- Row 2 -->
-            <div class="activity-row activity-date" role="cell">2025/08/28</div>
-            <div class="activity-row activity-owner" role="cell">並木 彩</div>
-            <div class="activity-row activity-content" role="cell">
-              ソースデータの粒度確認。会計・販売・人事の連携スケジュール調整。
-              ETLのPoC（BigQuery → Looker）を実施し可視化サンプルを提示。関係者からのフィードバックを反映。XXX
+            <div class="input-group">
+              <label>REAL NAME</label>
+              <input class="input" value="XXX" />
+            <div class="input-group">
+              <label>PHONE</label>
+              <input class="input" value="XXX" />
             </div>
-        
-            <!-- Row 3（例：長文でもOK） -->
-            <div class="activity-row activity-date" role="cell">2025/09/05</div>
-            <div class="activity-row activity-owner" role="cell">岩本 陸</div>
-            <div class="activity-row activity-content" role="cell">
-              データ遅延の原因分析および改善案策定。
-              - 深夜バッチの並列度調整
-              - 取込前の検証ルール追加
-              - エラー通知をOpsへルーティング
-              次回スプリントで一部を先行適用。XXX XXX XXX
+            <div class="input-group">
+              <label>EMAIL</label>
+              <input class="input" value="XXX" />
             </div>
-        
-            <!-- 以降、行をコピペして増やすだけ -->
           </div>
-        </div>
-
-
           <h2>Social</h2>
           <div class="grid-2">
             <div class="input-group">
