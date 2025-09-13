@@ -174,7 +174,8 @@
           border-radius:10px;
           border:1px solid rgba(15,23,42,.12);
           padding:10px 12px;
-          font-size:14px;
+          font-size:12px;
+          color:#6b7280; 
           line-height:1.6;
           white-space:pre-wrap;           /* 改行保持 */
           word-break:break-word;          /* 長文/URL折返し */
@@ -389,12 +390,11 @@
               <!-- Step 2: 構築 -->
               <article class="rm-step">
                 <!-- icon: 構築（ハンマー） -->
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 21l-6-6"/>
-                  <path d="M3 7l6 6"/>
-                  <path d="M15.5 2.5a4 4 0 0 1 4 4l-3 3-4-4 3-3Z"/>
-                  <path d="M8.5 9.5 4 14l-1 5 5-1 4.5-4.5-4-4Z"/>
-                </svg>
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 6 3 12l5 6"/>   <!-- < -->
+                <path d="M16 6l5 6-5 6"/>   <!-- > -->
+              </svg>
                 <p class="rm-title">構築</p>
                 <div class="rm-desc" contenteditable="false">ETL実装、UI実装、レビュー対応</div>
               </article>
