@@ -266,7 +266,7 @@
         
             <!-- 1行目 -->
             <div class="activity-row">
-              <div class="cell">2025/09/10</div>
+              <div class="cell">2025/09/11</div>
               <div class="cell">並木</div>
               <div class="cell">
                 <div class="cell-content">要件定義Kickoff。XXX ヒアリング実施。データソース洗い出し（会計・SFA・在庫・工数）。課題：SFAのフィールド定義が部門で不一致 → 標準化案を次回提示。</div>
@@ -275,7 +275,7 @@
         
             <!-- 2行目（例） -->
             <div class="activity-row">
-              <div class="cell">2025/09/10</div>
+              <div class="cell">2025/09/14</div>
               <div class="cell">並木</div>
               <div class="cell">
                 <div class="cell-content">要件定義Kickoff。XXX ヒアリング実施。データソース洗い出し（会計・SFA・在庫・工数）。課題：SFAのフィールド定義が部門で不一致 → 標準化案を次回提示。</div>
@@ -284,7 +284,7 @@
         
             <!-- 3行目（ダミー） -->
             <div class="activity-row">
-              <div class="cell">2025/09/10</div>
+              <div class="cell">2025/09/12</div>
               <div class="cell">並木</div>
               <div class="cell">
                 <div class="cell-content">要件定義Kickoff。XXX ヒアリング実施。データソース洗い出し（会計・SFA・在庫・工数）。課題：SFAのフィールド定義が部門で不一致 → 標準化案を次回提示。</div>
@@ -351,6 +351,35 @@
     });
     // 初期表示
     activate('tab-overview');
+
+      function parseYmd(str){
+    // "2025/09/10" や "2025-09-10" に対応
+    const m = String(str).trim().match(/(\d{4})[\/.-](\d{1,2})[\/.-](\d{1,2})/);
+    if(!m) return 0;
+    return new Date(+m[1], +m[2]-1, +m[3]).getTime();
+  }
+
+  function sortActivityDesc(){
+    const list = document.querySelector('#tab-activity .activity-list');
+    if(!list) return;
+    const rows = Array.from(list.querySelectorAll('.activity-row'));
+    rows.sort((a,b)=>{
+      const aDateText = a.querySelector('.cell')?.textContent || '';
+      const bDateText = b.querySelector('.cell')?.textContent || '';
+      return parseYmd(bDateText) - parseYmd(aDateText); // 降順
+    });
+    rows.forEach(r => list.appendChild(r)); // 並べ替え反映
+  }
+
+  // 初期並べ替え
+  sortActivityDesc();
+
+  // 行追加時も自動で並べ替え（手作業で行を増やした場合にも対応）
+  const actList = document.querySelector('#tab-activity .activity-list');
+  if(actList){
+    new MutationObserver(()=>sortActivityDesc())
+      .observe(actList, { childList: true });
+  }
   </script>
 </body>
 </html>
