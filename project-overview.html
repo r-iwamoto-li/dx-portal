@@ -191,44 +191,67 @@
         <!-- 活動履歴（ステークホルダーと同じ項目構成／値はXXX） -->
         <div class="section tabpanel hidden" id="tab-activity" role="tabpanel" aria-labelledby="tabbtn-activity">
           <h2>活動履歴</h2>
-          <div class="grid-2">
-            <div class="input-group">
-              <label>DISPLAY NAME</label>
-              <input class="input" value="XXX" />
-            </div>
-            <div class="input-group">
-              <label>REAL NAME</label>
-              <input class="input" value="XXX" />
-            </div>
-            <div class="input-group">
-              <label>PHONE</label>
-              <input class="input" value="XXX" />
-            </div>
-            <div class="input-group">
-              <label>EMAIL</label>
-              <input class="input" value="XXX" />
-            </div>
+        
+          <!-- ヘッダー -->
+          <div class="activity-head">
+            <div>日付</div>
+            <div>対応者</div>
+            <div>活動内容</div>
           </div>
-            
-          <h2>Social</h2>
-          <div class="grid-2">
-            <div class="input-group">
-              <label>WEBSITE</label>
-              <input class="input" value="XXX" />
-            </div>
-            <div class="input-group" style="display:flex; gap:8px; align-items:flex-end">
-              <div style="flex:1">
-                <label>TWITTER</label>
-                <input class="input" value="XXX" />
+        
+          <!-- リスト（行を複製して増やすだけ） -->
+          <div class="activity-list">
+        
+            <!-- 1行目 -->
+            <div class="activity-row">
+              <div class="cell">
+                <span class="label">日付</span>2025/09/10
               </div>
-              <button class="btn btn-light verify">Verify account</button>
+              <div class="cell">
+                <span class="label">対応者</span>並木
+              </div>
+              <div class="cell">
+                <span class="label">活動内容</span>
+                <div class="cell-content">
+                  要件定義Kickoff。XXX ヒアリング実施。データソース洗い出し（会計・SFA・在庫・工数）。課題：SFAのフィールド定義が部門で不一致 → 標準化案を次回提示。
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="actions">
-            <button class="btn">Save changes</button>
-            <button class="btn btn-light">Cancel</button>
+        
+            <!-- 2行目（例） -->
+            <div class="activity-row">
+              <div class="cell">
+                <span class="label">日付</span>2025/09/12
+              </div>
+              <div class="cell">
+                <span class="label">対応者</span>岩本
+              </div>
+              <div class="cell">
+                <span class="label">活動内容</span>
+                <div class="cell-content">
+                  PoCダッシュボード叩き台を作成（売上・粗利・受注見込み）。関係者レビューでXX点フィードバック。次回までにKPI定義をXXXへ合わせる。
+                  参考URL: https://example.com/very-long-url-which-will-wrap-and-scroll-if-needed
+                </div>
+              </div>
+            </div>
+        
+            <!-- 3行目（ダミー） -->
+            <div class="activity-row">
+              <div class="cell">
+                <span class="label">日付</span>2025/09/13
+              </div>
+              <div class="cell">
+                <span class="label">対応者</span>XXX
+              </div>
+              <div class="cell">
+                <span class="label">活動内容</span>
+                <div class="cell-content">XXX XXX XXX</div>
+              </div>
+            </div>
+        
           </div>
         </div>
+
 
         <!-- ロードマップ（簡易プレースホルダ） -->
         <div class="section tabpanel hidden" id="tab-roadmap" role="tabpanel" aria-labelledby="tabbtn-roadmap">
