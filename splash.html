@@ -1,92 +1,125 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DX PORTAL (Legacy)</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>DX PORTAL (Legacy Splash)</title>
 <style>
-  /* ===== 90s っぽい彩度と背景 ===== */
-  html,body{height:100%}
+  /* ====== 全面レイアウト ====== */
+  html,body{height:100%;margin:0}
   body{
-    margin:0; font:14px/1.6 "MS UI Gothic", "Osaka", system-ui, sans-serif;
-    color:#000; 
-    background:
-      url('https://i.imgur.com/8kYq9vD.png') repeat, /* 小さなチェッカー(タイル風) */
-      linear-gradient(90deg,#d5f0ff 0,#fff 50%,#ffe8f5 100%);
+    font:14px/1.6 "MS UI Gothic","MS Sans Serif",system-ui,sans-serif;
+    color:#000; background:#ffffff;   /* ← 背景タイルは廃止、全面1枚 */
+    overflow:hidden;                  /* スプラッシュ演出中はスクロール無効 */
   }
-  a{color:#00f}
+  #desk{position:fixed; inset:0; display:grid; grid-template-rows:auto 1fr auto;}
+  /* 上部バー（90sっぽい） */
+  .banner{background:#003399;color:#fff;padding:8px 12px;font-weight:bold}
+  /* 下部コピーライト */
+  .foot{background:#f0f0f0;border-top:3px ridge #c0c0c0;padding:6px 10px;text-align:center}
 
-  /* ページの最大幅を <table> でそれっぽく */
-  .shell{max-width:980px;margin:18px auto;border:3px ridge #c0c0c0;background:#fff}
-  .banner{background:#003399;color:#fff;padding:8px 12px;font-weight:bold;letter-spacing:.5px}
-  .marquee{background:#ffff99;border-top:2px groove #fff;border-bottom:2px groove #fff;padding:6px 8px}
-  .columns{display:grid;grid-template-columns:260px 1fr;gap:12px;padding:12px}
-  .box{border:3px groove #c0c0c0;background:#f5f5f5;padding:10px}
-  .box h3{margin:0 0 8px;font-size:16px;border-bottom:2px inset #c0c0c0;padding-bottom:4px}
-  .ul90{margin:0;padding-left:18px}
-  .sep{height:16px;background:url('https://i.imgur.com/3m0hZ3T.gif') repeat-x;margin:8px 0} /* 虹色ラインGIF */
-
-  /* ---- 中央の巨大ボタン（最初は「反応しない」） ---- */
-  .center-wrap{display:grid;place-items:center;margin:18px 0}
+  /* メインは左右2カラム（古Web風） */
+  .main{
+    display:grid; grid-template-columns:280px 1fr; gap:12px; padding:12px;
+  }
+  .box{
+    border:3px groove #c0c0c0; background:#f8f8f8; padding:10px; min-height:0; overflow:auto;
+  }
+  .box h3{margin:0 0 8px; font-size:16px; border-bottom:2px inset #c0c0c0; padding-bottom:4px}
+  .ul90{margin:0; padding-left:18px}
+  .ul90 a{color:#00f; text-decoration:underline}
+  .center-wrap{display:grid; place-items:center; margin:18px 0}
   .bigbtn{
-    font:700 18px/1 "MS Sans Serif", system-ui;
-    padding:14px 22px; color:#000; background:#e0e0e0; border:3px outset #fff; 
-    box-shadow:inset -2px -2px 0 #808080, inset 2px 2px 0 #fff; cursor:pointer;
+    font:700 18px/1 "MS Sans Serif"; padding:14px 22px; color:#000;
+    background:#e0e0e0; border:3px outset #fff;
+    box-shadow:inset -2px -2px #808080, inset 2px 2px #fff; cursor:pointer;
     transition:filter .15s, transform .05s;
   }
-  .bigbtn:hover{filter:brightness(1.08)}
-  .bigbtn:active{transform:translateY(1px);border:3px inset #fff}
+  .bigbtn:hover{filter:brightness(1.07)}
+  .bigbtn:active{transform:translateY(1px); border:3px inset #fff}
   .bigbtn[aria-disabled="true"]{cursor:not-allowed}
 
-  /* ---- 3秒後のCRT歪み（body に .glitch-on 付与） ---- */
-  .fx-layer{
-    position:fixed; inset:0; pointer-events:none; opacity:0; mix-blend-mode:multiply;
-    background:repeating-linear-gradient(0deg, rgba(0,0,0,.12) 0 1px, rgba(0,0,0,0) 2px 4px);
+  /* ====== 画面クラッシュ演出（3秒後に body.glitch-on で発火） ====== */
+  .fx-stack{pointer-events:none; position:fixed; inset:0; z-index:30}
+  /* 走査線 */
+  .scan{position:absolute; inset:0; opacity:0; background:
+        linear-gradient(transparent 50%, rgba(0,0,0,.08) 51%);
+        background-size:100% 4px;}
+  /* RGBノイズバー（赤/青/黒の壊れ線） */
+  .bars{position:absolute; inset:0; opacity:0; mix-blend-mode:multiply;
+        background:
+          repeating-linear-gradient(0deg,
+            rgba(255,0,0,.22) 0 2px,
+            rgba(0,0,0,.18) 3px 4px,
+            rgba(0,80,255,.22) 5px 6px,
+            transparent 7px 10px);
+        animation:barsMove 1.2s linear infinite;}
+  @keyframes barsMove{
+    0%{background-position-y:0}
+    100%{background-position-y:200px}
   }
-  @keyframes wobble {
+  /* 全体の揺らぎ */
+  .wobble{position:absolute; inset:0; opacity:0}
+  .glitch-on .wobble{animation:wob 600ms infinite; opacity:1}
+  @keyframes wob{
     0%,100%{transform:skewX(0) scale(1)}
-    40%{transform:skewX(0.8deg) scale(1.01)}
-    60%{transform:skewX(-0.8deg) scale(1.008)}
+    40%{transform:skewX(1deg) scale(1.008)}
+    60%{transform:skewX(-1deg) scale(1.01)}
   }
-  .glitch-on .shell{animation:wobble 600ms infinite}
-  .glitch-on .fx-layer{opacity:.55}
+  .glitch-on .scan{opacity:.6}
+  .glitch-on .bars{opacity:.8}
 
-  /* ---- Win98風モーダル ---- */
-  .modal{
-    position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:40;
+  /* ひび割れ（SVGを背景に） */
+  .cracks{position:absolute; inset:0; opacity:0; background:
+    url('data:image/svg+xml;utf8,\
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox=\"0 0 1000 600\">\
+        <g stroke=\"black\" stroke-width=\"2\" fill=\"none\" opacity=\"0.55\">\
+          <path d=\"M50,120 140,150 220,120 320,180 380,160 460,200 520,180 600,210 700,170 800,220\"/>\
+          <path d=\"M220,320 260,300 300,340 360,310 420,355 470,330 520,360 600,330 680,360 760,340\"/>\
+          <path d=\"M480,40 490,120 520,160 540,220 560,300 600,360\"/>\
+        </g>\
+      </svg>') center/cover no-repeat;}
+  .glitch-on .cracks{opacity:.85; filter:contrast(1.1) brightness(0.95)}
+
+  /* ====== Win98 風エラー小窓（複数） ====== */
+  .err98{
+    position:fixed; z-index:50; width:300px;
+    background:#c0c0c0; border:3px outset #fff; color:#000;
+    box-shadow:0 12px 24px rgba(0,0,0,.35);
+    transform:translate(-50%,-50%) rotate(var(--rot,0deg));
   }
-  .modal.show{display:flex}
-  .win98{
-    min-width:320px; background:#c0c0c0; border:3px outset #fff; color:#000;
-    box-shadow: 0 20px 40px rgba(0,0,0,.35);
-  }
-  .titlebar{
-    background:#000080; color:#fff; padding:4px 8px; font-weight:700;
-    display:flex; align-items:center; justify-content:space-between;
-  }
-  .titlebar .minibox{width:14px;height:14px;background:#c0c0c0;border:2px outset #fff}
-  .dialog{background:#f0f0f0; border:3px ridge #c0c0c0; padding:12px}
-  .dialog p{margin:4px 0 12px}
+  .err98 .title{background:#000080;color:#fff;padding:3px 6px;font-weight:700;font-size:13px}
+  .err98 .inner{background:#f0f0f0;border:3px ridge #c0c0c0;padding:10px}
+  .err98 .row{display:flex; align-items:center; gap:10px}
+  .xmark{width:18px;height:18px;background:#d00;color:#fff;border-radius:50%;
+         display:grid;place-items:center;font-weight:900}
+  .btnbar{margin-top:10px; display:flex; gap:8px; justify-content:flex-end}
   .btn98{
     font:700 13px/1 "MS Sans Serif"; padding:6px 14px; background:#e0e0e0; color:#000;
     border:3px outset #fff; box-shadow:inset -2px -2px #808080, inset 2px 2px #fff; cursor:pointer;
   }
   .btn98:active{border:3px inset #fff}
-  .btnrow{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
-  .scan{position:fixed; inset:0; pointer-events:none; background:linear-gradient(transparent 50%, rgba(0,0,0,.06) 51%); background-size:100% 4px; z-index:39; opacity:.6; display:none;}
-  .glitch-on .scan{display:block}
 
-  /* レスポンシブ軽め */
-  @media (max-width:720px){ .columns{grid-template-columns:1fr} }
+  /* ====== 最後の確認モーダル（前回そのまま） ====== */
+  .modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:60}
+  .modal.show{display:flex}
+  .win98{min-width:320px; background:#c0c0c0; border:3px outset #fff; color:#000; box-shadow:0 20px 40px rgba(0,0,0,.35)}
+  .titlebar{background:#000080;color:#fff;padding:4px 8px;font-weight:700;display:flex;align-items:center;justify-content:space-between}
+  .titlebar .minibox{width:14px;height:14px;background:#c0c0c0;border:2px outset #fff}
+  .dialog{background:#f0f0f0;border:3px ridge #c0c0c0;padding:12px}
+  .dialog p{margin:4px 0 12px}
+  .btnrow{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+
+  /* レスポンシブ */
+  @media (max-width:900px){ .main{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
 
-<div class="shell">
+<div id="desk">
   <div class="banner">★ DX PORTAL ★ — Welcome to Our Super Cool Homepage!!</div>
-  <div class="marquee"><marquee behavior="scroll" scrollamount="6">✨ NEW!! DX Tips / Under Construction 🚧 / Click the big button to enter (…maybe) ✨</marquee></div>
 
-  <div class="columns">
+  <div class="main">
     <aside class="box">
       <h3>メニュー</h3>
       <ul class="ul90">
@@ -95,16 +128,14 @@
         <li><a href="#" onclick="return false">ナレッジベース</a></li>
         <li><a href="#" onclick="return false">掲示板 BBS</a></li>
       </ul>
-      <div class="sep"></div>
-      <p><img src="https://i.imgur.com/4y6p3x0.gif" alt="" style="vertical-align:middle"> UNDER CONSTRUCTION!</p>
+      <p style="margin-top:10px"><strong>Tip:</strong> 大きなボタンを押すと…何かが起きるかも？</p>
     </aside>
 
     <main class="box">
       <h3>DXポータル（レガシー版）</h3>
-      <p>ここは1990年代の社内ポータル復刻サイトです。<br>最新のDXポータルへ入るには、下の大きなボタンを押して…みてください。</p>
+      <p>ここは1990年代の社内ポータル復刻サイトです。最新のDXポータルへ入るには、下の大きなボタンを押して…みてください。</p>
 
       <div class="center-wrap">
-        <!-- 最初は「見た目はボタン・クリックしても何も起きない」 -->
         <button id="fakeEnter" class="bigbtn" aria-disabled="true">ENTER DX PORTAL</button>
       </div>
 
@@ -116,20 +147,26 @@
       </ul>
     </main>
   </div>
+
+  <div class="foot">Copyright © 1998–2000 DX Portal — All rights reserved.</div>
 </div>
 
-<!-- 歪み表現 -->
-<div class="fx-layer"></div>
-<div class="scan"></div>
+<!-- クラッシュ用オーバーレイ -->
+<div class="fx-stack">
+  <div class="wobble"></div>
+  <div class="bars"></div>
+  <div class="scan"></div>
+  <div class="cracks"></div>
+</div>
 
-<!-- Win98風ポップアップ -->
+<!-- ラストの確認モーダル -->
 <div id="popup" class="modal" aria-hidden="true">
   <div class="win98" role="dialog" aria-modal="true" aria-labelledby="ttl">
     <div class="titlebar"><span id="ttl">Microsoft Windows</span><span class="minibox" aria-hidden="true"></span></div>
     <div class="dialog">
       <p>DXポータルの最新バージョンに接続します。よろしいですか？</p>
       <div class="btnrow">
-        <button id="ok"  class="btn98">OK</button>
+        <button id="ok" class="btn98">OK</button>
         <button id="cancel" class="btn98">Cancel</button>
       </div>
     </div>
@@ -137,31 +174,81 @@
 </div>
 
 <script>
-  // ①ページ表示 → ②3秒後に「歪み＋ポップアップ表示」
-  const body = document.body;
-  const popup = document.getElementById('popup');
-  const fakeEnter = document.getElementById('fakeEnter');
+  /* ===== 設定：OK後に遷移するURL ===== */
+  const DEST_URL = 'index.html'; // ←本番TOPのファイル名/URLに変更
 
-  // 押しても何も起きない（ホバーは効く）
-  fakeEnter.addEventListener('click', (e) => {
-    e.preventDefault();
-    // まだロック解除前は無反応
-  });
+  /* クリック不能なフェイクボタン（見た目だけ） */
+  document.getElementById('fakeEnter').addEventListener('click', e => e.preventDefault());
 
+  /* 3秒後：クラッシュ演出 → 小エラー乱発 → 最後に確認モーダル */
   setTimeout(() => {
-    body.classList.add('glitch-on');     // 画面にひずみ
-    popup.classList.add('show');         // Win98ダイアログ出現
-    popup.setAttribute('aria-hidden','false');
+    document.body.classList.add('glitch-on');
+    burstErrors(6, 1000);         // 小エラー 6個を 1秒間でばら撒き
+    setTimeout(() => {
+      document.getElementById('popup').classList.add('show');
+      document.getElementById('popup').setAttribute('aria-hidden','false');
+    }, 1200);
   }, 3000);
 
-  // ③OKでTOP（index.html）へ遷移
-  document.getElementById('ok').addEventListener('click', () => {
-    window.location.href = 'index.html'; // ← 現在のTOPファイル名に合わせて変更可
-  });
+  /* Win98風小エラーを生成 */
+  function createErrorWin(x, y, rotDeg){
+    const el = document.createElement('div');
+    el.className = 'err98';
+    el.style.left = x + 'px';
+    el.style.top  = y + 'px';
+    el.style.setProperty('--rot', rotDeg + 'deg');
+    el.innerHTML = `
+      <div class="title">System Error</div>
+      <div class="inner">
+        <div class="row">
+          <div class="xmark">×</div>
+          <div><div>Runtime error.</div><div>Press Ok to Continue.</div><div>Press Cancel to Quit.</div></div>
+        </div>
+        <div class="btnbar">
+          <button class="btn98">OK</button>
+          <button class="btn98 close">Cancel</button>
+        </div>
+      </div>`;
+    document.body.appendChild(el);
+    // Cancelで閉じる
+    el.querySelector('.close').addEventListener('click', ()=> el.remove());
+    // 位置がはみ出たら微調整
+    const r = el.getBoundingClientRect();
+    if(r.right > innerWidth) el.style.left = (innerWidth - r.width/2 - 8) + 'px';
+    if(r.bottom > innerHeight) el.style.top = (innerHeight - r.height/2 - 8) + 'px';
+    return el;
+  }
 
-  // Cancel で閉じる（再度3秒待たずに即開けるようにしておく）
+  /* N個のエラーをランダムにばら撒く */
+  function burstErrors(n=6, duration=1200){
+    const start = performance.now();
+    (function tick(t){
+      const p = (t - start) / duration;
+      if(p >= 1){ return; }
+      // 進行に応じて出す
+      createErrorWin(
+        Math.random() * innerWidth,
+        Math.random() * innerHeight,
+        (Math.random()*8 - 4)
+      );
+      requestAnimationFrame(tick);
+    })(start);
+    // きっちり n 個出す（上の連打とは別に保険）
+    for(let i=0;i<n;i++){
+      setTimeout(()=>{
+        createErrorWin(
+          Math.random() * innerWidth,
+          Math.random() * innerHeight,
+          (Math.random()*8 - 4)
+        );
+      }, Math.random() * duration);
+    }
+  }
+
+  /* 最後の確認モーダル：OKで遷移 / Cancelで閉じる */
+  document.getElementById('ok').addEventListener('click', () => location.href = DEST_URL);
   document.getElementById('cancel').addEventListener('click', () => {
-    popup.classList.remove('show');
+    document.getElementById('popup').classList.remove('show');
   });
 </script>
 </body>
