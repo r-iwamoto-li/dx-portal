@@ -71,6 +71,9 @@
       .subhero-inner{grid-template-columns:1fr;gap:24px}
       .detail-grid{grid-template-columns:1fr}
     }
+      #tab-stake .input[readonly] {
+        color:#3b4252;
+      }
 
           /* ==== Activity Log (scoped) ==== */
       #tab-activity .activity-head,
@@ -107,6 +110,9 @@
         display:block;
       }
       #tab-activity .cell:last-child{ border-right:none; }
+      #tab-activity .cell-content {
+        color:#3b4252;
+      }
       
       /* ③活動内容：長文OK・内部スクロール */
       #tab-activity .cell-content{
@@ -192,6 +198,10 @@
         #tab-roadmap .rm-input:focus,#tab-roadmap .rm-textarea:focus{
           outline:none;box-shadow:0 0 0 3px rgba(37,99,235,.25)
         }
+        #tab-outcome .input[readonly] {
+          color:#3b4252;
+        }
+
         
         /* Responsive */
         @media (max-width: 980px){
