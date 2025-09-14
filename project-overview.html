@@ -116,6 +116,10 @@
         word-break: break-word;        /* 長いURL等も折り返し */
         padding-right: 6px;            /* スクロールバー余白 */
       }
+      #tab-overview .input[readonly]{
+        color:#6b7280;  
+        cursor: default;
+      }
       
       /* レスポンシブ：モバイルでは縦積み */
       @media (max-width: 720px){
@@ -271,19 +275,19 @@
           <div class="grid-2">
             <div class="input-group">
               <label>プロジェクト名</label>
-              <input class="input" value="概況ビジュアライズ" />
+              <input class="input" value="概況ビジュアライズ" readonly  />
             </div>
             <div class="input-group">
               <label>推進者</label>
-              <input class="input" value="岩本 陸" />
+              <input class="input" value="岩本 陸" readonly  />
             </div>
             <div class="input-group">
               <label>開始日</label>
-              <input class="input" value="2024/4/1" />
+              <input class="input" value="2024/4/1" readonly  />
             </div>
             <div class="input-group">
               <label>ステータス</label>
-              <input class="input" value="進行中" />
+              <input class="input" value="進行中" readonly  />
             </div>
           </div>
           <div class="input-group">
