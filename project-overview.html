@@ -46,15 +46,15 @@
     }
     .placeholder{
       width:100%;
-      aspect-ratio:16/10;          /* 高さはそのまま見た目維持（比率固定） */
+      aspect-ratio:16/10;
       overflow:hidden;
-      border-radius:12px;
+      border-radius:var(--radius);                  /* 角丸を.cardと同じに */
+      border:1px solid rgba(15,23,42,.06);         /* 枠を.cardと同じに */
+      box-shadow:var(--shadow);                     /* 影を.cardと同じに */
+      background:#fff;
     }
     .placeholder img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
+      width:100%; height:100%; object-fit:cover; display:block;
     }
     .lead h1{font-family:"Noto Sans JP";font-size:48px;line-height:1.2;margin:0 0 10px}
     .lead p{color:#4b5563;margin:0}
@@ -210,7 +210,7 @@
   <!-- ==== Sub hero ==== -->
   <section class="subhero">
     <div class="container subhero-inner">
-      <div class="placeholder" aria-hidden="true">
+      <div class="placeholder card" aria-hidden="true">
         <img src="https://devio2023-media.developers.io/wp-content/uploads/2019/04/amazon-quicksight.png" alt="quicksight" />
       </div>
       <div class="lead">
