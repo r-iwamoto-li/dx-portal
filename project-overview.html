@@ -56,6 +56,10 @@
     .placeholder img{
       width:100%; height:100%; object-fit:cover; display:block;
     }
+    .subhero-inner .placeholder{
+      margin-inline:22px;          /* 左右に22px寄せる */
+      width:calc(100% - 44px);     /* その分だけ幅を縮める（高さはaspect-ratioで維持） */
+    }
     .lead h1{font-family:"Noto Sans JP";font-size:48px;line-height:1.2;margin:0 0 10px}
     .lead p{color:#4b5563;margin:0}
     .chip{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:#fff;border:1px solid rgba(15,23,42,.06);font-size:12px;font-weight:700}
@@ -231,7 +235,7 @@
           <button type="button" role="tab" aria-selected="false" aria-controls="tab-stake"    id="tabbtn-stake"    data-target="tab-stake">ステークホルダー</button>
           <button type="button" role="tab" aria-selected="false" aria-controls="tab-activity" id="tabbtn-activity" data-target="tab-activity">活動履歴</button>
           <button type="button" role="tab" aria-selected="false" aria-controls="tab-roadmap"  id="tabbtn-roadmap"  data-target="tab-roadmap">ロードマップ</button>
-          <button type="button" role="tab" aria-selected="false" aria-controls="tab-outcome"  id="tabbtn-outcome"  data-target="tab-outcome">成果</button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="tab-outcome"  id="tabbtn-outcome"  data-target="tab-outcome">目標・成果</button>
         </nav>
       </aside>
 
