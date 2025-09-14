@@ -58,7 +58,8 @@
     }
     .subhero-inner .placeholder{
       margin-left: var(--hero-start-offset);
-      width: calc(100% - var(--hero-start-offset));
+      width: calc(var(--col-left) - var(--hero-start-offset));
+      justify-self: start;
       aspect-ratio:16/10;
       overflow:hidden;
       border-radius:var(--radius);
