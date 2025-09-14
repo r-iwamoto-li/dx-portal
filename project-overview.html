@@ -14,7 +14,6 @@
       --bg:#0b0f1a; --surface:#ffffff; --text:#121416; --muted:#6b7280;
       --brand:#2563eb; --brand-2:#8b5cf6; --shadow:0 10px 30px rgba(2,6,23,.14);
       --radius:16px; --ink:#3b4252; --col-left: 320px; --hero-start-offset: 24px;
-      --col-left: 320px; --hero-gutter: calc(1px + 10px + 14px);
     }
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
@@ -58,9 +57,9 @@
       width:100%; height:100%; object-fit:cover; display:block;
     }
     .subhero-inner .placeholder{
-      margin-left: var(--hero-gutter);
-      width: calc(var(--col-left) - (var(--hero-gutter) * 2));
-      justify-self: start; 
+      margin-left: var(--hero-start-offset);
+      width: calc(var(--col-left) - var(--hero-start-offset));
+      justify-self: start;
       aspect-ratio:16/10;
       overflow:hidden;
       border-radius:var(--radius);
