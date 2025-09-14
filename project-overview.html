@@ -104,9 +104,13 @@
     }
     #tab-activity .cell:last-child{ border-right:none; }
     /* 長文セルは内部スクロール + 指定色 */
-    #tab-activity .cell-content{
-      max-height:96px; overflow:auto; white-space:pre-wrap; word-break:break-word; padding-right:6px;
-      color:var(--ink);
+    #tab-activity .cell .cell-content{
+      color:#3b4252;            /* 参考色 */
+      max-height:96px;
+      overflow:auto;
+      white-space:pre-wrap;
+      word-break:break-word;
+      padding-right:6px;
     }
     @media (max-width: 720px){
       #tab-activity .activity-head{ display:none; }
@@ -318,7 +322,9 @@
   </main>
 
   <!-- ==== Footer ==== -->
-  <footer><div class="container">Copyright © 2020. All rights reserved.</div></footer>
+  <footer>
+  　<div class="container">Copyright © <span id="copy-year">2020</span>. All rights reserved.</div>
+　</footer>
 
   <!-- ==== Tab Switcher ==== -->
   <script>
@@ -358,6 +364,7 @@
     if(actList){
       new MutationObserver(()=>sortActivityDesc()).observe(actList, { childList: true });
     }
+    document.getElementById('copy-year').textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
