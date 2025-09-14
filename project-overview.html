@@ -13,7 +13,7 @@
     :root{
       --bg:#0b0f1a; --surface:#ffffff; --text:#121416; --muted:#6b7280;
       --brand:#2563eb; --brand-2:#8b5cf6; --shadow:0 10px 30px rgba(2,6,23,.14);
-      --radius:16px; --ink:#3b4252; --col-left: 320px;
+      --radius:16px; --ink:#3b4252; --col-left: 320px; --hero-start-offset: 24px;
     }
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
@@ -57,8 +57,14 @@
       width:100%; height:100%; object-fit:cover; display:block;
     }
     .subhero-inner .placeholder{
-      margin:0;         /* ← 左右の余白をなくす */
-      width:100%;       /* ← カラム幅いっぱいに */
+      margin-left: var(--hero-start-offset);
+      width: calc(100% - var(--hero-start-offset));
+      aspect-ratio:16/10;
+      overflow:hidden;
+      border-radius:var(--radius);
+      border:1px solid rgba(15,23,42,.06);
+      box-shadow:var(--shadow);
+      background:#fff;
     }
     .lead h1{font-family:"Noto Sans JP";font-size:48px;line-height:1.2;margin:0 0 10px}
     .lead p{color:#4b5563;margin:0}
