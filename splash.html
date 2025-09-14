@@ -1,104 +1,168 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>WELCOME - DX Portal</title>
-  <style>
-    /* ---- 90s感ある背景（タイル柄＋星空） ---- */
-    html,body{height:100%;margin:0}
-    body{
-      display:grid; place-items:center; text-align:center; color:#000;
-      background:
-        radial-gradient(rgba(255,255,255,.18) 1px, transparent 1px) 0 0/12px 12px,
-        repeating-linear-gradient(45deg,#d6e0ff,#d6e0ff 8px,#e9efff 8px,#e9efff 16px);
-      font-family: "MS UI Gothic", "Osaka", system-ui, sans-serif;
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DX PORTAL (Legacy)</title>
+<style>
+  /* ===== 90s っぽい彩度と背景 ===== */
+  html,body{height:100%}
+  body{
+    margin:0; font:14px/1.6 "MS UI Gothic", "Osaka", system-ui, sans-serif;
+    color:#000; 
+    background:
+      url('https://i.imgur.com/8kYq9vD.png') repeat, /* 小さなチェッカー(タイル風) */
+      linear-gradient(90deg,#d5f0ff 0,#fff 50%,#ffe8f5 100%);
+  }
+  a{color:#00f}
 
-    /* 中央のパネル */
-    .panel{
-      width:min(520px, 92vw);
-      background:#fff;
-      border:3px outset #c3c7cb;           /* ベベル枠（90s感） */
-      box-shadow: 0 0 0 4px #00000022, 6px 6px 0 #00000033;
-      padding:18px 16px 24px;
-    }
+  /* ページの最大幅を <table> でそれっぽく */
+  .shell{max-width:980px;margin:18px auto;border:3px ridge #c0c0c0;background:#fff}
+  .banner{background:#003399;color:#fff;padding:8px 12px;font-weight:bold;letter-spacing:.5px}
+  .marquee{background:#ffff99;border-top:2px groove #fff;border-bottom:2px groove #fff;padding:6px 8px}
+  .columns{display:grid;grid-template-columns:260px 1fr;gap:12px;padding:12px}
+  .box{border:3px groove #c0c0c0;background:#f5f5f5;padding:10px}
+  .box h3{margin:0 0 8px;font-size:16px;border-bottom:2px inset #c0c0c0;padding-bottom:4px}
+  .ul90{margin:0;padding-left:18px}
+  .sep{height:16px;background:url('https://i.imgur.com/3m0hZ3T.gif') repeat-x;margin:8px 0} /* 虹色ラインGIF */
 
-    /* タイトル帯（グラデ＋星GIFっぽい雰囲気） */
-    .titlebar{
-      background: linear-gradient(90deg,#0040ff,#7aa0ff);
-      color:#fff; padding:8px 10px; font-weight:700;
-      display:flex; align-items:center; gap:8px;
-    }
-    .titlebar .dot{width:10px;height:10px;border-radius:50%;background:#fff}
+  /* ---- 中央の巨大ボタン（最初は「反応しない」） ---- */
+  .center-wrap{display:grid;place-items:center;margin:18px 0}
+  .bigbtn{
+    font:700 18px/1 "MS Sans Serif", system-ui;
+    padding:14px 22px; color:#000; background:#e0e0e0; border:3px outset #fff; 
+    box-shadow:inset -2px -2px 0 #808080, inset 2px 2px 0 #fff; cursor:pointer;
+    transition:filter .15s, transform .05s;
+  }
+  .bigbtn:hover{filter:brightness(1.08)}
+  .bigbtn:active{transform:translateY(1px);border:3px inset #fff}
+  .bigbtn[aria-disabled="true"]{cursor:not-allowed}
 
-    /* Marquee 風（<marquee>は使わずCSSで） */
-    .marquee{
-      overflow:hidden; white-space:nowrap; border:2px inset #c3c7cb;
-      background:#f3f6ff; color:#002; font-weight:700; margin:10px 0 14px;
-    }
-    .marquee span{
-      display:inline-block; padding:6px 10px;
-      animation: scroll 10s linear infinite;
-    }
-    @keyframes scroll {
-      from { transform: translateX(100%); }
-      to   { transform: translateX(-100%); }
-    }
+  /* ---- 3秒後のCRT歪み（body に .glitch-on 付与） ---- */
+  .fx-layer{
+    position:fixed; inset:0; pointer-events:none; opacity:0; mix-blend-mode:multiply;
+    background:repeating-linear-gradient(0deg, rgba(0,0,0,.12) 0 1px, rgba(0,0,0,0) 2px 4px);
+  }
+  @keyframes wobble {
+    0%,100%{transform:skewX(0) scale(1)}
+    40%{transform:skewX(0.8deg) scale(1.01)}
+    60%{transform:skewX(-0.8deg) scale(1.008)}
+  }
+  .glitch-on .shell{animation:wobble 600ms infinite}
+  .glitch-on .fx-layer{opacity:.55}
 
-    /* 説明テキスト */
-    .desc{font-size:14px; line-height:1.6; margin:8px 0 16px; color:#123;}
+  /* ---- Win98風モーダル ---- */
+  .modal{
+    position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:40;
+  }
+  .modal.show{display:flex}
+  .win98{
+    min-width:320px; background:#c0c0c0; border:3px outset #fff; color:#000;
+    box-shadow: 0 20px 40px rgba(0,0,0,.35);
+  }
+  .titlebar{
+    background:#000080; color:#fff; padding:4px 8px; font-weight:700;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .titlebar .minibox{width:14px;height:14px;background:#c0c0c0;border:2px outset #fff}
+  .dialog{background:#f0f0f0; border:3px ridge #c0c0c0; padding:12px}
+  .dialog p{margin:4px 0 12px}
+  .btn98{
+    font:700 13px/1 "MS Sans Serif"; padding:6px 14px; background:#e0e0e0; color:#000;
+    border:3px outset #fff; box-shadow:inset -2px -2px #808080, inset 2px 2px #fff; cursor:pointer;
+  }
+  .btn98:active{border:3px inset #fff}
+  .btnrow{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+  .scan{position:fixed; inset:0; pointer-events:none; background:linear-gradient(transparent 50%, rgba(0,0,0,.06) 51%); background-size:100% 4px; z-index:39; opacity:.6; display:none;}
+  .glitch-on .scan{display:block}
 
-    /* 90sボタン（最初は非表示） */
-    .btn-wrap{display:grid; place-items:center; min-height:120px;}
-    .btn-90s{
-      display:inline-block; padding:10px 28px; font-weight:800;
-      background:#e5e7ff; color:#000; text-decoration:none;
-      border:3px outset #c3c7cb;              /* ベベル */
-      box-shadow: inset 0 0 0 2px #ffffffaa;  /* ハイライト */
-      cursor:pointer; user-select:none;
-      transition: transform .08s ease, filter .18s ease, opacity .25s ease;
-      opacity:0; pointer-events:none;         /* 3秒までは触れない */
-    }
-    .btn-90s.show { opacity:1; pointer-events:auto; }
-    .btn-90s:hover { filter:brightness(1.05); }
-    .btn-90s:active{ border-style: inset; transform: translateY(1px); }
-
-    /* 下のフッター風 */
-    .footer{font-size:12px; color:#345; opacity:.8; margin-top:10px}
-  </style>
+  /* レスポンシブ軽め */
+  @media (max-width:720px){ .columns{grid-template-columns:1fr} }
+</style>
 </head>
 <body>
-  <div class="panel" role="document" aria-labelledby="title">
-    <div class="titlebar"><span class="dot"></span><div id="title">Welcome to DX Portal (Beta)</div></div>
 
-    <div class="marquee" aria-hidden="true">
-      <span>🌐 ようこそ！ 1999年風インターネット体験へようこそ！ 🌐 DX Portal 起動中…</span>
-    </div>
+<div class="shell">
+  <div class="banner">★ DX PORTAL ★ — Welcome to Our Super Cool Homepage!!</div>
+  <div class="marquee"><marquee behavior="scroll" scrollamount="6">✨ NEW!! DX Tips / Under Construction 🚧 / Click the big button to enter (…maybe) ✨</marquee></div>
 
-    <p class="desc">
-      下の <strong>ENTER</strong> ボタンからサイトへ入場できます。<br>
-      セーフモードを準備中…（約3秒）
-    </p>
+  <div class="columns">
+    <aside class="box">
+      <h3>メニュー</h3>
+      <ul class="ul90">
+        <li><a href="#" onclick="return false">会社概要</a></li>
+        <li><a href="#" onclick="return false">プロジェクト一覧</a></li>
+        <li><a href="#" onclick="return false">ナレッジベース</a></li>
+        <li><a href="#" onclick="return false">掲示板 BBS</a></li>
+      </ul>
+      <div class="sep"></div>
+      <p><img src="https://i.imgur.com/4y6p3x0.gif" alt="" style="vertical-align:middle"> UNDER CONSTRUCTION!</p>
+    </aside>
 
-    <div class="btn-wrap">
-      <!-- 3秒後に .show が付与されて有効化 -->
-      <a id="enterBtn" class="btn-90s" href="index.html" aria-label="Enter DX Portal">★ ENTER ★</a>
-    </div>
+    <main class="box">
+      <h3>DXポータル（レガシー版）</h3>
+      <p>ここは1990年代の社内ポータル復刻サイトです。<br>最新のDXポータルへ入るには、下の大きなボタンを押して…みてください。</p>
 
-    <div class="footer">© 2000–2025 DX Portal / Best viewed in 800×600, IE5+</div>
+      <div class="center-wrap">
+        <!-- 最初は「見た目はボタン・クリックしても何も起きない」 -->
+        <button id="fakeEnter" class="bigbtn" aria-disabled="true">ENTER DX PORTAL</button>
+      </div>
+
+      <h3>News</h3>
+      <ul class="ul90">
+        <li>[1999/04/01] Y2K 対策委員会からのお知らせ。</li>
+        <li>[1998/12/24] 社内イントラのアクセスランキングを公開しました！</li>
+        <li>[1998/10/15] Java がすごいらしい。</li>
+      </ul>
+    </main>
   </div>
+</div>
 
-  <script>
-    // 3秒後にボタンをフェードイン
-    setTimeout(() => {
-      document.getElementById('enterBtn').classList.add('show');
-    }, 3000);
-    // クリックでTOPへ（<a href>でも遷移するが、明示的に書いておく）
-    document.getElementById('enterBtn').addEventListener('click', function(e){
-      // クリック時の効果音っぽい遅延を演出したい場合はコメント解除
-      // e.preventDefault(); setTimeout(()=>location.href=this.href, 120);
-    });
-  </script>
+<!-- 歪み表現 -->
+<div class="fx-layer"></div>
+<div class="scan"></div>
+
+<!-- Win98風ポップアップ -->
+<div id="popup" class="modal" aria-hidden="true">
+  <div class="win98" role="dialog" aria-modal="true" aria-labelledby="ttl">
+    <div class="titlebar"><span id="ttl">Microsoft Windows</span><span class="minibox" aria-hidden="true"></span></div>
+    <div class="dialog">
+      <p>DXポータルの最新バージョンに接続します。よろしいですか？</p>
+      <div class="btnrow">
+        <button id="ok"  class="btn98">OK</button>
+        <button id="cancel" class="btn98">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ①ページ表示 → ②3秒後に「歪み＋ポップアップ表示」
+  const body = document.body;
+  const popup = document.getElementById('popup');
+  const fakeEnter = document.getElementById('fakeEnter');
+
+  // 押しても何も起きない（ホバーは効く）
+  fakeEnter.addEventListener('click', (e) => {
+    e.preventDefault();
+    // まだロック解除前は無反応
+  });
+
+  setTimeout(() => {
+    body.classList.add('glitch-on');     // 画面にひずみ
+    popup.classList.add('show');         // Win98ダイアログ出現
+    popup.setAttribute('aria-hidden','false');
+  }, 3000);
+
+  // ③OKでTOP（index.html）へ遷移
+  document.getElementById('ok').addEventListener('click', () => {
+    window.location.href = 'index.html'; // ← 現在のTOPファイル名に合わせて変更可
+  });
+
+  // Cancel で閉じる（再度3秒待たずに即開けるようにしておく）
+  document.getElementById('cancel').addEventListener('click', () => {
+    popup.classList.remove('show');
+  });
+</script>
 </body>
 </html>
