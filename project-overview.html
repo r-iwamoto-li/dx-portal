@@ -38,8 +38,17 @@
     /* sub hero */
     .subhero{background:#eef2f6;border-bottom:1px solid rgba(15,23,42,.06)}
     .subhero-inner{ display:grid; grid-template-columns:320px 1fr; gap:40px; align-items:center; padding:48px 0; }
-    .placeholder{ position:relative; overflow:hidden; }        /* はみ出し防止 */
-    .placeholder img{width:100%; height:100%; object-fit:cover; display:block; border-radius:12px;}
+    .placeholder{
+      width:100%;aspect-ratio:16/10;border-radius:12px;
+      background:#959dad22;border:2px dashed #959dad66;
+      overflow:hidden;              /* 余りは隠す */
+    }
+    .placeholder img{
+      width:100%;height:100%;
+      object-fit:cover;             /* ボックスいっぱいに表示（高さ維持） */
+      object-position:left center;  /* 左を基準にトリミング */
+      display:block;
+    }
     .lead h1{font-family:"Noto Sans JP";font-size:48px;line-height:1.2;margin:0 0 10px}
     .lead p{color:#4b5563;margin:0}
     .chip{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:#fff;border:1px solid rgba(15,23,42,.06);font-size:12px;font-weight:700}
@@ -173,7 +182,9 @@
         </a>
         <a class="nav-item" href="index.html#narrative">
           <span class="nav-ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- book icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
               <path d="M4 4.5A2.5 2.5 0 0 1 6.5 7H20v13H6.5A2.5 2.5 0 0 1 4 17.5v-13Z"/>
             </svg>
@@ -194,7 +205,8 @@
   <section class="subhero">
     <div class="container subhero-inner">
       <div class="placeholder" aria-hidden="true">
-        <img src="https://devio2023-media.developers.io/wp-content/uploads/2019/04/amazon-quicksight.png" alt="Amazon QuickSight sample" />
+        <img src="https://devio2023-media.developers.io/wp-content/uploads/2019/04/amazon-quicksight.png"
+             alt="Amazon QuickSight" />
       </div>
       <div class="lead">
         <div class="chip">経営データ</div>
