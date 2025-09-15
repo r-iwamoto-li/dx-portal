@@ -134,7 +134,13 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
 .scanlines.on{opacity:.45; animation-duration:.12s}
 
 /* ===== 3行メッセージ（動的装飾） ===== */
-.mv-copy{background:rgba(255,255,255,.86);border:1px solid rgba(15,23,42,.06);backdrop-filter: blur(6px);padding:18px 22px;border-radius:18px;box-shadow:var(--shadow)}
+.mv-copy{
+  background: transparent;      /* ← 透明化 */
+  border: none;                 /* ← 枠なし */
+  backdrop-filter: none;        /* ← ぼかしなし */
+  padding: 8px 0;               /* ← 余白だけ少し */
+  box-shadow: none;             /* ← 影もなし */
+}
 .mvv-lines{display:grid;gap:10px}
 .mvv-line{
   position:relative; display:block; font-weight:700; color:#0f172a;
@@ -174,6 +180,45 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
 .project-link:hover{background:rgba(37,99,235,.06);transform:translateY(-1px)}
 .project-link:active{transform:translateY(0)}
 .project-link:focus-visible{box-shadow:0 0 0 3px rgba(37,99,235,.35);background:#fff}
+
+  /* 数値カスタムプロパティをアニメ可能に */
+@property --h {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 220;
+}
+
+/* 3行メッセージの器はそのまま */
+.mvv-lines{display:grid;gap:10px}
+.mvv-line{position:relative;display:block;font-weight:700;color:#0f172a}
+
+/* タイピング完了後に付与される .alive で演出開始（色相ゆっくり変化＋浮遊＋光走査） */
+.mvv-line.alive{
+  --h: 220;
+  background:
+    linear-gradient(90deg,
+      hsl(var(--h) 84% 46%) 0%,
+      hsl(calc(var(--h) + 40) 84% 46%) 50%,
+      hsl(var(--h) 84% 46%) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  animation: hueShift 14s linear infinite, shine 3.2s linear infinite, floaty 6s ease-in-out infinite;
+  will-change: background-position, transform, filter;
+}
+@keyframes hueShift{
+  0%{ --h: 210 } 50%{ --h: 290 } 100%{ --h: 210 }
+}
+/* 既存 shine/floaty を活用（必要なら秒数は好みで） */
+@keyframes shine{0%{background-position:-120% 0}100%{background-position:220% 0}}
+@keyframes floaty{0%{transform:translateY(0)}50%{transform:translateY(-2px)}100%{transform:translateY(0)}}
+
+/* 下線の走査バーはそのまま使い回し（色相変化に追従） */
+.mvv-line.alive::after{
+  content:""; position:absolute; left:0; right:0; bottom:-4px; height:2px;
+  background:linear-gradient(90deg, transparent, hsl(calc(var(--h) + 20) 84% 56%), transparent);
+  animation:scan 1.8s ease-in-out infinite; border-radius:2px;
+}
+@keyframes scan{0%{transform:translateX(-40%)}50%{transform:translateX(40%)}100%{transform:translateX(-40%)}}
+
 </style>
 </head>
 <body>
@@ -459,6 +504,53 @@ window.addEventListener('scroll', ()=>{ const y = Math.min(1, window.scrollY/600
     await sleep(80);
   }
 })();
+  // ▼ タイプ後に時々「タイプし直そうとする」微ノイズを入れる
+function sampleRange(len, n){
+  const a = Math.max(0, len - 10); // 末尾10字を中心に
+  const b = Math.max(1, Math.min(len, a + n));
+  return [a, b];
+}
+async function microGlitch(el, jitterMs=60){
+  const plain = el.textContent;          // 現在の表示（<br>は自動で無視）
+  if(!plain || plain.length < 2) return;
+  // 末尾側の一部だけを軽くスクランブル
+  const [start,end] = sampleRange(plain.length, Math.floor(Math.random()*6)+2);
+  const head = plain.slice(0,start);
+  const tail = plain.slice(start,end);
+  const rest = plain.slice(end);
+  const messy = head + scramble(tail, 0.6) + rest;
+
+  // 画面の走査線＆色分離を一瞬ON
+  const scan = document.getElementById('scanlines');
+  el.classList.add('glitch-burst','on');
+  scan.classList.add('on');
+
+  // 改行がある可能性があるので <br> 変換して描画
+  const toHTML = s => s.replace(/\n/g,'<br>');
+  el.innerHTML = toHTML(messy);
+  await sleep(jitterMs);
+  el.innerHTML = toHTML(plain);
+
+  el.classList.remove('on');
+  scan.classList.remove('on');
+}
+
+// ▼ 既存のタイプ完了後のシーケンス末尾あたりに追加してください：
+(function startIdleNoises(){
+  const targets = [...document.querySelectorAll('.mvv-line.alive')];
+  if(!targets.length) return;
+  // ランダム間隔でどれか1行に微ノイズ（平均3〜6秒）
+  setInterval(()=>{
+    const t = targets[Math.floor(Math.random()*targets.length)];
+    // 稀に見出しにも軽くノイズ
+    const h = document.getElementById('headline');
+    if (Math.random() < 0.25 && h && h.textContent.trim()){
+      microGlitch(h, 55);
+    }
+    microGlitch(t, 55);
+  }, Math.floor(Math.random()*3000)+3000);
+})();
+
 </script>
 </body>
 </html>
