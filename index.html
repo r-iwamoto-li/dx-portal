@@ -22,6 +22,7 @@ body{
 }
 a{color:inherit;text-decoration:none}
 .container{max-width:1200px;margin:0 auto;padding:0 20px}
+
 /* ===== Top Nav ===== */
 .topnav-wrap{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.75);backdrop-filter:blur(10px);border-bottom:1px solid rgba(15,23,42,.06)}
 .topnav{display:flex;gap:14px;align-items:center;justify-content:center;padding:10px 8px}
@@ -35,7 +36,7 @@ a{color:inherit;text-decoration:none}
 .nav-item.active{background:linear-gradient(135deg,rgba(37,99,235,.12),rgba(139,92,246,.12));color:var(--brand);box-shadow:0 6px 16px rgba(37,99,235,.18)}
 .nav-ico{width:22px;height:22px;display:grid;place-items:center}
 .pill .nav-item{position:relative}
-.pill .nav-item::after{ /* 微グロー */
+.pill .nav-item::after{
   content:"";position:absolute;inset:-2px;border-radius:28px;pointer-events:none;opacity:.0;
   background:radial-gradient(60% 100% at 50% 0%, rgba(37,99,235,.25), transparent 60%),
              radial-gradient(60% 100% at 50% 100%, rgba(139,92,246,.2), transparent 60%);
@@ -47,7 +48,7 @@ a{color:inherit;text-decoration:none}
 .hero{position:relative;isolation:isolate}
 .hero-media{position:relative;height:420px;overflow:hidden;background:#0f1226;border-bottom-left-radius:24px;border-bottom-right-radius:24px}
 .hero-media img{
-  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.9;transform:scale(1.06); transition:transform 9s cubic-bezier(.2,.8,.2,1);
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.9;transform:scale(1.06);transition:transform 9s cubic-bezier(.2,.8,.2,1)
 }
 .hero-media::after{
   content:"";position:absolute;inset:0;pointer-events:none;
@@ -55,8 +56,24 @@ a{color:inherit;text-decoration:none}
               radial-gradient(900px 420px at 80% 30%, rgba(139,92,246,.35), transparent 55%),
               linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.85) 82%);
 }
-.hero-media canvas#fx{position:absolute;inset:0;mix-blend-mode:screen;opacity:.9}
-.hero-inner{position:relative;z-index:1}
+/* 粒子Canvas */
+.hero-media canvas#fx{position:absolute;inset:0;mix-blend-mode:screen;opacity:.9;z-index:1}
+
+/* === NEW: SVGテキストパス光走査 === */
+.hero-media svg#scan{
+  position:absolute; inset:0; width:100%; height:100%; z-index:2; pointer-events:none;
+  filter:drop-shadow(0 4px 10px rgba(37,99,235,.35));
+}
+.scan-base{ fill:url(#gradBase); opacity:.18 }
+.scan-shine{ fill:#fff; mask:url(#mask-sweep); opacity:.9; }
+@keyframes sweep {
+  from { transform: translateX(-40%); }
+  to   { transform: translateX(140%); }
+}
+#sweeper{ animation: sweep 3.8s linear infinite; }
+
+/* Hero texts */
+.hero-inner{position:relative;z-index:3}
 .hero-grid{display:grid;grid-template-columns:1.25fr .9fr;gap:48px;align-items:center;margin-top:-320px;padding:0 0 48px}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid rgba(15,23,42,.06);backdrop-filter: blur(6px);font-size:12px;font-weight:700;letter-spacing:.06em}
 .hero h1{font-family:"Noto Sans JP";font-size:48px;line-height:1.2;margin:16px 0 10px;letter-spacing:.02em}
@@ -65,13 +82,13 @@ a{color:inherit;text-decoration:none}
 .cta{margin-top:24px}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;background:#111827;color:#fff;font-weight:700;box-shadow:var(--shadow);transform:translateZ(0);transition:transform .15s ease}
 .btn:hover{transform:translateY(-1px)}
+
 /* ===== Main ===== */
 main{padding:56px 0}
 .grid-2{display:grid;grid-template-columns:1.1fr 1fr;gap:32px}
 h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
-/* Cards */
 .card{position:relative;background:#fff;border:1px solid rgba(15,23,42,.06);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
-.card::before{ /* 動くグラデ枠 */
+.card::before{
   content:"";position:absolute;inset:-1px;border-radius:calc(var(--radius) + 1px);padding:1px;background:
   linear-gradient(90deg, rgba(37,99,235,.35), rgba(139,92,246,.35), rgba(37,99,235,.35));
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
@@ -84,7 +101,7 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
 .dot{width:8px;height:8px;border-radius:999px;background:linear-gradient(135deg,var(--brand),var(--brand-2))}
 .title{font-weight:700}
 .badge{margin-left:auto;font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid rgba(15,23,42,.08);background:#111827;color:#fff}
-/* Right */
+
 .toolbar{display:flex;align-items:center;gap:10px;justify-content:flex-end}
 .select{position:relative}
 .select select{appearance:none;border:1px solid rgba(15,23,42,.12);padding:8px 32px 8px 12px;border-radius:10px;background:#fff;font-weight:600}
@@ -97,11 +114,22 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
 .actions{display:flex;gap:12px;font-size:13px}
 .stars{margin-left:auto;display:flex;gap:4px}
 .star{width:16px;height:16px}
-/* Footer */
-footer{padding:28px 0 56px;color:#6b7280;text-align:center}
-/* Reveal */
+
+/* ===== NEW: 3D Tilt ===== */
+.tilt{transform-style:preserve-3d; will-change:transform; transition:transform .12s ease}
+.tilt .glare{
+  position:absolute; inset:-1px; border-radius:inherit; pointer-events:none;
+  background:radial-gradient(600px 320px at var(--gx,50%) var(--gy,0%), rgba(255,255,255,.35), transparent 60%);
+  opacity:.0; transition:opacity .15s ease;
+}
+.tilt.is-tilting .glare{opacity:.45}
+.tilt .tilt-inner{transform:translateZ(24px)}
+/* ===== Reveal ===== */
 .reveal{opacity:0;transform:translateY(16px) scale(.98);filter:blur(6px);transition:opacity .7s ease, transform .7s ease, filter .7s ease}
 .reveal.on{opacity:1;transform:none;filter:none}
+/* ===== Footer ===== */
+footer{padding:28px 0 56px;color:#6b7280;text-align:center}
+
 /* Responsive */
 @media (max-width:980px){
   .hero-media{height:380px}
@@ -141,7 +169,7 @@ footer{padding:28px 0 56px;color:#6b7280;text-align:center}
         </a>
         <a class="nav-item" href="#narrative">
           <span class="nav-ico" aria-hidden="true">
-            <!-- 本アイコン（既存） -->
+            <!-- 本アイコン -->
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
               <path d="M3.5 6.5V18c4-.9 7-.9 10 .6"/><path d="M3.5 6.5C3.5 5.7 4.2 5 5 5h5c1.2 0 2.3.4 3 1"/>
               <path d="M20.5 6.5V18c-4-.9-7-.9-10 .6"/><path d="M20.5 6.5C20.5 5.7 19.8 5 19 5h-5c-1.2 0-2.3.4-3 1"/>
@@ -165,7 +193,41 @@ footer{padding:28px 0 56px;color:#6b7280;text-align:center}
     <div class="hero-media">
       <img id="heroImg" src="https://raw.githubusercontent.com/r-iwamoto-li/dx-portal/9ec9a663d1166b703e5e36f653841ad459a546d3/360_F_743682104_ti07mGClxONYK6SVRGLr7WT7A8Tz070X.jpg" alt="DX Portal hero background" />
       <canvas id="fx"></canvas>
+
+      <!-- === NEW: SVGテキストパス（光走査） === -->
+      <svg id="scan" viewBox="0 0 1200 420" preserveAspectRatio="none">
+        <defs>
+          <!-- ゆるカーブのパス -->
+          <path id="curve" d="M-200 260 Q 600 60 1400 260" />
+          <!-- ベースのグラデ -->
+          <linearGradient id="gradBase" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0%"  stop-color="rgba(255,255,255,.9)"/>
+            <stop offset="50%" stop-color="rgba(180,200,255,.9)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,.9)"/>
+          </linearGradient>
+          <!-- 走査マスク（細いバーが横断） -->
+          <mask id="mask-sweep">
+            <rect width="1200" height="420" fill="black"/>
+            <rect id="sweeper" x="-400" y="0" width="320" height="420" fill="white"
+                  style="transform-box:fill-box; transform-origin:50% 50%;" />
+          </mask>
+        </defs>
+
+        <!-- ベース文字（薄く常時表示） -->
+        <text class="scan-base" font-family="Inter, 'Noto Sans JP', sans-serif" font-size="28" letter-spacing="6">
+          <textPath href="#curve" startOffset="0%">
+            DX • INNOVATION • PORTAL • FUTURE • TECHNOLOGY • DX • INNOVATION • PORTAL •
+          </textPath>
+        </text>
+        <!-- 光走査（マスクで光だけ見せる） -->
+        <text class="scan-shine" font-family="Inter, 'Noto Sans JP', sans-serif" font-size="28" letter-spacing="6">
+          <textPath href="#curve" startOffset="0%">
+            DX • INNOVATION • PORTAL • FUTURE • TECHNOLOGY • DX • INNOVATION • PORTAL •
+          </textPath>
+        </text>
+      </svg>
     </div>
+
     <div class="hero-inner container">
       <div class="hero-grid">
         <div class="reveal">
@@ -192,15 +254,19 @@ footer{padding:28px 0 56px;color:#6b7280;text-align:center}
       <!-- Projects -->
       <section id="projects" class="reveal">
         <h2>進行中プロジェクト</h2>
-        <div class="card">
-          <ul class="list">
-            <li><a class="project-link" href="project-overview.html"><span class="dot"></span><span class="title">概況</span><span class="badge">進行中</span></a></li>
-            <li><a class="project-link" href="project-login-security.html"><span class="dot"></span><span class="title">Login and security</span><span class="badge">進行中</span></a></li>
-            <li><a class="project-link" href="project-payments.html"><span class="dot"></span><span class="title">My payments</span></a></li>
-            <li><a class="project-link" href="project-voucher.html"><span class="dot"></span><span class="title">My voucher</span></a></li>
-            <li><a class="project-link" href="project-points.html"><span class="dot"></span><span class="title">My points</span></a></li>
-            <li><a class="project-link" href="project-orders.html"><span class="dot"></span><span class="title">My orders</span></a></li>
-          </ul>
+        <!-- === NEW: tilt付与（tilt, tilt-inner, glare） === -->
+        <div class="card tilt" data-tilt>
+          <div class="tilt-inner">
+            <ul class="list">
+              <li><a class="project-link" href="project-overview.html"><span class="dot"></span><span class="title">概況</span><span class="badge">進行中</span></a></li>
+              <li><a class="project-link" href="project-login-security.html"><span class="dot"></span><span class="title">Login and security</span><span class="badge">進行中</span></a></li>
+              <li><a class="project-link" href="project-payments.html"><span class="dot"></span><span class="title">My payments</span></a></li>
+              <li><a class="project-link" href="project-voucher.html"><span class="dot"></span><span class="title">My voucher</span></a></li>
+              <li><a class="project-link" href="project-points.html"><span class="dot"></span><span class="title">My points</span></a></li>
+              <li><a class="project-link" href="project-orders.html"><span class="dot"></span><span class="title">My orders</span></a></li>
+            </ul>
+          </div>
+          <div class="glare" aria-hidden="true"></div>
         </div>
       </section>
 
@@ -260,17 +326,16 @@ footer{padding:28px 0 56px;color:#6b7280;text-align:center}
     </div>
   </main>
 
-  <!-- ===== Footer ===== -->
   <footer class="reveal">
     <div class="container">Copyright © 2020. All rights reserved.</div>
   </footer>
 
 <script>
-/* ===== 1) Hero パーティクル・ネットワーク ===== */
+/* ===== 粒子ネットワーク（既存） ===== */
 (function(){
   const c = document.getElementById('fx'), ctx = c.getContext('2d',{alpha:true});
   let W=0,H=0, dpr = Math.min(2, window.devicePixelRatio||1);
-  const P=[], MAX=90; // 粒子数
+  const P=[], MAX=90;
   function resize(){ W = c.clientWidth = c.parentElement.clientWidth; H = c.clientHeight = c.parentElement.clientHeight; c.width = W*dpr; c.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0) }
   function add(n=MAX){
     P.length=0;
@@ -278,21 +343,18 @@ footer{padding:28px 0 56px;color:#6b7280;text-align:center}
       P.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.6,vy:(Math.random()-.5)*.6,r:1.4+Math.random()*1.3});
     }
   }
-  function lerp(a,b,t){return a+(b-a)*t}
   function loop(){
     ctx.clearRect(0,0,W,H);
-    // 背景薄いグリッド
     ctx.strokeStyle='rgba(37,99,235,.08)'; ctx.lineWidth=1;
     for(let y=0;y<H;y+=48){ctx.beginPath();ctx.moveTo(0,y+.5);ctx.lineTo(W,y+.5);ctx.stroke()}
     for(let x=0;x<W;x+=64){ctx.beginPath();ctx.moveTo(x+.5,0);ctx.lineTo(x+.5,H);ctx.stroke()}
-    // 粒子＆接続
     for(let i=0;i<P.length;i++){
       const a=P[i]; a.x+=a.vx; a.y+=a.vy;
       if(a.x<0||a.x>W) a.vx*=-1; if(a.y<0||a.y>H) a.vy*=-1;
       ctx.fillStyle='rgba(139,92,246,.85)'; ctx.beginPath(); ctx.arc(a.x,a.y,a.r,0,Math.PI*2); ctx.fill();
       for(let j=i+1;j<P.length;j++){
         const b=P[j], dx=a.x-b.x, dy=a.y-b.y, dist=dx*dx+dy*dy;
-        if(dist<9000){ // しきい値
+        if(dist<9000){
           const op = 1 - dist/9000;
           const grad = ctx.createLinearGradient(a.x,a.y,b.x,b.y);
           grad.addColorStop(0,'rgba(37,99,235,'+ (0.35*op) +')');
@@ -307,22 +369,20 @@ footer{padding:28px 0 56px;color:#6b7280;text-align:center}
   resize(); add(); loop();
 })();
 
-/* ===== 2) Reveal on scroll ===== */
+/* ===== Reveal on scroll ===== */
 const io = new IntersectionObserver((ents)=>{
-  ents.forEach(e=>{
-    if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target)}
-  })
+  ents.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target)} })
 },{threshold:.18});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
-/* ===== 3) Parallax zoom ===== */
+/* ===== Parallax zoom ===== */
 const heroImg = document.getElementById('heroImg');
 window.addEventListener('scroll', ()=>{
   const y = Math.min(1, window.scrollY/600);
   heroImg.style.transform = `scale(${1.06 + y*0.06}) translateY(${y*10}px)`;
 });
 
-/* ===== 4) Magnet nav（軽い吸着） ===== */
+/* ===== Magnet nav ===== */
 (function(){
   const wrap=document.getElementById('magnet');
   const items=[...wrap.querySelectorAll('.nav-item')];
@@ -340,7 +400,7 @@ window.addEventListener('scroll', ()=>{
   wrap.addEventListener('mouseleave', ()=>items.forEach(it=>it.style.transform=''));
 })();
 
-/* ===== 5) Headline 微グリッチ ===== */
+/* ===== Headline 微グリッチ ===== */
 (function(){
   const h = document.getElementById('headline');
   const keyframes = [
@@ -351,6 +411,40 @@ window.addEventListener('scroll', ()=>{
   h.animate(keyframes,{duration:900,iterations:1,easing:'cubic-bezier(.2,.8,.2,1)',delay:300});
 })();
 
+/* ===== NEW: 3D Tilt（カード） ===== */
+(function(){
+  const supportsTouch = ('ontouchstart' in window) || navigator.maxTouchPoints>0;
+  if(supportsTouch) return; // モバイルは負荷軽減で無効
+
+  document.querySelectorAll('.tilt').forEach(card=>{
+    const inner = card.querySelector('.tilt-inner');
+    const glare = card.querySelector('.glare');
+    const max = 10; // 最大傾きdeg
+    let ticking = false;
+
+    function calc(e){
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width;   // 0..1
+      const y = (e.clientY - r.top)  / r.height;  // 0..1
+      const rx = (y - 0.5) * -2 * max;
+      const ry = (x - 0.5) *  2 * max;
+      const gx = (x*100).toFixed(1)+'%';
+      const gy = (y*100).toFixed(1)+'%';
+
+      card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+      glare && (glare.style.setProperty('--gx',gx), glare.style.setProperty('--gy',gy));
+    }
+
+    card.addEventListener('mouseenter', ()=>{ card.classList.add('is-tilting'); });
+    card.addEventListener('mouseleave', ()=>{
+      card.classList.remove('is-tilting');
+      card.style.transform = '';
+    });
+    card.addEventListener('mousemove', e=>{
+      if(!ticking){ window.requestAnimationFrame(()=>{ calc(e); ticking=false; }); ticking=true; }
+    });
+  });
+})();
 </script>
 </body>
 </html>
