@@ -200,6 +200,17 @@ footer .container{color:#6b7280;text-align:center;font-size:14px}
   text-shadow:0 0 20px rgba(37,99,235,.45);
   z-index:2;
 }
+  .intro.fade-out::after{
+  content:""; position:absolute; inset:0;
+  background:radial-gradient(circle at center, rgba(37,99,235,.85), transparent 70%);
+  animation:warpOut .6s ease forwards;
+  mix-blend-mode:screen;
+}
+@keyframes warpOut{
+  0%{transform:scale(0.2);opacity:1}
+  100%{transform:scale(6);opacity:0}
+}
+
 </style>
 </head>
 <body>
@@ -360,177 +371,94 @@ footer .container{color:#6b7280;text-align:center;font-size:14px}
   const intro = document.getElementById('intro');
   const canvas = document.getElementById('geoFx');
   const ctx = canvas.getContext('2d');
-
-  let W=0, H=0, dpr=1;
+  let W,H,dpr;
   function resize(){
-    dpr = Math.min(2, window.devicePixelRatio||1);
+    dpr = window.devicePixelRatio||1;
     W = canvas.clientWidth; H = canvas.clientHeight;
     canvas.width = W*dpr; canvas.height = H*dpr;
     ctx.setTransform(dpr,0,0,dpr,0,0);
   }
-  addEventListener('resize', resize); resize();
+  window.addEventListener('resize', resize); resize();
 
-  // ========= 図形ジェネレータ（全て N 点に正規化） =========
-  const N = 220;           // 表示点数（多いほど複雑）
-  const R = Math.min(W,H)*0.18;
+  // ====== 3Dワイヤーフレーム：正二十面体と球点群 ======
+  const icosa = (()=> {
+    const t = (1+Math.sqrt(5))/2;
+    const raw = [
+      [-1,t,0],[1,t,0],[-1,-t,0],[1,-t,0],
+      [0,-1,t],[0,1,t],[0,-1,-t],[0,1,-t],
+      [t,0,-1],[t,0,1],[-t,0,-1],[-t,0,1]
+    ];
+    const norm = raw.map(v=>{
+      const l=Math.hypot(...v);
+      return v.map(x=>x*90/l);
+    });
+    return norm;
+  })();
 
-  const gen = {
-    polygon: (sides=7, r=R)=> sampleContour(sides, i=>{
-      const t = 2*Math.PI*i/sides;
-      return [r*Math.cos(t), r*Math.sin(t)];
-    }),
-    star: (sides=5, r1=R*1.0, r2=R*0.45)=> sampleContour(sides*2, i=>{
-      const t = Math.PI*i/sides;
-      const r = (i%2? r2: r1);
-      return [r*Math.cos(t), r*Math.sin(t)];
-    }),
-    rose: (k=5, r=R)=> sampleParam(0, 2*Math.PI, i=>{
-      const t = 2*Math.PI*i/(N-1);
-      const rr = r*Math.cos(k*t);
-      return [rr*Math.cos(t), rr*Math.sin(t)];
-    }),
-    lissajous: (ax=3, ay=2, r=R)=> sampleParam(0, 2*Math.PI, i=>{
-      const t = 2*Math.PI*i/(N-1);
-      return [ r*Math.sin(ax*t+Math.PI/4), r*0.8*Math.sin(ay*t) ];
-    }),
-    superellipse: (m=3.2, a=R, b=R*0.9)=> sampleParam(-Math.PI, Math.PI, i=>{
-      const t= -Math.PI + 2*Math.PI*i/(N-1);
-      const cx = Math.sign(Math.cos(t))*Math.pow(Math.abs(Math.cos(t)),2/m)*a;
-      const cy = Math.sign(Math.sin(t))*Math.pow(Math.abs(Math.sin(t)),2/m)*b;
-      return [cx, cy];
-    }),
-    gear: (teeth=12, r=R*0.85)=> sampleContour(teeth*2, i=>{
-      const t = Math.PI*i/teeth;
-      const rr = (i%2? r*0.78 : r*1.08);
-      return [rr*Math.cos(t), rr*Math.sin(t)];
-    }),
-    hypocycloid: (k=3, r=R)=> sampleParam(0, 2*Math.PI, i=>{
-      const t = 2*Math.PI*i/(N-1);
-      const Rb = r, rb = r/k;
-      return [(Rb-rb)*Math.cos(t)+rb*Math.cos((Rb/rb-1)*t),
-              (Rb-rb)*Math.sin(t)-rb*Math.sin((Rb/rb-1)*t)];
-    }),
-  };
+  const sphere = Array.from({length:120},()=>{
+    const u=Math.random()*2-1;
+    const a=Math.random()*2*Math.PI;
+    const r=90;
+    return [r*Math.sqrt(1-u*u)*Math.cos(a),
+            r*Math.sqrt(1-u*u)*Math.sin(a),
+            r*u];
+  });
 
-  // 均等サンプリング（周長ベース or パラメトリック）
-  function sampleContour(steps, f){ // f(i)->[x,y], i=0..steps-1
-    const pts=[]; for(let i=0;i<steps;i++) pts.push(f(i));
-    pts.push(pts[0]);
-    return resample(pts, N);
-  }
-  function sampleParam(a,b, f){ // 0..N-1 でパラメトリック
-    const pts=[]; for(let i=0;i<N;i++) pts.push(f(i));
-    return pts;
-  }
-  function resample(poly, n){
-    // poly: 連続点列(閉曲線推奨)
-    const seg=[], cum=[0]; let L=0;
-    for(let i=0;i<poly.length-1;i++){
-      const [x1,y1]=poly[i], [x2,y2]=poly[i+1];
-      const d=Math.hypot(x2-x1, y2-y1); seg.push(d); L+=d; cum.push(L);
-    }
-    const out=[];
-    for(let i=0;i<n;i++){
-      const t=L*i/(n-1);
-      let j=0; while(cum[j+1]<t) j++;
-      const ratio=(t-cum[j])/(seg[j]||1);
-      const [x1,y1]=poly[j], [x2,y2]=poly[j+1]||poly[j];
-      out.push([x1+(x2-x1)*ratio, y1+(y2-y1)*ratio]);
-    }
-    return out;
+  let angle=0;
+  function project([x,y,z]){
+    const scale=220/(z+300); // zが大きいほど小さく
+    return [x*scale,y*scale];
   }
 
-  // 図形の順番
-  const sequence = [
-    ()=>gen.polygon(7),
-    ()=>gen.star(7),
-    ()=>gen.rose(5),
-    ()=>gen.lissajous(3,2),
-    ()=>gen.superellipse(3.2),
-    ()=>gen.hypocycloid(4),
-    ()=>gen.gear(12),
-    ()=>gen.polygon(12)
-  ];
-
-  // 初期形状と次形状
-  let a = sequence[0](), b = sequence[1]();
-  let idx = 1, morphT = 0;
-  const morphDur = 1100;           // 1回のモーフ時間(ms)
-  const holdDur  = 300;            // 形状ホールド(ms)
-  let last = 0, holdLeft = holdDur;
-
-  function draw(t){
+  function draw(){
     ctx.clearRect(0,0,W,H);
-    ctx.save(); ctx.translate(W/2, H/2);
+    ctx.save();
+    ctx.translate(W/2,H/2);
 
-    // ゆっくり回転＋わずかな拡縮でOP感
-    const rot = performance.now()*0.00035;
-    ctx.rotate(rot);
-    const k = morphT;
-    const pts = new Array(N);
-    for(let i=0;i<N;i++){
-      const [x1,y1]=a[i], [x2,y2]=b[i];
-      pts[i] = { x:x1+(x2-x1)*k, y:y1+(y2-y1)*k };
+    angle+=0.005;
+
+    const cos= Math.cos(angle), sin= Math.sin(angle);
+    function rot([x,y,z]){
+      // Y軸回転
+      const dx=cos*x+sin*z;
+      const dz=-sin*x+cos*z;
+      // X軸傾け
+      const dy=y*cos - dz*sin*0.3;
+      return [dx,dy,dz];
     }
 
-    // 外周
-    ctx.beginPath();
-    ctx.moveTo(pts[0].x, pts[0].y);
-    for(let i=1;i<N;i++) ctx.lineTo(pts[i].x, pts[i].y);
-    ctx.closePath();
-    ctx.strokeStyle='rgba(148,163,184,.55)';  // slate-300
-    ctx.lineWidth=1.2; ctx.stroke();
-
-    // 内部の近傍接続（ネットワーク風）
-    ctx.lineWidth=1;
-    for(let i=0;i<N;i+=1){
-      for(let j=i+2;j<i+10 && j<N; j+=3){
-        const p=pts[i], q=pts[j];
-        const d2=(p.x-q.x)**2+(p.y-q.y)**2;
-        if(d2< (R*1.35)**2){
-          const op = 0.06 + 0.12*Math.cos((i+j+rot*240)%6);
-          const grd = ctx.createLinearGradient(p.x,p.y,q.x,q.y);
-          grd.addColorStop(0,'rgba(37,99,235,'+op+')');   // brand
-          grd.addColorStop(1,'rgba(139,92,246,'+op+')'); // brand-2
-          ctx.strokeStyle=grd;
-          ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.stroke();
+    // Icosahedron edges
+    const pts=icosa.map(rot).map(project);
+    ctx.strokeStyle="rgba(139,92,246,.85)";
+    ctx.lineWidth=1.2;
+    for(let i=0;i<pts.length;i++){
+      for(let j=i+1;j<pts.length;j++){
+        if(Math.hypot(...pts[i].map((c,k)=>c-pts[j][k]))<120){
+          ctx.beginPath();
+          ctx.moveTo(...pts[i]); ctx.lineTo(...pts[j]); ctx.stroke();
         }
       }
     }
 
-    // ノードの微光
-    for(let i=0;i<N;i+=6){
-      ctx.fillStyle='rgba(139,92,246,.9)';
-      ctx.beginPath(); ctx.arc(pts[i].x, pts[i].y, 1.8, 0, Math.PI*2); ctx.fill();
-    }
+    // Sphere particles
+    sphere.forEach(p=>{
+      const [x,y]=project(rot(p));
+      ctx.fillStyle="rgba(37,99,235,.7)";
+      ctx.beginPath(); ctx.arc(x,y,1.6,0,Math.PI*2); ctx.fill();
+    });
+
     ctx.restore();
+    requestAnimationFrame(draw);
   }
+  draw();
 
-  function tick(ts){
-    if(!last) last=ts;
-    const dt = ts-last; last=ts;
-
-    if(holdLeft>0){ holdLeft -= dt; }
-    else{
-      morphT += dt/morphDur;
-      if(morphT>=1){
-        morphT = 0;
-        a = b;
-        idx = (idx+1)%sequence.length;
-        b = sequence[idx]();
-        holdLeft = holdDur;
-      }
-    }
-
-    draw(ts);
-    if(ts < 4200){ requestAnimationFrame(tick); }
-    else{
-      intro.classList.add('fade-out');
-      setTimeout(()=> intro.remove(), 650);
-    }
-  }
-  requestAnimationFrame(tick);
+  // フェードアウト
+  setTimeout(()=>{
+    intro.classList.add('fade-out');
+    setTimeout(()=>intro.remove(),800);
+  },4200);
 })();
+
 
 
 /* ===== Hero パーティクル ===== */
