@@ -219,6 +219,64 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
 }
 @keyframes scan{0%{transform:translateX(-40%)}50%{transform:translateX(40%)}100%{transform:translateX(-40%)}}
 
+  /* 1文字ブロック（白背景の“札”） */
+.char {
+  display:inline-block;
+  background:#fff;              /* ← 白い札 */
+  color:#0f172a;
+  padding:2px 3px;
+  margin:0 2px 3px 0;
+  border-radius:6px;
+  line-height:1.25;
+  box-shadow:0 1px 0 rgba(0,0,0,.04);
+  /* 常時わずかな上下ゆらぎ＆色相シフト */
+  animation:charFloat 4.5s ease-in-out infinite,
+           charHue 10s linear infinite;
+  animation-delay: calc(var(--i, 0) * .03s);
+  will-change: transform, filter, color, background;
+}
+
+/* 改行用の札の高さ調整（<br>の直前後で余白を詰める用） */
+.char.br { background:transparent; padding:0; margin:0; display:block; height:0 }
+
+/* アイドル時のゆらぎ */
+@keyframes charFloat {
+  0%   { transform:translateY(0) }
+  50%  { transform:translateY(-1.6px) }
+  100% { transform:translateY(0) }
+}
+/* 文字色（前景）をほんのり色相スイープ */
+@keyframes charHue {
+  0%   { color: hsl(215 30% 14%) }
+  50%  { color: hsl(265 28% 16%) }
+  100% { color: hsl(215 30% 14%) }
+}
+
+/* コンテナが .noise の瞬間だけ“タイプ風ノイズ”を強化 */
+.charify.noise .char:nth-child(odd)  { transform:translateY(-2.5px) rotate(-.2deg) }
+.charify.noise .char:nth-child(even) { transform:translateY( 2.5px) rotate( .2deg) }
+.charify.noise .char {
+  text-shadow:
+    0 0 0 rgba(0,0,0,0),
+    -1px 0 0 rgba(255,42,109,.45), /* 赤チャンネルずらし */
+     1px 0 0 rgba(41,173,255,.45); /* 青チャンネルずらし */
+  filter: contrast(1.06);
+}
+
+/* MVV行の“生きた”見た目（文字自体はchar側で白札化） */
+.mvv-lines{display:grid;gap:10px}
+.mvv-line.alive { position:relative; }
+.mvv-line.alive::after{
+  content:""; position:absolute; left:0; right:0; bottom:-4px; height:2px;
+  background:linear-gradient(90deg, transparent, rgba(37,99,235,.6), rgba(139,92,246,.6), transparent);
+  animation:scan 1.8s ease-in-out infinite;
+  border-radius:2px;
+}
+@keyframes scan{0%{transform:translateX(-40%)}50%{transform:translateX(40%)}100%{transform:translateX(-40%)}}
+
+/* mv-copyは白枠・白背景なし（既に適用済みでOK） */
+.mv-copy{ background:transparent; border:none; backdrop-filter:none; padding:8px 0; box-shadow:none; }
+
 </style>
 </head>
 <body>
@@ -293,9 +351,12 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
         <!-- ▼ MVVブロックを削除し、3行の文章のみ残す -->
         <div class="mv-copy reveal">
           <div class="mvv-lines">
-            <p class="mvv-line typer" data-text="デジタルの力で業務を再構築し、組織の可能性を余さず引き出す。"></p>
-            <p class="mvv-line typer" data-text="すべての業務と人を“デジタルネイティブ化”し、進化し続ける企業を目指す。"></p>
-            <p class="mvv-line typer" data-text="挑戦を称え、共創を楽しみ、成果にこだわる。"></p>
+            <div class="mvv-line typer charify"
+                 data-text="デジタルの力で業務を再構築し、組織の可能性を余さず引き出す。"></div>
+            <div class="mvv-line typer charify"
+                 data-text="すべての業務と人を“デジタルネイティブ化”し、進化し続ける企業を目指す。"></div>
+            <div class="mvv-line typer charify"
+                 data-text="挑戦を称え、共創を楽しみ、成果にこだわる。"></div>
           </div>
         </div>
         <!-- ▲ 3行のみ -->
@@ -451,7 +512,20 @@ window.addEventListener('scroll', ()=>{ const y = Math.min(1, window.scrollY/600
 /* ===== Typing + Glitch（改行対応） ===== */
 (async function(){
   const scan = document.getElementById('scanlines');
-  const asHTML = s => s.replace(/\n/g,'<br>'); // 本物の改行だけ <br> に
+
+  const toHTMLBr = s => s.replace(/\n/g,'<br>');
+  function wrapChars(htmlText){
+    // HTMLの <br> をいったんプレースホルダに
+    const PLACE = '[[BR]]';
+    const withMarks = htmlText.replace(/<br\s*\/?>/gi, PLACE);
+    const chars = [...withMarks];
+    return chars.map((ch,i)=>{
+      if(ch=== '[' && withMarks.slice(i, i+5)===PLACE){ return '<span class="char br"></span>'; }
+      if(ch=== ' ') ch = '&nbsp;'; // 空白も札化
+      return `<span class="char" style="--i:${i}">${ch}</span>`;
+    }).join('').replace(/\[\[BR\]\]/g,'<span class="char br"></span>');
+  }
+
   function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
   function rand(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
   function scramble(s, rate=0.25){
@@ -460,97 +534,73 @@ window.addEventListener('scroll', ()=>{ const y = Math.min(1, window.scrollY/600
   }
 
   async function typeNode(el, text, speed=[16,38], noiseEvery=rand(10,18)){
+    // data-text内の「\n」（バックスラッシュn）を実改行へ
     const norm = text.replace(/\\n/g, '\n');
+
     el.classList.add('typer');
     el.setAttribute('data-glitch', norm.replace(/\n/g,' '));
+
     let out='', tick=0;
     for(let i=0;i<norm.length;i++){
       out += norm[i];
-      el.innerHTML = asHTML(out);
+      const html = toHTMLBr(out);
+      if(el.classList.contains('charify')){
+        el.innerHTML = wrapChars(html);
+      }else{
+        el.innerHTML = html;
+      }
       tick++;
+
+      // たまに小さなノイズ（タイプ中）
       if(tick % noiseEvery === 0 && i < norm.length-1){
         const keep = out.slice(0,-Math.min(6,out.length));
         const mess = scramble(out.slice(-Math.min(6,out.length)), .7);
-        el.innerHTML = asHTML(keep + mess);
+        const html2 = toHTMLBr(keep + mess);
+        el.innerHTML = el.classList.contains('charify') ? wrapChars(html2) : html2;
+
+        // 色分離＋走査線を一瞬
         el.classList.add('glitch-burst','on'); scan.classList.add('on');
         await sleep(70);
-        el.innerHTML = asHTML(out);
         el.classList.remove('on'); scan.classList.remove('on');
       }
       await sleep(rand(speed[0],speed[1]));
     }
     el.classList.remove('typer');
+
+    // タイプ完了後：生きた演出＆アイドル時ノイズ
+    el.classList.add('alive');
+    if(el.classList.contains('charify')){
+      // コンテナ自体に .charify を付けておく（HTML側で既に付与済み）
+      startIdleNoise(el);
+    }
   }
 
-  // シーケンス
+  function startIdleNoise(container){
+    // 3〜6秒ごとに瞬間的な“タイプ風ノイズ”
+    setInterval(()=>{
+      container.classList.add('noise');
+      setTimeout(()=>container.classList.remove('noise'), 140);
+    }, rand(3000, 6000));
+  }
+
+  // ===== シーケンス =====
   const eyebrow = document.querySelector('.eyebrow');
   const h1 = document.getElementById('headline');
   const sub = document.querySelector('.sub');
-  const lines = [...document.querySelectorAll('.mvv-line')];
+  const mvvLines = [...document.querySelectorAll('.mvv-line')];
 
-  // イントロ完了後に開始
   const INTRO_MS = 1300;
   await sleep(INTRO_MS + 150);
-
   await typeNode(eyebrow, eyebrow.dataset.text, [10,24]);
-  await typeNode(h1, h1.dataset.text, [38,70]);
+  await typeNode(h1, h1.dataset.text, [24,42]);     // 見出しも1文字札でタイプ
   await typeNode(sub, sub.dataset.text, [12,24]);
 
-  // 3行を順番にタイプ → 完了した行に “alive” を付与して動かす
-  for(let i=0;i<lines.length;i++){
-    const el = lines[i];
-    await typeNode(el, el.dataset.text, [14,28]);
-    el.classList.add('alive'); // ← 動的装飾ON
+  // 3文を順にタイプ → 各行にノイズ走らせる
+  for(const line of mvvLines){
+    await typeNode(line, line.dataset.text, [12,28]);
     await sleep(80);
   }
 })();
-  // ▼ タイプ後に時々「タイプし直そうとする」微ノイズを入れる
-function sampleRange(len, n){
-  const a = Math.max(0, len - 10); // 末尾10字を中心に
-  const b = Math.max(1, Math.min(len, a + n));
-  return [a, b];
-}
-async function microGlitch(el, jitterMs=60){
-  const plain = el.textContent;          // 現在の表示（<br>は自動で無視）
-  if(!plain || plain.length < 2) return;
-  // 末尾側の一部だけを軽くスクランブル
-  const [start,end] = sampleRange(plain.length, Math.floor(Math.random()*6)+2);
-  const head = plain.slice(0,start);
-  const tail = plain.slice(start,end);
-  const rest = plain.slice(end);
-  const messy = head + scramble(tail, 0.6) + rest;
-
-  // 画面の走査線＆色分離を一瞬ON
-  const scan = document.getElementById('scanlines');
-  el.classList.add('glitch-burst','on');
-  scan.classList.add('on');
-
-  // 改行がある可能性があるので <br> 変換して描画
-  const toHTML = s => s.replace(/\n/g,'<br>');
-  el.innerHTML = toHTML(messy);
-  await sleep(jitterMs);
-  el.innerHTML = toHTML(plain);
-
-  el.classList.remove('on');
-  scan.classList.remove('on');
-}
-
-// ▼ 既存のタイプ完了後のシーケンス末尾あたりに追加してください：
-(function startIdleNoises(){
-  const targets = [...document.querySelectorAll('.mvv-line.alive')];
-  if(!targets.length) return;
-  // ランダム間隔でどれか1行に微ノイズ（平均3〜6秒）
-  setInterval(()=>{
-    const t = targets[Math.floor(Math.random()*targets.length)];
-    // 稀に見出しにも軽くノイズ
-    const h = document.getElementById('headline');
-    if (Math.random() < 0.25 && h && h.textContent.trim()){
-      microGlitch(h, 55);
-    }
-    microGlitch(t, 55);
-  }, Math.floor(Math.random()*3000)+3000);
-})();
-
 </script>
 </body>
 </html>
