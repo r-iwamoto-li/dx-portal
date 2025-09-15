@@ -94,34 +94,26 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
 .reveal{opacity:0;transform:translateY(16px) scale(.98);filter:blur(6px);transition:opacity .7s ease, transform .7s ease, filter .7s ease}
 .reveal.on{opacity:1;transform:none;filter:none}
 
-/* ===== Intro (3D Geometry Morph) ===== */
-.intro{
-  position:fixed; inset:0; z-index:999; overflow:hidden;
-  background:linear-gradient(135deg,#05070f,#0b1020 60%,#0b1020);
-  display:block; opacity:1; transition:opacity .6s ease;
-}
-.intro.fade-out{opacity:0}
-#geoFx{position:absolute; inset:0; width:100%; height:100%; opacity:.9; filter:drop-shadow(0 0 22px rgba(56,189,248,.22))}
+/* ===== Intro Shutter ===== */
+.intro{position:fixed;inset:0;background:#06080f;z-index:999;display:grid;grid-template-columns:repeat(10,1fr);gap:2px;overflow:hidden}
+.intro .bar{background:#0b1020;transform:translateY(0);animation:barOut .9s cubic-bezier(.2,.8,.2,1) forwards;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
+.intro .bar:nth-child(odd){background:#0c1428}
+@keyframes barOut{to{transform:translateY(-110%)}}
+.intro.is-break .bar{animation:barBreak .6s cubic-bezier(.55,.05,.2,.99) forwards}
+@keyframes barBreak{to{transform:translateY(110%)}}
 .intro .logo{
-  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-  color:#dbeafe; font-weight:900; font-size:20px; letter-spacing:.08em;
-  text-shadow:0 0 20px rgba(37,99,235,.45); user-select:none; z-index:2;
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%); color:#dbeafe; font-weight:900;
+  letter-spacing:.08em; text-shadow:0 0 20px rgba(37,99,235,.45);
+  opacity:.95; font-size:18px; user-select:none;
 }
-/* フラッシュ（未来へジャンプ感） */
-.intro.fade-out::after{
-  content:""; position:absolute; inset:0; pointer-events:none;
-  background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.75) 10%, rgba(37,99,235,.45) 25%, transparent 60%);
-  animation:warpOut .65s ease forwards;
-  mix-blend-mode:screen;
-}
-@keyframes warpOut{0%{transform:scale(.18);opacity:1}100%{transform:scale(6);opacity:0}}
 
 /* ===== Typing & Glitch（共通） ===== */
 .typer{position:relative;display:inline-block}
 .typer::after{content:"";position:absolute;right:-2px;bottom:0;width:10px;height:1.15em;background:linear-gradient(#111827,#111827) no-repeat center/2px 1em;animation:blink .9s steps(1,end) infinite}
 @keyframes blink{50%{opacity:0}}
 .glitch-burst{position:relative;filter:contrast(1.08)}
-.glitch-burst::before,.glitch-burst::after{content:attr(data-glitch);position:absolute;left:0;top:0;pointer-events:none;mix-blend-mode:screen;opacity:.0}
+.glitch-burst::before,
+.glitch-burst::after{content:attr(data-glitch);position:absolute;left:0;top:0;pointer-events:none;mix-blend-mode:screen;opacity:.0}
 .glitch-burst::before{color:#ff2a6d}
 .glitch-burst::after {color:#29adff}
 .glitch-burst.on::before{opacity:.9;transform:translate(-1px,0)}
@@ -130,7 +122,7 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
 @keyframes lines{to{background-position-y:4px}}
 .scanlines.on{opacity:.45; animation-duration:.12s}
 
-/* ===== 3行メッセージ（下線の走査） ===== */
+/* ===== 3行メッセージ（動的装飾） ===== */
 .mv-copy{background:transparent;border:none;backdrop-filter:none;padding:8px 0;box-shadow:none}
 .mvv-lines{display:grid;gap:10px}
 .mvv-line{position:relative;display:block;font-weight:700;color:#0f172a}
@@ -141,16 +133,23 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
 }
 @keyframes scan{0%{transform:translateX(-40%)}50%{transform:translateX(40%)}100%{transform:translateX(-40%)}}
 
-/* ===== 文字ラップ（h1は白背景なし） ===== */
+/* ===== 文字ラップ ===== */
+/* 連結白背景のブロック（h1では使わない） */
 .charify:not(.no-bg) .ink-bg{
-  display:inline-block; background:#fff; color:#0f172a;
-  padding:4px 6px; border-radius:8px; box-shadow:0 1px 0 rgba(0,0,0,.05);
-  box-decoration-break:clone; -webkit-box-decoration-break:clone;
+  display:inline-block;
+  background:#fff;
+  color:#0f172a;
+  padding:4px 6px;
+  border-radius:8px;
+  box-shadow:0 1px 0 rgba(0,0,0,.05);
+  box-decoration-break:clone;
+  -webkit-box-decoration-break:clone;
 }
 .char{display:inline-block}
 
-/* ===== 文字ノイズ（ランダム方向＆間隔） ===== */
+/* ===== ランダム方向・ランダム間隔の強ノイズ ===== */
 .char.glitch{
+  /* JSから --gx/--gy/--grot を毎回ランダム設定 */
   transform: translate(var(--gx,0px), var(--gy,0px)) rotate(var(--grot,0deg));
   text-shadow: calc(var(--sx,-2px)) 0 rgba(255,42,109,.65),
                calc(var(--cx,  2px)) 0 rgba(41,173,255,.65);
@@ -166,32 +165,22 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
 /* ===== Footer ===== */
 footer{padding:28px 0 36px;border-top:1px solid rgba(15,23,42,.06)}
 footer .container{color:#6b7280;text-align:center;font-size:14px}
-
-/* ===== Responsive ===== */
-@media (max-width:980px){
-  .hero-media{height:380px}
-  .hero-grid{grid-template-columns:1fr;gap:24px;margin-top:-300px}
-  .mv-copy{order:-1}
-  .grid-2{grid-template-columns:1fr}
-}
-@media (max-width:560px){
-  .nav-item{gap:2px;padding:8px 10px}
-  .nav-ico{width:20px;height:20px}
-  .hero h1{font-size:36px}
-}
-/* Clickable row */
-.list li{padding:0}
-.project-link{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:12px;outline:none;transition:background .18s ease, transform .06s ease}
-.project-link:hover{background:rgba(37,99,235,.06);transform:translateY(-1px)}
-.project-link:active{transform:translateY(0)}
-.project-link:focus-visible{box-shadow:0 0 0 3px rgba(37,99,235,.35);background:#fff}
 </style>
 </head>
 <body>
-  <!-- Intro -->
+  <!-- Intro Shutter -->
   <div class="intro" id="intro">
-    <canvas id="geoFx"></canvas>
     <div class="logo">DX PORTAL • INITIALIZING…</div>
+    <div class="bar" style="animation-delay:0.00s"></div>
+    <div class="bar" style="animation-delay:0.05s"></div>
+    <div class="bar" style="animation-delay:0.10s"></div>
+    <div class="bar" style="animation-delay:0.15s"></div>
+    <div class="bar" style="animation-delay:0.20s"></div>
+    <div class="bar" style="animation-delay:0.25s"></div>
+    <div class="bar" style="animation-delay:0.30s"></div>
+    <div class="bar" style="animation-delay:0.35s"></div>
+    <div class="bar" style="animation-delay:0.40s"></div>
+    <div class="bar" style="animation-delay:0.45s"></div>
   </div>
   <div class="scanlines" id="scanlines"></div>
 
@@ -241,13 +230,13 @@ footer .container{color:#6b7280;text-align:center;font-size:14px}
       <div class="hero-grid">
         <div class="reveal">
           <span class="eyebrow typer" data-text="DX Innovation"></span>
-          <!-- h1 は白背景なし -->
+          <!-- h1 は白背景なしの文字分割（no-bg） -->
           <h1 id="headline" class="glitch-burst typer charify no-bg" data-glitch="" data-text="常識を疑え\n“標準”を再定義"></h1>
           <p class="sub typer" data-text="Question the norm, reconstruct the standard"></p>
           <div class="cta"><a class="btn" href="#contact">お問い合せ</a></div>
         </div>
 
-        <!-- 3行コピー（白背景の“連結”付き） -->
+        <!-- 3行だけ残す（こちらは白背景ありのまま） -->
         <div class="mv-copy reveal">
           <div class="mvv-lines">
             <div class="mvv-line typer charify" data-text="デジタルの力で業務を再構築し、組織の可能性を余さず引き出す。"></div>
@@ -338,179 +327,14 @@ footer .container{color:#6b7280;text-align:center;font-size:14px}
   </footer>
 
 <script>
-/* ===== Intro 3D Geometry Morph ===== */
+/* ===== Intro Shutter ===== */
 (function(){
   const intro = document.getElementById('intro');
-  const canvas = document.getElementById('geoFx');
-  const ctx = canvas.getContext('2d');
-  let W=0,H=0,dpr=1;
-
-  function resize(){
-    dpr = Math.min(2, window.devicePixelRatio||1);
-    W = canvas.clientWidth; H = canvas.clientHeight;
-    canvas.width = W*dpr; canvas.height = H*dpr;
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-  }
-  addEventListener('resize', resize); resize();
-
-  // フィボナッチ球分布（点の“ID”は固定 → どの形にもマップ可能）
-  const COUNT = 420; // 点数（多いほど複雑）
-  const base = [];
-  for(let i=0;i<COUNT;i++){
-    const y = 1 - (i/(COUNT-1))*2;                 // -1..1
-    const r = Math.sqrt(1 - y*y);
-    const phi = (Math.PI * (3 - Math.sqrt(5))) * i; // 黄金角
-    base.push([Math.cos(phi)*r, y, Math.sin(phi)*r]); // 単位球
-  }
-
-  // 形状ターゲット（同じ個数の点へ写像）
-  const R = Math.min(W,H)*0.28;
-
-  function mapSphere(p){ return mul(p, R); }
-
-  function mapSuperquadric(p, e1=2.0, e2=2.0, s=R){ // e1,e2 < 2で角ばる
-    const [x,y,z]=p;
-    const nx = Math.sign(x)*Math.pow(Math.abs(x), 2/e1);
-    const ny = Math.sign(y)*Math.pow(Math.abs(y), 2/e2);
-    const nz = Math.sign(z)*Math.pow(Math.abs(z), 2/e1);
-    return [nx*s, ny*s, nz*s];
-  }
-  function mapOcta(p){ // 菱形体（L1ノルム）
-    let [x,y,z]=p.map(Math.abs);
-    const k = 1/(x+y+z+1e-6);
-    return mul([Math.sign(p[0])*x*k, Math.sign(p[1])*y*k, Math.sign(p[2])*z*k], R);
-  }
-  function mapCube(p){ // 球→立方体表面
-    const [x,y,z]=p;
-    const ax=Math.abs(x), ay=Math.abs(y), az=Math.abs(z);
-    const m = Math.max(ax,ay,az);
-    return mul([x/m, y/m, z/m], R);
-  }
-  function mapTorus(p){ // トーラス風（擬似）
-    const R0 = R*0.75, r = R*0.28;
-    // 球点 → 角度に読み替え
-    const u = Math.atan2(p[2], p[0]);   // 周方向
-    const v = Math.asin(p[1]);          // 断面
-    const x = (R0 + r*Math.cos(2*v)) * Math.cos(u*1.2);
-    const y = r*Math.sin(2*v);
-    const z = (R0 + r*Math.cos(2*v)) * Math.sin(u*1.2);
-    return [x,y,z];
-  }
-
-  const targets = [
-    (p)=>mapSphere(p),                 // 球
-    (p)=>mapSuperquadric(p, 1.0, 1.0), // 丸みのある立方体前段
-    (p)=>mapCube(p),                   // 立方体
-    (p)=>mapSuperquadric(p, 0.6, 0.6), // さらに角強調
-    (p)=>mapOcta(p),                   // 菱形体（八面体系）
-    (p)=>mapSuperquadric(p, 1.6, 1.6), // 緩やかに戻す
-    (p)=>mapTorus(p),                  // トーラス風
-    (p)=>mapSphere(p)                  // 球に回帰
-  ];
-
-  let a = base.map(mapSphere);
-  let b = base.map(mapCube);
-  let idx = 1;
-  let t = 0; // 0..1
-  const morphMs = 1200; // モーフ時間
-  const holdMs  = 300;
-
-  // 透視投影
-  function proj([x,y,z]){
-    const zshift = z + R*3.2;
-    const s = (R*1.8) / zshift;
-    return [W/2 + x*s, H/2 + y*s];
-  }
-  const mul=(v,k)=>[v[0]*k,v[1]*k,v[2]*k];
-
-  // 近傍結線用にインデックスを作っておく（等間隔で近い点）
-  const neighbors = [];
-  const K = 6;
-  for(let i=0;i<COUNT;i++){
-    const n=[];
-    for(let j=1;j<=K;j++) n.push((i+j*3)%COUNT);
-    neighbors.push(n);
-  }
-
-  let last = performance.now(), holdLeft = holdMs;
-  function easeInOut(k){return 0.5 - 0.5*Math.cos(Math.PI*k)}
-
-  function render(now){
-    const dt = now - last; last = now;
-
-    if(holdLeft>0){ holdLeft -= dt; }
-    else{
-      t += dt/morphMs;
-      if(t>=1){
-        t = 0;
-        a = b;
-        idx = (idx+1)%targets.length;
-        b = base.map(targets[idx]);
-        holdLeft = holdMs;
-      }
-    }
-
-    // 背景グラデをうっすら流す
-    ctx.clearRect(0,0,W,H);
-    const grd = ctx.createLinearGradient(0,0,W,H);
-    grd.addColorStop(0,'rgba(15,23,42,.35)');
-    grd.addColorStop(1,'rgba(2,6,23,.15)');
-    ctx.fillStyle = grd; ctx.fillRect(0,0,W,H);
-
-    // 回転（全体にゆっくり）
-    const rot = now*0.0006;
-    const cos= Math.cos(rot), sin=Math.sin(rot);
-    function rotY([x,y,z]){ const nx=cos*x+sin*z; const nz=-sin*x+cos*z; return [nx,y,nz]; }
-    function rotX([x,y,z]){ const cy=Math.cos(rot*0.6), sy=Math.sin(rot*0.6); const ny=cy*y - sy*z; const nz=sy*y + cy*z; return [x,ny,nz]; }
-
-    const k = easeInOut(t);
-    const pts3 = new Array(COUNT);
-    for(let i=0;i<COUNT;i++){
-      const p = a[i], q = b[i];
-      // 補間→回転
-      const cur = [p[0]+(q[0]-p[0])*k, p[1]+(q[1]-p[1])*k, p[2]+(q[2]-p[2])*k];
-      pts3[i] = rotX(rotY(cur));
-    }
-
-    // 描画（奥→手前でα強め）
-    const order = pts3.map((p,i)=>[i,p[2]]).sort((m,n)=>m[1]-n[1]).map(x=>x[0]);
-
-    // 結線
-    ctx.lineWidth = 1;
-    for(const i of order){
-      const p = proj(pts3[i]);
-      for(const j of neighbors[i]){
-        const q = proj(pts3[j]);
-        const dx=p[0]-q[0], dy=p[1]-q[1], d = Math.hypot(dx,dy);
-        if(d<180){
-          const op = 0.08 + 0.18*Math.max(0,1 - d/180);
-          const g = ctx.createLinearGradient(p[0],p[1],q[0],q[1]);
-          g.addColorStop(0,`rgba(37,99,235,${op})`);
-          g.addColorStop(1,`rgba(139,92,246,${op})`);
-          ctx.strokeStyle=g;
-          ctx.beginPath(); ctx.moveTo(p[0],p[1]); ctx.lineTo(q[0],q[1]); ctx.stroke();
-        }
-      }
-    }
-
-    // ノード
-    for(const i of order){
-      const [x,y] = proj(pts3[i]);
-      ctx.fillStyle='rgba(148,163,184,.85)';
-      ctx.beginPath(); ctx.arc(x,y,1.4,0,Math.PI*2); ctx.fill();
-    }
-
-    // 4.6秒後にイントロ終了（フラッシュ→remove）
-    if(now < 4600) requestAnimationFrame(render);
-    else{
-      intro.classList.add('fade-out');
-      setTimeout(()=> intro.remove(), 700);
-    }
-  }
-  requestAnimationFrame(render);
+  setTimeout(()=> intro.classList.add('is-break'), 700);
+  setTimeout(()=> intro.remove(), 1300);
 })();
 
-/* ===== Hero パーティクル（既存） ===== */
+/* ===== Hero パーティクル ===== */
 (function(){
   const c = document.getElementById('fx'), ctx = c.getContext('2d',{alpha:true});
   let W=0,H=0, dpr = Math.min(2, window.devicePixelRatio||1);
@@ -597,6 +421,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
     }
     return out;
   }
+
   // 白背景あり：文章を連結白背景の中に1文字ずつ
   function wrapForInk(html){
     const PLACE='[[BR]]';
@@ -612,7 +437,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
     return out;
   }
 
-  async function typeNode(el, text, speed=[16,38], noiseEvery=rand(12,20)){
+  async function typeNode(el, text, speed=[16,38], noiseEvery=rand(10,18)){
     const norm = text.replace(/\\n/g, '\n'); // \n → 実改行
     el.classList.add('typer');
     el.setAttribute('data-glitch', norm.replace(/\n/g,' '));
@@ -622,6 +447,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
       out += norm[i];
       const html = toHTMLBr(out);
       if(el.classList.contains('charify')){
+        // h1 は no-bg なのでプレーン、その他は白背景
         el.innerHTML = el.classList.contains('no-bg') ? wrapCharsPlain(html) : wrapForInk(html);
       }else{
         el.innerHTML = html;
@@ -651,14 +477,16 @@ document.getElementById('year').textContent = new Date().getFullYear();
 
   function startPerCharNoise(container){
     const getChars = ()=>[...container.querySelectorAll('.char')];
+
     (function loop(){
-      const nextIn = rand(1100, 2600);
+      const nextIn = rand(900, 2200);      // 発火間隔を毎回ランダム化
       setTimeout(()=>{
         const chars = getChars();
         if(chars.length){
-          const burst = rand(1,3);
+          const burst = rand(1,3);       // 同時にゆらす文字数
           for(let i=0;i<burst;i++){
             const t = chars[rand(0, chars.length-1)];
+            // ランダム方向（x,y）、回転、RGBズレ幅もランダム
             const gx = rand(-3,3), gy = rand(-3,3), rot = rand(-6,6)/10;
             const sx = rand(-3,-1), cx = rand(1,3);
             t.style.setProperty('--gx', gx+'px');
@@ -674,7 +502,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
             }, rand(110, 200));
           }
         }
-        loop();
+        loop(); // 次回もランダム間隔で
       }, nextIn);
     })();
   }
@@ -685,8 +513,8 @@ document.getElementById('year').textContent = new Date().getFullYear();
   const sub = document.querySelector('.sub');
   const mvvLines = [...document.querySelectorAll('.mvv-line')];
 
-  const INTRO_MS = 4600;
-  await sleep(INTRO_MS + 120);
+  const INTRO_MS = 1300;
+  await sleep(INTRO_MS + 150);
   await typeNode(eyebrow, eyebrow.dataset.text, [10,24]);
   await typeNode(h1, h1.dataset.text, [24,42]);     // h1：白背景なしで改行OK
   await typeNode(sub, sub.dataset.text, [12,24]);
