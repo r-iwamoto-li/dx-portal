@@ -133,53 +133,38 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
 }
 @keyframes scan{0%{transform:translateX(-40%)}50%{transform:translateX(40%)}100%{transform:translateX(-40%)}}
 
-/* ===== 文字ラップ（背景は“連結”で白く） ===== */
-.charify .ink{
-  display:inline;            /* 中身はインラインのまま */
-}
-.charify .ink > .ink-bg{
-  display:inline-block;      /* 背景を持つ器 */
+/* ===== 文字ラップ ===== */
+/* 連結白背景のブロック（h1では使わない） */
+.charify:not(.no-bg) .ink-bg{
+  display:inline-block;
   background:#fff;
   color:#0f172a;
   padding:4px 6px;
   border-radius:8px;
   box-shadow:0 1px 0 rgba(0,0,0,.05);
-  box-decoration-break:clone;         /* 折り返しで連結表示 */
-  -webkit-box-decoration-break:clone; /* Safari */
+  box-decoration-break:clone;
+  -webkit-box-decoration-break:clone;
 }
-.char{display:inline-block} /* 文字自体は背景なし */
+.char{display:inline-block}
 
-/* ===== “強め”の文字単位ノイズ（ランダム発火） ===== */
+/* ===== ランダム方向・ランダム間隔の強ノイズ ===== */
 .char.glitch{
-  transform:translateY(-3px) rotate(-.5deg);
-  text-shadow:-2px 0 rgba(255,42,109,.65), 2px 0 rgba(41,173,255,.65);
-  animation:jitter 120ms ease, flashHue 160ms linear;
+  /* JSから --gx/--gy/--grot を毎回ランダム設定 */
+  transform: translate(var(--gx,0px), var(--gy,0px)) rotate(var(--grot,0deg));
+  text-shadow: calc(var(--sx,-2px)) 0 rgba(255,42,109,.65),
+               calc(var(--cx,  2px)) 0 rgba(41,173,255,.65);
+  animation: flashHue 140ms linear;
+  will-change: transform, text-shadow, filter;
 }
-@keyframes jitter{50%{transform:translateY(3px) rotate(.5deg)}}
 @keyframes flashHue{
-  0%{filter:contrast(1.1) saturate(1.1)}
+  0%{filter:contrast(1.05) saturate(1.05)}
   50%{filter:contrast(1.25) saturate(1.25)}
-  100%{filter:contrast(1.1) saturate(1.1)}
+  100%{filter:contrast(1.05) saturate(1.05)}
 }
 
-/* ===== Responsive ===== */
-@media (max-width:980px){
-  .hero-media{height:380px}
-  .hero-grid{grid-template-columns:1fr;gap:24px;margin-top:-300px}
-  .mv-copy{order:-1}
-  .grid-2{grid-template-columns:1fr}
-}
-@media (max-width:560px){
-  .nav-item{gap:2px;padding:8px 10px}
-  .nav-ico{width:20px;height:20px}
-  .hero h1{font-size:36px}
-}
-/* Clickable row */
-.list li{padding:0}
-.project-link{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:12px;outline:none;transition:background .18s ease, transform .06s ease}
-.project-link:hover{background:rgba(37,99,235,.06);transform:translateY(-1px)}
-.project-link:active{transform:translateY(0)}
-.project-link:focus-visible{box-shadow:0 0 0 3px rgba(37,99,235,.35);background:#fff}
+/* ===== Footer ===== */
+footer{padding:28px 0 36px;border-top:1px solid rgba(15,23,42,.06)}
+footer .container{color:#6b7280;text-align:center;font-size:14px}
 </style>
 </head>
 <body>
@@ -245,12 +230,13 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
       <div class="hero-grid">
         <div class="reveal">
           <span class="eyebrow typer" data-text="DX Innovation"></span>
-          <h1 id="headline" class="glitch-burst typer charify" data-glitch="" data-text="常識を疑え\n“標準”を再定義"></h1>
+          <!-- h1 は白背景なしの文字分割（no-bg） -->
+          <h1 id="headline" class="glitch-burst typer charify no-bg" data-glitch="" data-text="常識を疑え\n“標準”を再定義"></h1>
           <p class="sub typer" data-text="Question the norm, reconstruct the standard"></p>
           <div class="cta"><a class="btn" href="#contact">お問い合せ</a></div>
         </div>
 
-        <!-- 3行だけ残す -->
+        <!-- 3行だけ残す（こちらは白背景ありのまま） -->
         <div class="mv-copy reveal">
           <div class="mvv-lines">
             <div class="mvv-line typer charify" data-text="デジタルの力で業務を再構築し、組織の可能性を余さず引き出す。"></div>
@@ -410,31 +396,40 @@ window.addEventListener('scroll', ()=>{ const y = Math.min(1, window.scrollY/600
 /* ===== 年自動挿入 ===== */
 document.getElementById('year').textContent = new Date().getFullYear();
 
-/* ===== Typing + 連結白背景 + 文字単位ノイズ ===== */
+/* ===== Typing + 文字分割 + ランダムノイズ ===== */
 (async function(){
   const scan = document.getElementById('scanlines');
 
-  const toHTMLBr = s => s.replace(/\n/g,'<br>');
-  function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
-  function rand(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+  const toHTMLBr = s => s.replace(/\n/g,'<br>'); // 改行を <br> に
+  const sleep = ms => new Promise(r=>setTimeout(r,ms));
+  const rand  = (a,b)=> Math.floor(Math.random()*(b-a+1))+a;
   function scramble(s, rate=0.25){
     const pool = 'アイウエオカキクケコサシスセソﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789*#=+<>';
     return s.split('').map(ch => Math.random()<rate ? pool[rand(0,pool.length-1)] : ch).join('');
   }
 
-  // 文字列を “連結白背景(.ink-bg)” の中に “1文字(.char)” で格納
-  function wrapForInk(htmlText){
+  // h1用：白背景なしのプレーン文字分割
+  function wrapCharsPlain(html){
     const PLACE='[[BR]]';
-    const withMarks = htmlText.replace(/<br\s*\/?>/gi, PLACE);
+    const withMarks = html.replace(/<br\s*\/?>/gi, PLACE);
+    const chars=[...withMarks];
+    let out = '';
+    for(let i=0;i<chars.length;i++){
+      if(withMarks.slice(i,i+5)===PLACE){ out += '<br>'; i+=4; continue; }
+      const ch = chars[i]===' ' ? '&nbsp;' : chars[i];
+      out += `<span class="char">${ch}</span>`;
+    }
+    return out;
+  }
+
+  // 白背景あり：文章を連結白背景の中に1文字ずつ
+  function wrapForInk(html){
+    const PLACE='[[BR]]';
+    const withMarks = html.replace(/<br\s*\/?>/gi, PLACE);
     const chars=[...withMarks];
     let out = '<span class="ink"><span class="ink-bg">';
     for(let i=0;i<chars.length;i++){
-      // 改行は ink を一度切って <br> して再開
-      if(withMarks.slice(i, i+5)===PLACE){
-        out += '</span></span><br><span class="ink"><span class="ink-bg">';
-        i += 4; // "[[BR]]" を飛ばす
-        continue;
-      }
+      if(withMarks.slice(i,i+5)===PLACE){ out += '</span></span><br><span class="ink"><span class="ink-bg">'; i+=4; continue; }
       const ch = chars[i]===' ' ? '&nbsp;' : chars[i];
       out += `<span class="char">${ch}</span>`;
     }
@@ -443,7 +438,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
   }
 
   async function typeNode(el, text, speed=[16,38], noiseEvery=rand(10,18)){
-    const norm = text.replace(/\\n/g, '\n');
+    const norm = text.replace(/\\n/g, '\n'); // \n → 実改行
     el.classList.add('typer');
     el.setAttribute('data-glitch', norm.replace(/\n/g,' '));
 
@@ -452,16 +447,21 @@ document.getElementById('year').textContent = new Date().getFullYear();
       out += norm[i];
       const html = toHTMLBr(out);
       if(el.classList.contains('charify')){
-        el.innerHTML = wrapForInk(html);
+        // h1 は no-bg なのでプレーン、その他は白背景
+        el.innerHTML = el.classList.contains('no-bg') ? wrapCharsPlain(html) : wrapForInk(html);
       }else{
         el.innerHTML = html;
       }
       tick++;
+
+      // タイプ中の小ノイズ
       if(tick % noiseEvery === 0 && i < norm.length-1){
         const keep = out.slice(0,-Math.min(6,out.length));
         const mess = scramble(out.slice(-Math.min(6,out.length)), .7);
         const html2 = toHTMLBr(keep + mess);
-        el.innerHTML = el.classList.contains('charify') ? wrapForInk(html2) : html2;
+        el.innerHTML = el.classList.contains('charify')
+          ? (el.classList.contains('no-bg') ? wrapCharsPlain(html2) : wrapForInk(html2))
+          : html2;
         el.classList.add('glitch-burst','on'); scan.classList.add('on');
         await sleep(70);
         el.classList.remove('on'); scan.classList.remove('on');
@@ -471,23 +471,40 @@ document.getElementById('year').textContent = new Date().getFullYear();
     el.classList.remove('typer');
     el.classList.add('alive');
 
-    // タイプ完了後、文字単位ノイズを常時ランダム発火
+    // 文字単位ノイズ（ランダム間隔＆ランダム方向）
     if(el.classList.contains('charify')) startPerCharNoise(el);
   }
 
   function startPerCharNoise(container){
-    const chars = ()=>[...container.querySelectorAll('.char')];
-    // ランダム間隔で1〜3文字に強ノイズ（上下ジッター＋色分離）
-    setInterval(()=>{
-      const nodes = chars();
-      if(!nodes.length) return;
-      const burst = rand(1,3);
-      for(let i=0;i<burst;i++){
-        const t = nodes[rand(0,nodes.length-1)];
-        t.classList.add('glitch');
-        setTimeout(()=> t.classList.remove('glitch'), rand(110,180));
-      }
-    }, rand(260,520));
+    const getChars = ()=>[...container.querySelectorAll('.char')];
+
+    (function loop(){
+      const nextIn = rand(180, 640);      // 発火間隔を毎回ランダム化
+      setTimeout(()=>{
+        const chars = getChars();
+        if(chars.length){
+          const burst = rand(1,3);       // 同時にゆらす文字数
+          for(let i=0;i<burst;i++){
+            const t = chars[rand(0, chars.length-1)];
+            // ランダム方向（x,y）、回転、RGBズレ幅もランダム
+            const gx = rand(-3,3), gy = rand(-3,3), rot = rand(-6,6)/10;
+            const sx = rand(-3,-1), cx = rand(1,3);
+            t.style.setProperty('--gx', gx+'px');
+            t.style.setProperty('--gy', gy+'px');
+            t.style.setProperty('--grot', rot+'deg');
+            t.style.setProperty('--sx', sx+'px');
+            t.style.setProperty('--cx', cx+'px');
+            t.classList.add('glitch');
+            setTimeout(()=>{
+              t.classList.remove('glitch');
+              t.style.removeProperty('--gx'); t.style.removeProperty('--gy'); t.style.removeProperty('--grot');
+              t.style.removeProperty('--sx'); t.style.removeProperty('--cx');
+            }, rand(110, 200));
+          }
+        }
+        loop(); // 次回もランダム間隔で
+      }, nextIn);
+    })();
   }
 
   // ===== シーケンス =====
@@ -499,7 +516,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
   const INTRO_MS = 1300;
   await sleep(INTRO_MS + 150);
   await typeNode(eyebrow, eyebrow.dataset.text, [10,24]);
-  await typeNode(h1, h1.dataset.text, [24,42]);     // 見出し：連結白背景＋タイプ
+  await typeNode(h1, h1.dataset.text, [24,42]);     // h1：白背景なしで改行OK
   await typeNode(sub, sub.dataset.text, [12,24]);
 
   for(const line of mvvLines){
