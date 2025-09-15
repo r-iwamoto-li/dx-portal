@@ -415,7 +415,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
     const chars=[...withMarks];
     let out = '';
     for(let i=0;i<chars.length;i++){
-      if(withMarks.slice(i,i+5)===PLACE){ out += '<br>'; i+=4; continue; }
+      if(withMarks.slice(i, i + PLACE.length) === PLACE){out += '<br>';i += PLACE.length - 1;continue;}
       const ch = chars[i]===' ' ? '&nbsp;' : chars[i];
       out += `<span class="char">${ch}</span>`;
     }
@@ -429,7 +429,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
     const chars=[...withMarks];
     let out = '<span class="ink"><span class="ink-bg">';
     for(let i=0;i<chars.length;i++){
-      if(withMarks.slice(i,i+5)===PLACE){ out += '</span></span><br><span class="ink"><span class="ink-bg">'; i+=4; continue; }
+      if(withMarks.slice(i, i + PLACE.length) === PLACE){out += '</span></span><br><span class="ink"><span class="ink-bg">';i += PLACE.length - 1;continue;}
       const ch = chars[i]===' ' ? '&nbsp;' : chars[i];
       out += `<span class="char">${ch}</span>`;
     }
@@ -479,7 +479,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
     const getChars = ()=>[...container.querySelectorAll('.char')];
 
     (function loop(){
-      const nextIn = rand(180, 640);      // 発火間隔を毎回ランダム化
+      const nextIn = rand(900, 2200);      // 発火間隔を毎回ランダム化
       setTimeout(()=>{
         const chars = getChars();
         if(chars.length){
