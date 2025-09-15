@@ -107,60 +107,60 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
   opacity:.95; font-size:18px; user-select:none;
 }
 
-/* ===== Typing & Glitch ===== */
+/* ===== Typing & Glitch（共通） ===== */
 .typer{position:relative;display:inline-block}
-.typer::after{
-  content:"";position:absolute;right:-2px;bottom:0;width:10px;height:1.15em;background:linear-gradient(#111827,#111827) no-repeat center/2px 1em;
-  animation:blink .9s steps(1,end) infinite;
-}
+.typer::after{content:"";position:absolute;right:-2px;bottom:0;width:10px;height:1.15em;background:linear-gradient(#111827,#111827) no-repeat center/2px 1em;animation:blink .9s steps(1,end) infinite}
 @keyframes blink{50%{opacity:0}}
 .glitch-burst{position:relative;filter:contrast(1.08)}
 .glitch-burst::before,
-.glitch-burst::after{
-  content:attr(data-glitch);
-  position:absolute;left:0;top:0;pointer-events:none;mix-blend-mode:screen;opacity:.0;
-}
+.glitch-burst::after{content:attr(data-glitch);position:absolute;left:0;top:0;pointer-events:none;mix-blend-mode:screen;opacity:.0}
 .glitch-burst::before{color:#ff2a6d}
 .glitch-burst::after {color:#29adff}
 .glitch-burst.on::before{opacity:.9;transform:translate(-1px,0)}
 .glitch-burst.on::after {opacity:.9;transform:translate(1px,0)}
-.scanlines{
-  position:fixed;inset:0;pointer-events:none;z-index:35;mix-blend-mode:multiply;opacity:0;
-  background:
-    repeating-linear-gradient(0deg, rgba(0,0,0,.06) 0px, rgba(0,0,0,.06) 1px, transparent 2px, transparent 4px);
-  animation:lines 0.18s steps(2,end) infinite;
-}
+.scanlines{position:fixed;inset:0;pointer-events:none;z-index:35;mix-blend-mode:multiply;opacity:0;background:repeating-linear-gradient(0deg, rgba(0,0,0,.06) 0px, rgba(0,0,0,.06) 1px, transparent 2px, transparent 4px);animation:lines .18s steps(2,end) infinite}
 @keyframes lines{to{background-position-y:4px}}
 .scanlines.on{opacity:.45; animation-duration:.12s}
 
 /* ===== 3行メッセージ（動的装飾） ===== */
-.mv-copy{
-  background: transparent;      /* ← 透明化 */
-  border: none;                 /* ← 枠なし */
-  backdrop-filter: none;        /* ← ぼかしなし */
-  padding: 8px 0;               /* ← 余白だけ少し */
-  box-shadow: none;             /* ← 影もなし */
-}
+.mv-copy{background:transparent;border:none;backdrop-filter:none;padding:8px 0;box-shadow:none}
 .mvv-lines{display:grid;gap:10px}
-.mvv-line{
-  position:relative; display:block; font-weight:700; color:#0f172a;
-}
-/* テキストにグラデの“光”を流す */
-.mvv-line.alive{
-  background:linear-gradient(90deg,#0f172a 0%,#0f172a 40%,#2563eb 50%,#0f172a 60%,#0f172a 100%);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  animation:shine 3.6s linear infinite, floaty 6s ease-in-out infinite;
-}
-@keyframes shine{0%{background-position:-120% 0}100%{background-position:220% 0}}
-@keyframes floaty{0%{transform:translateY(0)}50%{transform:translateY(-2px)}100%{transform:translateY(0)}}
-/* 下線に走査バー */
+.mvv-line{position:relative;display:block;font-weight:700;color:#0f172a}
 .mvv-line.alive::after{
   content:""; position:absolute; left:0; right:0; bottom:-4px; height:2px;
   background:linear-gradient(90deg, transparent, rgba(37,99,235,.55), transparent);
-  animation:scan 1.8s ease-in-out infinite;
-  border-radius:2px;
+  animation:scan 1.8s ease-in-out infinite; border-radius:2px;
 }
 @keyframes scan{0%{transform:translateX(-40%)}50%{transform:translateX(40%)}100%{transform:translateX(-40%)}}
+
+/* ===== 文字ラップ（背景は“連結”で白く） ===== */
+.charify .ink{
+  display:inline;            /* 中身はインラインのまま */
+}
+.charify .ink > .ink-bg{
+  display:inline-block;      /* 背景を持つ器 */
+  background:#fff;
+  color:#0f172a;
+  padding:4px 6px;
+  border-radius:8px;
+  box-shadow:0 1px 0 rgba(0,0,0,.05);
+  box-decoration-break:clone;         /* 折り返しで連結表示 */
+  -webkit-box-decoration-break:clone; /* Safari */
+}
+.char{display:inline-block} /* 文字自体は背景なし */
+
+/* ===== “強め”の文字単位ノイズ（ランダム発火） ===== */
+.char.glitch{
+  transform:translateY(-3px) rotate(-.5deg);
+  text-shadow:-2px 0 rgba(255,42,109,.65), 2px 0 rgba(41,173,255,.65);
+  animation:jitter 120ms ease, flashHue 160ms linear;
+}
+@keyframes jitter{50%{transform:translateY(3px) rotate(.5deg)}}
+@keyframes flashHue{
+  0%{filter:contrast(1.1) saturate(1.1)}
+  50%{filter:contrast(1.25) saturate(1.25)}
+  100%{filter:contrast(1.1) saturate(1.1)}
+}
 
 /* ===== Responsive ===== */
 @media (max-width:980px){
@@ -180,103 +180,6 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
 .project-link:hover{background:rgba(37,99,235,.06);transform:translateY(-1px)}
 .project-link:active{transform:translateY(0)}
 .project-link:focus-visible{box-shadow:0 0 0 3px rgba(37,99,235,.35);background:#fff}
-
-  /* 数値カスタムプロパティをアニメ可能に */
-@property --h {
-  syntax: '<number>';
-  inherits: true;
-  initial-value: 220;
-}
-
-/* 3行メッセージの器はそのまま */
-.mvv-lines{display:grid;gap:10px}
-.mvv-line{position:relative;display:block;font-weight:700;color:#0f172a}
-
-/* タイピング完了後に付与される .alive で演出開始（色相ゆっくり変化＋浮遊＋光走査） */
-.mvv-line.alive{
-  --h: 220;
-  background:
-    linear-gradient(90deg,
-      hsl(var(--h) 84% 46%) 0%,
-      hsl(calc(var(--h) + 40) 84% 46%) 50%,
-      hsl(var(--h) 84% 46%) 100%);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  animation: hueShift 14s linear infinite, shine 3.2s linear infinite, floaty 6s ease-in-out infinite;
-  will-change: background-position, transform, filter;
-}
-@keyframes hueShift{
-  0%{ --h: 210 } 50%{ --h: 290 } 100%{ --h: 210 }
-}
-/* 既存 shine/floaty を活用（必要なら秒数は好みで） */
-@keyframes shine{0%{background-position:-120% 0}100%{background-position:220% 0}}
-@keyframes floaty{0%{transform:translateY(0)}50%{transform:translateY(-2px)}100%{transform:translateY(0)}}
-
-/* 下線の走査バーはそのまま使い回し（色相変化に追従） */
-.mvv-line.alive::after{
-  content:""; position:absolute; left:0; right:0; bottom:-4px; height:2px;
-  background:linear-gradient(90deg, transparent, hsl(calc(var(--h) + 20) 84% 56%), transparent);
-  animation:scan 1.8s ease-in-out infinite; border-radius:2px;
-}
-@keyframes scan{0%{transform:translateX(-40%)}50%{transform:translateX(40%)}100%{transform:translateX(-40%)}}
-
-  /* 1文字ブロック（白背景の“札”） */
-.char {
-  display:inline-block;
-  background:#fff;              /* ← 白い札 */
-  color:#0f172a;
-  padding:2px 3px;
-  margin:0 2px 3px 0;
-  border-radius:6px;
-  line-height:1.25;
-  box-shadow:0 1px 0 rgba(0,0,0,.04);
-  /* 常時わずかな上下ゆらぎ＆色相シフト */
-  animation:charFloat 4.5s ease-in-out infinite,
-           charHue 10s linear infinite;
-  animation-delay: calc(var(--i, 0) * .03s);
-  will-change: transform, filter, color, background;
-}
-
-/* 改行用の札の高さ調整（<br>の直前後で余白を詰める用） */
-.char.br { background:transparent; padding:0; margin:0; display:block; height:0 }
-
-/* アイドル時のゆらぎ */
-@keyframes charFloat {
-  0%   { transform:translateY(0) }
-  50%  { transform:translateY(-1.6px) }
-  100% { transform:translateY(0) }
-}
-/* 文字色（前景）をほんのり色相スイープ */
-@keyframes charHue {
-  0%   { color: hsl(215 30% 14%) }
-  50%  { color: hsl(265 28% 16%) }
-  100% { color: hsl(215 30% 14%) }
-}
-
-/* コンテナが .noise の瞬間だけ“タイプ風ノイズ”を強化 */
-.charify.noise .char:nth-child(odd)  { transform:translateY(-2.5px) rotate(-.2deg) }
-.charify.noise .char:nth-child(even) { transform:translateY( 2.5px) rotate( .2deg) }
-.charify.noise .char {
-  text-shadow:
-    0 0 0 rgba(0,0,0,0),
-    -1px 0 0 rgba(255,42,109,.45), /* 赤チャンネルずらし */
-     1px 0 0 rgba(41,173,255,.45); /* 青チャンネルずらし */
-  filter: contrast(1.06);
-}
-
-/* MVV行の“生きた”見た目（文字自体はchar側で白札化） */
-.mvv-lines{display:grid;gap:10px}
-.mvv-line.alive { position:relative; }
-.mvv-line.alive::after{
-  content:""; position:absolute; left:0; right:0; bottom:-4px; height:2px;
-  background:linear-gradient(90deg, transparent, rgba(37,99,235,.6), rgba(139,92,246,.6), transparent);
-  animation:scan 1.8s ease-in-out infinite;
-  border-radius:2px;
-}
-@keyframes scan{0%{transform:translateX(-40%)}50%{transform:translateX(40%)}100%{transform:translateX(-40%)}}
-
-/* mv-copyは白枠・白背景なし（既に適用済みでOK） */
-.mv-copy{ background:transparent; border:none; backdrop-filter:none; padding:8px 0; box-shadow:none; }
-
 </style>
 </head>
 <body>
@@ -314,7 +217,6 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
         </a>
         <a class="nav-item" href="#narrative">
           <span class="nav-ico" aria-hidden="true">
-            <!-- 本アイコン -->
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
               <path d="M3.5 6.5V18c4-.9 7-.9 10 .6"/><path d="M3.5 6.5C3.5 5.7 4.2 5 5 5h5c1.2 0 2.3.4 3 1"/>
               <path d="M20.5 6.5V18c-4-.9-7-.9-10 .6"/><path d="M20.5 6.5C20.5 5.7 19.8 5 19 5h-5c-1.2 0-2.3.4-3 1"/>
@@ -343,23 +245,19 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
       <div class="hero-grid">
         <div class="reveal">
           <span class="eyebrow typer" data-text="DX Innovation"></span>
-          <h1 id="headline" class="glitch-burst typer" data-glitch="" data-text="常識を疑え\n“標準”を再定義"></h1>
+          <h1 id="headline" class="glitch-burst typer charify" data-glitch="" data-text="常識を疑え\n“標準”を再定義"></h1>
           <p class="sub typer" data-text="Question the norm, reconstruct the standard"></p>
           <div class="cta"><a class="btn" href="#contact">お問い合せ</a></div>
         </div>
 
-        <!-- ▼ MVVブロックを削除し、3行の文章のみ残す -->
+        <!-- 3行だけ残す -->
         <div class="mv-copy reveal">
           <div class="mvv-lines">
-            <div class="mvv-line typer charify"
-                 data-text="デジタルの力で業務を再構築し、組織の可能性を余さず引き出す。"></div>
-            <div class="mvv-line typer charify"
-                 data-text="すべての業務と人を“デジタルネイティブ化”し、進化し続ける企業を目指す。"></div>
-            <div class="mvv-line typer charify"
-                 data-text="挑戦を称え、共創を楽しみ、成果にこだわる。"></div>
+            <div class="mvv-line typer charify" data-text="デジタルの力で業務を再構築し、組織の可能性を余さず引き出す。"></div>
+            <div class="mvv-line typer charify" data-text="すべての業務と人を“デジタルネイティブ化”し、進化し続ける企業を目指す。"></div>
+            <div class="mvv-line typer charify" data-text="挑戦を称え、共創を楽しみ、成果にこだわる。"></div>
           </div>
         </div>
-        <!-- ▲ 3行のみ -->
       </div>
     </div>
   </section>
@@ -439,7 +337,7 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
   </main>
 
   <footer class="reveal">
-    <div class="container">Copyright © 2020. All rights reserved.</div>
+    <div class="container">Copyright © <span id="year"></span>. All rights reserved.</div>
   </footer>
 
 <script>
@@ -509,23 +407,14 @@ window.addEventListener('scroll', ()=>{ const y = Math.min(1, window.scrollY/600
   wrap.addEventListener('mouseleave', ()=>items.forEach(it=>it.style.transform=''));
 })();
 
-/* ===== Typing + Glitch（改行対応） ===== */
+/* ===== 年自動挿入 ===== */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ===== Typing + 連結白背景 + 文字単位ノイズ ===== */
 (async function(){
   const scan = document.getElementById('scanlines');
 
   const toHTMLBr = s => s.replace(/\n/g,'<br>');
-  function wrapChars(htmlText){
-    // HTMLの <br> をいったんプレースホルダに
-    const PLACE = '[[BR]]';
-    const withMarks = htmlText.replace(/<br\s*\/?>/gi, PLACE);
-    const chars = [...withMarks];
-    return chars.map((ch,i)=>{
-      if(ch=== '[' && withMarks.slice(i, i+5)===PLACE){ return '<span class="char br"></span>'; }
-      if(ch=== ' ') ch = '&nbsp;'; // 空白も札化
-      return `<span class="char" style="--i:${i}">${ch}</span>`;
-    }).join('').replace(/\[\[BR\]\]/g,'<span class="char br"></span>');
-  }
-
   function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
   function rand(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
   function scramble(s, rate=0.25){
@@ -533,10 +422,28 @@ window.addEventListener('scroll', ()=>{ const y = Math.min(1, window.scrollY/600
     return s.split('').map(ch => Math.random()<rate ? pool[rand(0,pool.length-1)] : ch).join('');
   }
 
-  async function typeNode(el, text, speed=[16,38], noiseEvery=rand(10,18)){
-    // data-text内の「\n」（バックスラッシュn）を実改行へ
-    const norm = text.replace(/\\n/g, '\n');
+  // 文字列を “連結白背景(.ink-bg)” の中に “1文字(.char)” で格納
+  function wrapForInk(htmlText){
+    const PLACE='[[BR]]';
+    const withMarks = htmlText.replace(/<br\s*\/?>/gi, PLACE);
+    const chars=[...withMarks];
+    let out = '<span class="ink"><span class="ink-bg">';
+    for(let i=0;i<chars.length;i++){
+      // 改行は ink を一度切って <br> して再開
+      if(withMarks.slice(i, i+5)===PLACE){
+        out += '</span></span><br><span class="ink"><span class="ink-bg">';
+        i += 4; // "[[BR]]" を飛ばす
+        continue;
+      }
+      const ch = chars[i]===' ' ? '&nbsp;' : chars[i];
+      out += `<span class="char">${ch}</span>`;
+    }
+    out += '</span></span>';
+    return out;
+  }
 
+  async function typeNode(el, text, speed=[16,38], noiseEvery=rand(10,18)){
+    const norm = text.replace(/\\n/g, '\n');
     el.classList.add('typer');
     el.setAttribute('data-glitch', norm.replace(/\n/g,' '));
 
@@ -545,20 +452,16 @@ window.addEventListener('scroll', ()=>{ const y = Math.min(1, window.scrollY/600
       out += norm[i];
       const html = toHTMLBr(out);
       if(el.classList.contains('charify')){
-        el.innerHTML = wrapChars(html);
+        el.innerHTML = wrapForInk(html);
       }else{
         el.innerHTML = html;
       }
       tick++;
-
-      // たまに小さなノイズ（タイプ中）
       if(tick % noiseEvery === 0 && i < norm.length-1){
         const keep = out.slice(0,-Math.min(6,out.length));
         const mess = scramble(out.slice(-Math.min(6,out.length)), .7);
         const html2 = toHTMLBr(keep + mess);
-        el.innerHTML = el.classList.contains('charify') ? wrapChars(html2) : html2;
-
-        // 色分離＋走査線を一瞬
+        el.innerHTML = el.classList.contains('charify') ? wrapForInk(html2) : html2;
         el.classList.add('glitch-burst','on'); scan.classList.add('on');
         await sleep(70);
         el.classList.remove('on'); scan.classList.remove('on');
@@ -566,21 +469,25 @@ window.addEventListener('scroll', ()=>{ const y = Math.min(1, window.scrollY/600
       await sleep(rand(speed[0],speed[1]));
     }
     el.classList.remove('typer');
-
-    // タイプ完了後：生きた演出＆アイドル時ノイズ
     el.classList.add('alive');
-    if(el.classList.contains('charify')){
-      // コンテナ自体に .charify を付けておく（HTML側で既に付与済み）
-      startIdleNoise(el);
-    }
+
+    // タイプ完了後、文字単位ノイズを常時ランダム発火
+    if(el.classList.contains('charify')) startPerCharNoise(el);
   }
 
-  function startIdleNoise(container){
-    // 3〜6秒ごとに瞬間的な“タイプ風ノイズ”
+  function startPerCharNoise(container){
+    const chars = ()=>[...container.querySelectorAll('.char')];
+    // ランダム間隔で1〜3文字に強ノイズ（上下ジッター＋色分離）
     setInterval(()=>{
-      container.classList.add('noise');
-      setTimeout(()=>container.classList.remove('noise'), 140);
-    }, rand(3000, 6000));
+      const nodes = chars();
+      if(!nodes.length) return;
+      const burst = rand(1,3);
+      for(let i=0;i<burst;i++){
+        const t = nodes[rand(0,nodes.length-1)];
+        t.classList.add('glitch');
+        setTimeout(()=> t.classList.remove('glitch'), rand(110,180));
+      }
+    }, rand(260,520));
   }
 
   // ===== シーケンス =====
@@ -592,10 +499,9 @@ window.addEventListener('scroll', ()=>{ const y = Math.min(1, window.scrollY/600
   const INTRO_MS = 1300;
   await sleep(INTRO_MS + 150);
   await typeNode(eyebrow, eyebrow.dataset.text, [10,24]);
-  await typeNode(h1, h1.dataset.text, [24,42]);     // 見出しも1文字札でタイプ
+  await typeNode(h1, h1.dataset.text, [24,42]);     // 見出し：連結白背景＋タイプ
   await typeNode(sub, sub.dataset.text, [12,24]);
 
-  // 3文を順にタイプ → 各行にノイズ走らせる
   for(const line of mvvLines){
     await typeNode(line, line.dataset.text, [12,28]);
     await sleep(80);
