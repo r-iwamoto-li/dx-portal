@@ -426,10 +426,11 @@ window.addEventListener('scroll', ()=>{ const y = Math.min(1, window.scrollY/600
   const sub = document.querySelector('.sub');
   const mvh3 = document.querySelector('.mv-copy h3');
   const dds = [...document.querySelectorAll('.mv-copy dd')];
-
-  await sleep(300);
+  // ★ イントロが remove される 1300ms に合わせて待つ
+  const INTRO_MS = 1300;
+  await sleep(INTRO_MS + 150);
   await typeNode(eyebrow, eyebrow.dataset.text, [10,24]);
-  await typeNode(h1, h1.dataset.text, [8,18]);     // ← これでタイトルも改行タイプされます
+  await typeNode(h1, h1.dataset.text, [38,70]);  
   await typeNode(sub, sub.dataset.text, [12,24]);
   await typeNode(mvh3, mvh3.dataset.text, [12,26]);
   for(const dd of dds){ await typeNode(dd, dd.dataset.text, [12,26]); await sleep(60); }
