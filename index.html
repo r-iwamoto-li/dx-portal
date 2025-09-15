@@ -94,7 +94,7 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
 .reveal{opacity:0;transform:translateY(16px) scale(.98);filter:blur(6px);transition:opacity .7s ease, transform .7s ease, filter .7s ease}
 .reveal.on{opacity:1;transform:none;filter:none}
 
-/* ===== Intro Shutter（最初の工夫） ===== */
+/* ===== Intro Shutter ===== */
 .intro{position:fixed;inset:0;background:#06080f;z-index:999;display:grid;grid-template-columns:repeat(10,1fr);gap:2px;overflow:hidden}
 .intro .bar{background:#0b1020;transform:translateY(0);animation:barOut .9s cubic-bezier(.2,.8,.2,1) forwards;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
 .intro .bar:nth-child(odd){background:#0c1428}
@@ -109,7 +109,7 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
 
 /* ===== Typing & Glitch ===== */
 .typer{position:relative;display:inline-block}
-.typer::after{ /* カーソル */
+.typer::after{
   content:"";position:absolute;right:-2px;bottom:0;width:10px;height:1.15em;background:linear-gradient(#111827,#111827) no-repeat center/2px 1em;
   animation:blink .9s steps(1,end) infinite;
 }
@@ -132,6 +132,29 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
 }
 @keyframes lines{to{background-position-y:4px}}
 .scanlines.on{opacity:.45; animation-duration:.12s}
+
+/* ===== 3行メッセージ（動的装飾） ===== */
+.mv-copy{background:rgba(255,255,255,.86);border:1px solid rgba(15,23,42,.06);backdrop-filter: blur(6px);padding:18px 22px;border-radius:18px;box-shadow:var(--shadow)}
+.mvv-lines{display:grid;gap:10px}
+.mvv-line{
+  position:relative; display:block; font-weight:700; color:#0f172a;
+}
+/* テキストにグラデの“光”を流す */
+.mvv-line.alive{
+  background:linear-gradient(90deg,#0f172a 0%,#0f172a 40%,#2563eb 50%,#0f172a 60%,#0f172a 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  animation:shine 3.6s linear infinite, floaty 6s ease-in-out infinite;
+}
+@keyframes shine{0%{background-position:-120% 0}100%{background-position:220% 0}}
+@keyframes floaty{0%{transform:translateY(0)}50%{transform:translateY(-2px)}100%{transform:translateY(0)}}
+/* 下線に走査バー */
+.mvv-line.alive::after{
+  content:""; position:absolute; left:0; right:0; bottom:-4px; height:2px;
+  background:linear-gradient(90deg, transparent, rgba(37,99,235,.55), transparent);
+  animation:scan 1.8s ease-in-out infinite;
+  border-radius:2px;
+}
+@keyframes scan{0%{transform:translateX(-40%)}50%{transform:translateX(40%)}100%{transform:translateX(-40%)}}
 
 /* ===== Responsive ===== */
 @media (max-width:980px){
@@ -157,7 +180,6 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
   <!-- Intro Shutter -->
   <div class="intro" id="intro">
     <div class="logo">DX PORTAL • INITIALIZING…</div>
-    <!-- 10分割のバー -->
     <div class="bar" style="animation-delay:0.00s"></div>
     <div class="bar" style="animation-delay:0.05s"></div>
     <div class="bar" style="animation-delay:0.10s"></div>
@@ -218,16 +240,20 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
       <div class="hero-grid">
         <div class="reveal">
           <span class="eyebrow typer" data-text="DX Innovation"></span>
-          <!-- 改行を含むタイトル（\n を本当の改行として表示） -->
           <h1 id="headline" class="glitch-burst typer" data-glitch="" data-text="常識を疑え\n“標準”を再定義"></h1>
           <p class="sub typer" data-text="Question the norm, reconstruct the standard"></p>
           <div class="cta"><a class="btn" href="#contact">お問い合せ</a></div>
         </div>
+
+        <!-- ▼ MVVブロックを削除し、3行の文章のみ残す -->
         <div class="mv-copy reveal">
-          <h3 class="typer" data-text="＿デジタルの力で業務を再構築し、組織の可能性を余さず引き出す"></h3>
-          <h3 class="typer" data-text="＿すべての業務と人を“デジタルネイティブ化”し、進化し続ける企業を目指す"></h3>
-          <h3 class="typer" data-text="＿挑戦を称え、共創を楽しみ、成果にこだわる"></h3>
+          <div class="mvv-lines">
+            <p class="mvv-line typer" data-text="デジタルの力で業務を再構築し、組織の可能性を余さず引き出す。"></p>
+            <p class="mvv-line typer" data-text="すべての業務と人を“デジタルネイティブ化”し、進化し続ける企業を目指す。"></p>
+            <p class="mvv-line typer" data-text="挑戦を称え、共創を楽しみ、成果にこだわる。"></p>
+          </div>
         </div>
+        <!-- ▲ 3行のみ -->
       </div>
     </div>
   </section>
@@ -389,20 +415,14 @@ window.addEventListener('scroll', ()=>{ const y = Math.min(1, window.scrollY/600
   }
 
   async function typeNode(el, text, speed=[16,38], noiseEvery=rand(10,18)){
-    // ▼ ここを追加：属性内の「\n」（バックスラッシュ＋n）を本当の改行に直す
     const norm = text.replace(/\\n/g, '\n');
-
     el.classList.add('typer');
-    // 擬似要素テキストも「本当の改行 → スペース」にしておく
     el.setAttribute('data-glitch', norm.replace(/\n/g,' '));
-
     let out='', tick=0;
     for(let i=0;i<norm.length;i++){
-      const ch=norm[i];
-      out += ch;
-      el.innerHTML = asHTML(out); // ← 改行は <br> に
+      out += norm[i];
+      el.innerHTML = asHTML(out);
       tick++;
-
       if(tick % noiseEvery === 0 && i < norm.length-1){
         const keep = out.slice(0,-Math.min(6,out.length));
         const mess = scramble(out.slice(-Math.min(6,out.length)), .7);
@@ -417,20 +437,27 @@ window.addEventListener('scroll', ()=>{ const y = Math.min(1, window.scrollY/600
     el.classList.remove('typer');
   }
 
-  // 以下はそのまま
+  // シーケンス
   const eyebrow = document.querySelector('.eyebrow');
   const h1 = document.getElementById('headline');
   const sub = document.querySelector('.sub');
-  const mvh3 = document.querySelector('.mv-copy h3');
-  const dds = [...document.querySelectorAll('.mv-copy dd')];
-  // ★ イントロが remove される 1300ms に合わせて待つ
+  const lines = [...document.querySelectorAll('.mvv-line')];
+
+  // イントロ完了後に開始
   const INTRO_MS = 1300;
   await sleep(INTRO_MS + 150);
+
   await typeNode(eyebrow, eyebrow.dataset.text, [10,24]);
-  await typeNode(h1, h1.dataset.text, [38,70]);  
+  await typeNode(h1, h1.dataset.text, [38,70]);
   await typeNode(sub, sub.dataset.text, [12,24]);
-  await typeNode(mvh3, mvh3.dataset.text, [12,26]);
-  for(const dd of dds){ await typeNode(dd, dd.dataset.text, [12,26]); await sleep(60); }
+
+  // 3行を順番にタイプ → 完了した行に “alive” を付与して動かす
+  for(let i=0;i<lines.length;i++){
+    const el = lines[i];
+    await typeNode(el, el.dataset.text, [14,28]);
+    el.classList.add('alive'); // ← 動的装飾ON
+    await sleep(80);
+  }
 })();
 </script>
 </body>
