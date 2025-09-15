@@ -383,24 +383,30 @@ window.addEventListener('scroll', ()=>{ const y = Math.min(1, window.scrollY/600
 /* ===== Typing + Glitch（改行対応） ===== */
 (async function(){
   const scan = document.getElementById('scanlines');
-  const asHTML = s => s.replace(/\n/g,'<br>');
+  const asHTML = s => s.replace(/\n/g,'<br>'); // 本物の改行だけ <br> に
   function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
   function rand(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
   function scramble(s, rate=0.25){
     const pool = 'アイウエオカキクケコサシスセソﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789*#=+<>';
     return s.split('').map(ch => Math.random()<rate ? pool[rand(0,pool.length-1)] : ch).join('');
   }
+
   async function typeNode(el, text, speed=[16,38], noiseEvery=rand(10,18)){
+    // ▼ ここを追加：属性内の「\n」（バックスラッシュ＋n）を本当の改行に直す
+    const norm = text.replace(/\\n/g, '\n');
+
     el.classList.add('typer');
-    el.setAttribute('data-glitch', text.replace(/\n/g,' ')); // 擬似要素は改行をスペース化
+    // 擬似要素テキストも「本当の改行 → スペース」にしておく
+    el.setAttribute('data-glitch', norm.replace(/\n/g,' '));
+
     let out='', tick=0;
-    for(let i=0;i<text.length;i++){
-      const ch=text[i];
+    for(let i=0;i<norm.length;i++){
+      const ch=norm[i];
       out += ch;
-      el.innerHTML = asHTML(out); // ← 改行を <br> に
+      el.innerHTML = asHTML(out); // ← 改行は <br> に
       tick++;
-      // たまにノイズ
-      if(tick % noiseEvery === 0 && i < text.length-1){
+
+      if(tick % noiseEvery === 0 && i < norm.length-1){
         const keep = out.slice(0,-Math.min(6,out.length));
         const mess = scramble(out.slice(-Math.min(6,out.length)), .7);
         el.innerHTML = asHTML(keep + mess);
@@ -414,7 +420,7 @@ window.addEventListener('scroll', ()=>{ const y = Math.min(1, window.scrollY/600
     el.classList.remove('typer');
   }
 
-  // シーケンス
+  // 以下はそのまま
   const eyebrow = document.querySelector('.eyebrow');
   const h1 = document.getElementById('headline');
   const sub = document.querySelector('.sub');
@@ -423,7 +429,7 @@ window.addEventListener('scroll', ()=>{ const y = Math.min(1, window.scrollY/600
 
   await sleep(300);
   await typeNode(eyebrow, eyebrow.dataset.text, [10,24]);
-  await typeNode(h1, h1.dataset.text, [8,18]);     // ← 見出しも改行タイプ
+  await typeNode(h1, h1.dataset.text, [8,18]);     // ← これでタイトルも改行タイプされます
   await typeNode(sub, sub.dataset.text, [12,24]);
   await typeNode(mvh3, mvh3.dataset.text, [12,26]);
   for(const dd of dds){ await typeNode(dd, dd.dataset.text, [12,26]); await sleep(60); }
