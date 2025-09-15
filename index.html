@@ -1,190 +1,157 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DX推進ポータル</title>
-  <meta name="description" content="Link innovation | DX推進ポータル" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#0b0f1a;
-      --surface:#ffffff;
-      --text:#121416;
-      --muted:#6b7280;
-      --brand:#2563eb;
-      --brand-2:#8b5cf6;
-      --shadow:0 10px 30px rgba(2,6,23,.14);
-      --radius:16px;
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0}
-    body{
-      font-family:"Inter","Noto Sans JP", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      color:var(--text);
-      background:#f7f9fc;
-      line-height:1.6;
-    }
-    a{color:inherit;text-decoration:none}
-    .container{max-width:1200px;margin:0 auto;padding:0 20px}
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>DX推進ポータル</title>
+<meta name="description" content="Link innovation | DX推進ポータル" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0f1a; --surface:#ffffff; --text:#121416; --muted:#6b7280;
+  --brand:#2563eb; --brand-2:#8b5cf6; --shadow:0 10px 30px rgba(2,6,23,.14);
+  --radius:16px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Inter","Noto Sans JP",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+  color:var(--text); background:#f7f9fc; line-height:1.6;
+}
+a{color:inherit;text-decoration:none}
+.container{max-width:1200px;margin:0 auto;padding:0 20px}
+/* ===== Top Nav ===== */
+.topnav-wrap{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.75);backdrop-filter:blur(10px);border-bottom:1px solid rgba(15,23,42,.06)}
+.topnav{display:flex;gap:14px;align-items:center;justify-content:center;padding:10px 8px}
+.pill{
+  display:flex;gap:24px;align-items:center;justify-content:center;
+  background:#f4f6fb;border:1px solid rgba(15,23,42,.06);
+  border-radius:46px;padding:8px 14px;box-shadow:var(--shadow)
+}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 14px;border-radius:28px;font-size:12px;color:#3b4252;font-weight:600;transition:transform .2s ease, background .2s ease, box-shadow .2s ease}
+.nav-item:hover{background:#fff;transform:translateY(-2px)}
+.nav-item.active{background:linear-gradient(135deg,rgba(37,99,235,.12),rgba(139,92,246,.12));color:var(--brand);box-shadow:0 6px 16px rgba(37,99,235,.18)}
+.nav-ico{width:22px;height:22px;display:grid;place-items:center}
+.pill .nav-item{position:relative}
+.pill .nav-item::after{ /* 微グロー */
+  content:"";position:absolute;inset:-2px;border-radius:28px;pointer-events:none;opacity:.0;
+  background:radial-gradient(60% 100% at 50% 0%, rgba(37,99,235,.25), transparent 60%),
+             radial-gradient(60% 100% at 50% 100%, rgba(139,92,246,.2), transparent 60%);
+  transition:opacity .25s ease;
+}
+.pill .nav-item:hover::after{opacity:.9}
 
-    /* ===== Top Nav ===== */
-    .topnav-wrap{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.75);backdrop-filter: blur(10px);border-bottom:1px solid rgba(15,23,42,.06)}
-    .topnav{display:flex;gap:14px;align-items:center;justify-content:center;padding:10px 8px}
-    .pill{
-      display:flex;gap:24px;align-items:center;justify-content:center;
-      background:#f4f6fb;border:1px solid rgba(15,23,42,.06);
-      border-radius:46px;padding:8px 14px;box-shadow: var(--shadow);
-    }
-    .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 14px;border-radius:28px;font-size:12px;color:#3b4252;font-weight:600;transition: all .2s ease}
-    .nav-item:hover{background:#fff}
-    .nav-item.active{background:linear-gradient(135deg,rgba(37,99,235,.12),rgba(139,92,246,.12));color:var(--brand);box-shadow:0 6px 16px rgba(37,99,235,.18)}
-    .nav-ico{width:22px;height:22px;display:grid;place-items:center}
-
-    /* ===== Hero ===== */
-    .hero{position:relative;isolation:isolate}
-    .hero-media{
-      position:relative;height:420px;overflow:hidden;background:#0f1226;border-bottom-left-radius:24px;border-bottom-right-radius:24px
-    }
-    .hero-media img{
-      position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.9;transform:scale(1.02)
-    }
-    .hero-media::after{
-      /* color overlay */
-      content:"";position:absolute;inset:0;
-      background: radial-gradient(1200px 480px at 20% 20%, rgba(37,99,235,.35), transparent 50%),
-                  radial-gradient(900px 420px at 80% 30%, rgba(139,92,246,.35), transparent 55%),
-                  linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.85) 82%);
-      pointer-events:none
-    }
-    .hero-inner{position:relative;z-index:1}
-    .hero-grid{display:grid;grid-template-columns:1.25fr .9fr;gap:48px;align-items:center;margin-top:-320px;padding:0 0 48px}
-    .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid rgba(15,23,42,.06);backdrop-filter: blur(6px);font-size:12px;font-weight:700;letter-spacing:.06em}
-    .hero h1{font-family:"Noto Sans JP";font-size:48px;line-height:1.2;margin:16px 0 10px;letter-spacing:.02em}
-    .hero p.sub{color:#2f3947;font-weight:500}
-    .cta{margin-top:24px}
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;background:#111827;color:#fff;font-weight:700;box-shadow:var(--shadow)}
-    .btn:hover{opacity:.9}
-
-    .mv-copy{background:rgba(255,255,255,.86);border:1px solid rgba(15,23,42,.06);backdrop-filter: blur(6px);padding:18px 22px;border-radius:18px;box-shadow:var(--shadow)}
-    .mv-copy h3{margin:0 0 10px;font-size:16px}
-    .mv-copy dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:10px 18px}
-    .mv-copy dt{font-weight:800}
-    .mv-copy dd{margin:0;color:#334155}
-
-    /* ===== Main sections ===== */
-    main{padding:56px 0}
-    .grid-2{display:grid;grid-template-columns:1.1fr 1fr;gap:32px}
-    h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
-
-    /* Left: Projects */
-    .card{background:#fff;border:1px solid rgba(15,23,42,.06);border-radius:var(--radius);box-shadow:var(--shadow)}
-    .list{padding:8px 0;margin:0}
-    .list li{list-style:none;display:flex;align-items:center;gap:12px;padding:14px 16px}
-    .list li + li{border-top:1px dashed rgba(15,23,42,.08)}
-    .dot{width:8px;height:8px;border-radius:999px;background:linear-gradient(135deg,var(--brand),var(--brand-2))}
-    .title{font-weight:700}
-    .badge{margin-left:auto;font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid rgba(15,23,42,.08);background:#111827;color:#fff}
-
-    /* Right: Announcements / Comments */
-    .toolbar{display:flex;align-items:center;gap:10px;justify-content:flex-end}
-    .select{position:relative}
-    .select select{appearance:none;border:1px solid rgba(15,23,42,.12);padding:8px 32px 8px 12px;border-radius:10px;background:#fff;font-weight:600}
-    .select svg{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;pointer-events:none}
-
-    .comment{display:grid;grid-template-columns:48px 1fr;gap:14px;padding:16px}
-    .comment + .comment{border-top:1px dashed rgba(15,23,42,.08)}
-    .avatar{width:48px;height:48px;border-radius:999px;background:#e5e7eb;display:grid;place-items:center;font-weight:800;color:#374151}
-    .c-name{font-weight:700}
-    .c-meta{color:#6b7280;font-size:12px}
-    .actions{display:flex;gap:12px;font-size:13px}
-    .stars{margin-left:auto;display:flex;gap:4px}
-    .star{width:16px;height:16px}
-
-    /* Footer */
-    footer{padding:28px 0 56px;color:#6b7280;text-align:center}
-
-    /* Responsive */
-    @media (max-width: 980px){
-      .hero-media{height:380px}
-      .hero-grid{grid-template-columns:1fr;gap:24px;margin-top:-300px}
-      .mv-copy{order:-1}
-      .grid-2{grid-template-columns:1fr}
-    }
-    @media (max-width: 560px){
-      .nav-item{gap:2px;padding:8px 10px}
-      .nav-ico{width:20px;height:20px}
-      .hero h1{font-size:36px}
-    }
-    /* clickable row for project list */
-    .list li { padding: 0; } /* 既存の li padding を0にしてリンク側に持たせる */
-    .project-link{
-      display:flex; align-items:center; gap:12px; padding:14px 16px;
-      border-radius:12px; outline: none;
-      transition: background .18s ease, transform .06s ease;
-    }
-    .project-link:hover{ background: rgba(37,99,235,.06); transform: translateY(-1px); }
-    .project-link:active{ transform: translateY(0); }
-    .project-link:focus-visible{ box-shadow: 0 0 0 3px rgba(37,99,235,.35); background:#fff; }
-
-  </style>
+/* ===== Hero ===== */
+.hero{position:relative;isolation:isolate}
+.hero-media{position:relative;height:420px;overflow:hidden;background:#0f1226;border-bottom-left-radius:24px;border-bottom-right-radius:24px}
+.hero-media img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.9;transform:scale(1.06); transition:transform 9s cubic-bezier(.2,.8,.2,1);
+}
+.hero-media::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background: radial-gradient(1200px 480px at 20% 20%, rgba(37,99,235,.35), transparent 50%),
+              radial-gradient(900px 420px at 80% 30%, rgba(139,92,246,.35), transparent 55%),
+              linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.85) 82%);
+}
+.hero-media canvas#fx{position:absolute;inset:0;mix-blend-mode:screen;opacity:.9}
+.hero-inner{position:relative;z-index:1}
+.hero-grid{display:grid;grid-template-columns:1.25fr .9fr;gap:48px;align-items:center;margin-top:-320px;padding:0 0 48px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid rgba(15,23,42,.06);backdrop-filter: blur(6px);font-size:12px;font-weight:700;letter-spacing:.06em}
+.hero h1{font-family:"Noto Sans JP";font-size:48px;line-height:1.2;margin:16px 0 10px;letter-spacing:.02em}
+.hero h1 .glow{display:inline-block;filter:drop-shadow(0 4px 14px rgba(37,99,235,.55))}
+.hero p.sub{color:#2f3947;font-weight:500}
+.cta{margin-top:24px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;background:#111827;color:#fff;font-weight:700;box-shadow:var(--shadow);transform:translateZ(0);transition:transform .15s ease}
+.btn:hover{transform:translateY(-1px)}
+/* ===== Main ===== */
+main{padding:56px 0}
+.grid-2{display:grid;grid-template-columns:1.1fr 1fr;gap:32px}
+h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
+/* Cards */
+.card{position:relative;background:#fff;border:1px solid rgba(15,23,42,.06);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.card::before{ /* 動くグラデ枠 */
+  content:"";position:absolute;inset:-1px;border-radius:calc(var(--radius) + 1px);padding:1px;background:
+  linear-gradient(90deg, rgba(37,99,235,.35), rgba(139,92,246,.35), rgba(37,99,235,.35));
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+  animation:borderShift 8s linear infinite; pointer-events:none;
+}
+@keyframes borderShift{0%{background-position:0 0}100%{background-position:200% 0}}
+.list{padding:8px 0;margin:0}
+.list li{list-style:none;display:flex;align-items:center;gap:12px;padding:14px 16px}
+.list li + li{border-top:1px dashed rgba(15,23,42,.08)}
+.dot{width:8px;height:8px;border-radius:999px;background:linear-gradient(135deg,var(--brand),var(--brand-2))}
+.title{font-weight:700}
+.badge{margin-left:auto;font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid rgba(15,23,42,.08);background:#111827;color:#fff}
+/* Right */
+.toolbar{display:flex;align-items:center;gap:10px;justify-content:flex-end}
+.select{position:relative}
+.select select{appearance:none;border:1px solid rgba(15,23,42,.12);padding:8px 32px 8px 12px;border-radius:10px;background:#fff;font-weight:600}
+.select svg{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;pointer-events:none}
+.comment{display:grid;grid-template-columns:48px 1fr;gap:14px;padding:16px}
+.comment + .comment{border-top:1px dashed rgba(15,23,42,.08)}
+.avatar{width:48px;height:48px;border-radius:999px;background:#e5e7eb;display:grid;place-items:center;font-weight:800;color:#374151}
+.c-name{font-weight:700}
+.c-meta{color:#6b7280;font-size:12px}
+.actions{display:flex;gap:12px;font-size:13px}
+.stars{margin-left:auto;display:flex;gap:4px}
+.star{width:16px;height:16px}
+/* Footer */
+footer{padding:28px 0 56px;color:#6b7280;text-align:center}
+/* Reveal */
+.reveal{opacity:0;transform:translateY(16px) scale(.98);filter:blur(6px);transition:opacity .7s ease, transform .7s ease, filter .7s ease}
+.reveal.on{opacity:1;transform:none;filter:none}
+/* Responsive */
+@media (max-width:980px){
+  .hero-media{height:380px}
+  .hero-grid{grid-template-columns:1fr;gap:24px;margin-top:-300px}
+  .mv-copy{order:-1}
+  .grid-2{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .nav-item{gap:2px;padding:8px 10px}
+  .nav-ico{width:20px;height:20px}
+  .hero h1{font-size:36px}
+}
+/* Clickable row */
+.list li{padding:0}
+.project-link{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:12px;outline:none;transition:background .18s ease, transform .06s ease}
+.project-link:hover{background:rgba(37,99,235,.06);transform:translateY(-1px)}
+.project-link:active{transform:translateY(0)}
+.project-link:focus-visible{box-shadow:0 0 0 3px rgba(37,99,235,.35);background:#fff}
+</style>
 </head>
 <body>
   <!-- ===== Top Navigation ===== -->
   <div class="topnav-wrap">
     <nav class="topnav container">
-      <div class="pill">
+      <div class="pill" id="magnet">
         <a class="nav-item active" href="#home" aria-current="page">
           <span class="nav-ico" aria-hidden="true">
-            <!-- Home -->
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
           </span>
           <span>HOME</span>
         </a>
         <a class="nav-item" href="#projects">
           <span class="nav-ico" aria-hidden="true">
-            <!-- Folder -->
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h5l2 3h11v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 7V5a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v3"/></svg>
           </span>
           <span>プロジェクト</span>
         </a>
         <a class="nav-item" href="#narrative">
           <span class="nav-ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2"
-                 stroke-linecap="round" stroke-linejoin="round"
-                 width="22" height="22">
-              <!-- 開いた本の外形（左ページ） -->
-              <path d="M3.5 6.5V18
-                       c4-.9 7-.9 10 .6" />
-              <path d="M3.5 6.5
-                       C3.5 5.7 4.2 5 5 5h5
-                       c1.2 0 2.3.4 3 1" />
-              <!-- 開いた本の外形（右ページ） -->
-              <path d="M20.5 6.5V18
-                       c-4-.9-7-.9-10 .6" />
-              <path d="M20.5 6.5
-                       C20.5 5.7 19.8 5 19 5h-5
-                       c-1.2 0-2.3.4-3 1" />
-              <!-- 背（センター） -->
-              <path d="M12 6v13" />
-              <!-- 行（左ページ） -->
-              <path d="M6.5 9.5c1.7-.5 3.3-.5 5 0" />
-              <path d="M6.5 13c1.7-.5 3.3-.5 5 0" />
-              <path d="M6.5 16.5c1.7-.5 3.3-.5 5 0" />
-              <!-- 行（右ページ） -->
-              <path d="M12.5 9.5c1.7-.5 3.3-.5 5 0" />
-              <path d="M12.5 13c1.7-.5 3.3-.5 5 0" />
-              <path d="M12.5 16.5c1.7-.5 3.3-.5 5 0" />
+            <!-- 本アイコン（既存） -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+              <path d="M3.5 6.5V18c4-.9 7-.9 10 .6"/><path d="M3.5 6.5C3.5 5.7 4.2 5 5 5h5c1.2 0 2.3.4 3 1"/>
+              <path d="M20.5 6.5V18c-4-.9-7-.9-10 .6"/><path d="M20.5 6.5C20.5 5.7 19.8 5 19 5h-5c-1.2 0-2.3.4-3 1"/>
+              <path d="M12 6v13"/><path d="M6.5 9.5c1.7-.5 3.3-.5 5 0"/><path d="M6.5 13c1.7-.5 3.3-.5 5 0"/><path d="M6.5 16.5c1.7-.5 3.3-.5 5 0"/><path d="M12.5 9.5c1.7-.5 3.3-.5 5 0"/><path d="M12.5 13c1.7-.5 3.3-.5 5 0"/><path d="M12.5 16.5c1.7-.5 3.3-.5 5 0"/>
             </svg>
           </span>
           <span>ナレッジ</span>
         </a>
         <a class="nav-item" href="#contact">
           <span class="nav-ico" aria-hidden>
-            <!-- Bell -->
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
           </span>
           <span>問合せ</span>
@@ -196,26 +163,23 @@
   <!-- ===== Hero ===== -->
   <section id="home" class="hero">
     <div class="hero-media">
-      <!-- Replace src with your asset (e.g. /assets/hero-abstract.jpg) -->
-      <img src="https://raw.githubusercontent.com/r-iwamoto-li/dx-portal/9ec9a663d1166b703e5e36f653841ad459a546d3/360_F_743682104_ti07mGClxONYK6SVRGLr7WT7A8Tz070X.jpg" alt="DX Portal hero background" />
+      <img id="heroImg" src="https://raw.githubusercontent.com/r-iwamoto-li/dx-portal/9ec9a663d1166b703e5e36f653841ad459a546d3/360_F_743682104_ti07mGClxONYK6SVRGLr7WT7A8Tz070X.jpg" alt="DX Portal hero background" />
+      <canvas id="fx"></canvas>
     </div>
     <div class="hero-inner container">
       <div class="hero-grid">
-        <div>
+        <div class="reveal">
           <span class="eyebrow">DX Innovation</span>
-          <h1>常識を疑え<br>“<strong>標準</strong>”を再定義</h1>
+          <h1 id="headline"><span class="glow">常識を疑え</span><br>“<strong>標準</strong>”を再定義</h1>
           <p class="sub">Question the norm, reconstruct the standard</p>
           <div class="cta"><a class="btn" href="#contact">お問い合せ</a></div>
         </div>
-        <div class="mv-copy">
+        <div class="mv-copy reveal">
           <h3>Mission / Vision / Value</h3>
           <dl>
-            <dt>Mission</dt>
-            <dd>デジタルの力で業務を再構築し、組織の可能性を余さず引き出す。</dd>
-            <dt>Vision</dt>
-            <dd>すべての業務と人を“デジタルネイティブ化”し、進化し続ける企業を目指す。</dd>
-            <dt>Value</dt>
-            <dd>挑戦を称え、共創を楽しみ、成果にこだわる。</dd>
+            <dt>Mission</dt><dd>デジタルの力で業務を再構築し、組織の可能性を余さず引き出す。</dd>
+            <dt>Vision</dt><dd>すべての業務と人を“デジタルネイティブ化”し、進化し続ける企業を目指す。</dd>
+            <dt>Value</dt><dd>挑戦を称え、共創を楽しみ、成果にこだわる。</dd>
           </dl>
         </div>
       </div>
@@ -226,41 +190,28 @@
   <main class="container">
     <div class="grid-2">
       <!-- Projects -->
-      <section id="projects">
+      <section id="projects" class="reveal">
         <h2>進行中プロジェクト</h2>
         <div class="card">
           <ul class="list">
-            <li>
-              <a class="project-link" href="project-overview.html">
-                <span class="dot"></span> <span class="title">概況</span>
-                <span class="badge">進行中</span>
-              </a>
-            </li>
-            <li>
-              <a class="project-link" href="project-login-security.html">
-                <span class="dot"></span> <span class="title">Login and security</span>
-                <span class="badge">進行中</span>
-              </a>
-            </li>
-            <li><a class="project-link" href="project-payments.html"><span class="dot"></span> <span class="title">My payments</span></a></li>
-            <li><a class="project-link" href="project-voucher.html"><span class="dot"></span> <span class="title">My voucher</span></a></li>
-            <li><a class="project-link" href="project-points.html"><span class="dot"></span> <span class="title">My points</span></a></li>
-            <li><a class="project-link" href="project-orders.html"><span class="dot"></span> <span class="title">My orders</span></a></li>
+            <li><a class="project-link" href="project-overview.html"><span class="dot"></span><span class="title">概況</span><span class="badge">進行中</span></a></li>
+            <li><a class="project-link" href="project-login-security.html"><span class="dot"></span><span class="title">Login and security</span><span class="badge">進行中</span></a></li>
+            <li><a class="project-link" href="project-payments.html"><span class="dot"></span><span class="title">My payments</span></a></li>
+            <li><a class="project-link" href="project-voucher.html"><span class="dot"></span><span class="title">My voucher</span></a></li>
+            <li><a class="project-link" href="project-points.html"><span class="dot"></span><span class="title">My points</span></a></li>
+            <li><a class="project-link" href="project-orders.html"><span class="dot"></span><span class="title">My orders</span></a></li>
           </ul>
-
         </div>
       </section>
 
-      <!-- Announcements / Comments -->
-      <section aria-labelledby="news-title">
+      <!-- News -->
+      <section aria-labelledby="news-title" class="reveal">
         <div style="display:flex;align-items:center;justify-content:space-between">
           <h2 id="news-title">お知らせ</h2>
           <div class="toolbar">
             <div class="select">
               <select aria-label="ソート">
-                <option>Newest</option>
-                <option>Oldest</option>
-                <option>Most liked</option>
+                <option>Newest</option><option>Oldest</option><option>Most liked</option>
               </select>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
             </div>
@@ -274,7 +225,6 @@
                 <span class="c-name">Osbaldo Beahan</span>
                 <span class="c-meta">about 1 hour ago</span>
                 <div class="stars" aria-label="rating: 5 of 5">
-                  <!-- simple stars -->
                   <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
                   <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
                   <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
@@ -311,8 +261,96 @@
   </main>
 
   <!-- ===== Footer ===== -->
-  <footer>
+  <footer class="reveal">
     <div class="container">Copyright © 2020. All rights reserved.</div>
   </footer>
+
+<script>
+/* ===== 1) Hero パーティクル・ネットワーク ===== */
+(function(){
+  const c = document.getElementById('fx'), ctx = c.getContext('2d',{alpha:true});
+  let W=0,H=0, dpr = Math.min(2, window.devicePixelRatio||1);
+  const P=[], MAX=90; // 粒子数
+  function resize(){ W = c.clientWidth = c.parentElement.clientWidth; H = c.clientHeight = c.parentElement.clientHeight; c.width = W*dpr; c.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0) }
+  function add(n=MAX){
+    P.length=0;
+    for(let i=0;i<n;i++){
+      P.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.6,vy:(Math.random()-.5)*.6,r:1.4+Math.random()*1.3});
+    }
+  }
+  function lerp(a,b,t){return a+(b-a)*t}
+  function loop(){
+    ctx.clearRect(0,0,W,H);
+    // 背景薄いグリッド
+    ctx.strokeStyle='rgba(37,99,235,.08)'; ctx.lineWidth=1;
+    for(let y=0;y<H;y+=48){ctx.beginPath();ctx.moveTo(0,y+.5);ctx.lineTo(W,y+.5);ctx.stroke()}
+    for(let x=0;x<W;x+=64){ctx.beginPath();ctx.moveTo(x+.5,0);ctx.lineTo(x+.5,H);ctx.stroke()}
+    // 粒子＆接続
+    for(let i=0;i<P.length;i++){
+      const a=P[i]; a.x+=a.vx; a.y+=a.vy;
+      if(a.x<0||a.x>W) a.vx*=-1; if(a.y<0||a.y>H) a.vy*=-1;
+      ctx.fillStyle='rgba(139,92,246,.85)'; ctx.beginPath(); ctx.arc(a.x,a.y,a.r,0,Math.PI*2); ctx.fill();
+      for(let j=i+1;j<P.length;j++){
+        const b=P[j], dx=a.x-b.x, dy=a.y-b.y, dist=dx*dx+dy*dy;
+        if(dist<9000){ // しきい値
+          const op = 1 - dist/9000;
+          const grad = ctx.createLinearGradient(a.x,a.y,b.x,b.y);
+          grad.addColorStop(0,'rgba(37,99,235,'+ (0.35*op) +')');
+          grad.addColorStop(1,'rgba(139,92,246,'+ (0.35*op) +')');
+          ctx.strokeStyle=grad; ctx.lineWidth=1.2*op; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(loop);
+  }
+  window.addEventListener('resize', ()=>{resize(); add()});
+  resize(); add(); loop();
+})();
+
+/* ===== 2) Reveal on scroll ===== */
+const io = new IntersectionObserver((ents)=>{
+  ents.forEach(e=>{
+    if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target)}
+  })
+},{threshold:.18});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ===== 3) Parallax zoom ===== */
+const heroImg = document.getElementById('heroImg');
+window.addEventListener('scroll', ()=>{
+  const y = Math.min(1, window.scrollY/600);
+  heroImg.style.transform = `scale(${1.06 + y*0.06}) translateY(${y*10}px)`;
+});
+
+/* ===== 4) Magnet nav（軽い吸着） ===== */
+(function(){
+  const wrap=document.getElementById('magnet');
+  const items=[...wrap.querySelectorAll('.nav-item')];
+  wrap.addEventListener('mousemove', e=>{
+    const rect = wrap.getBoundingClientRect();
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    items.forEach(it=>{
+      const r = it.getBoundingClientRect();
+      const cx = r.left - rect.left + r.width/2;
+      const cy = r.top  - rect.top  + r.height/2;
+      const dx = (mx-cx)/r.width, dy=(my-cy)/r.height;
+      it.style.transform = `translate(${dx*6}px,${dy*6}px)`;
+    });
+  });
+  wrap.addEventListener('mouseleave', ()=>items.forEach(it=>it.style.transform=''));
+})();
+
+/* ===== 5) Headline 微グリッチ ===== */
+(function(){
+  const h = document.getElementById('headline');
+  const keyframes = [
+    {filter:'contrast(1) hue-rotate(0deg)', transform:'skewX(0deg)'},
+    {filter:'contrast(1.3) hue-rotate(-8deg)', transform:'skewX(-2deg)'},
+    {filter:'contrast(1) hue-rotate(0deg)', transform:'skewX(0deg)'}
+  ];
+  h.animate(keyframes,{duration:900,iterations:1,easing:'cubic-bezier(.2,.8,.2,1)',delay:300});
+})();
+
+</script>
 </body>
 </html>
