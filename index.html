@@ -95,9 +95,26 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
 .reveal.on{opacity:1;transform:none;filter:none}
 
 /* ===== Intro Shutter ===== */
-.intro{position:fixed;inset:0;background:#06080f;z-index:999;display:grid;grid-template-columns:repeat(10,1fr);gap:2px;overflow:hidden}
-.intro .bar{background:#0b1020;transform:translateY(0);animation:barOut .9s cubic-bezier(.2,.8,.2,1) forwards;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
-.intro .bar:nth-child(odd){background:#0c1428}
+/* Intro: 暗いグラデ＋中央Canvasのみ */
+.intro{
+  position:fixed; inset:0; z-index:999; overflow:hidden;
+  background:linear-gradient(135deg,#05070f,#0b1020 60%,#0b1020);
+  display:block; opacity:1; transition:opacity .6s ease;
+}
+.intro.fade-out{ opacity:0 }
+
+/* 幾何学キャンバス */
+#geoFx{
+  position:absolute; inset:0; width:100%; height:100%;
+  opacity:.88; filter: drop-shadow(0 0 24px rgba(56,189,248,.2));
+}
+
+/* ロゴはそのまま中央に */
+.intro .logo{
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  color:#dbeafe; font-weight:900; font-size:20px; letter-spacing:.08em;
+  text-shadow:0 0 20px rgba(37,99,235,.45);
+}
 @keyframes barOut{to{transform:translateY(-110%)}}
 .intro.is-break .bar{animation:barBreak .6s cubic-bezier(.55,.05,.2,.99) forwards}
 @keyframes barBreak{to{transform:translateY(110%)}}
@@ -190,17 +207,8 @@ footer .container{color:#6b7280;text-align:center;font-size:14px}
   <div class="intro" id="intro">
     <canvas id="geoFx"></canvas>
     <div class="logo">DX PORTAL • INITIALIZING…</div>
-    <div class="bar" style="animation-delay:0.00s"></div>
-    <div class="bar" style="animation-delay:0.05s"></div>
-    <div class="bar" style="animation-delay:0.10s"></div>
-    <div class="bar" style="animation-delay:0.15s"></div>
-    <div class="bar" style="animation-delay:0.20s"></div>
-    <div class="bar" style="animation-delay:0.25s"></div>
-    <div class="bar" style="animation-delay:0.30s"></div>
-    <div class="bar" style="animation-delay:0.35s"></div>
-    <div class="bar" style="animation-delay:0.40s"></div>
-    <div class="bar" style="animation-delay:0.45s"></div>
   </div>
+
   <div class="scanlines" id="scanlines"></div>
 
   <!-- ===== Top Navigation ===== -->
@@ -347,11 +355,183 @@ footer .container{color:#6b7280;text-align:center;font-size:14px}
 
 <script>
 /* ===== Intro Shutter ===== */
+/* ===== Intro Geometry Morph ===== */
 (function(){
   const intro = document.getElementById('intro');
-  setTimeout(()=> intro.classList.add('is-break'), 700);
-  setTimeout(()=> intro.remove(), 1300);
+  const canvas = document.getElementById('geoFx');
+  const ctx = canvas.getContext('2d');
+
+  let W=0, H=0, dpr=1;
+  function resize(){
+    dpr = Math.min(2, window.devicePixelRatio||1);
+    W = canvas.clientWidth; H = canvas.clientHeight;
+    canvas.width = W*dpr; canvas.height = H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  addEventListener('resize', resize); resize();
+
+  // ========= 図形ジェネレータ（全て N 点に正規化） =========
+  const N = 220;           // 表示点数（多いほど複雑）
+  const R = Math.min(W,H)*0.18;
+
+  const gen = {
+    polygon: (sides=7, r=R)=> sampleContour(sides, i=>{
+      const t = 2*Math.PI*i/sides;
+      return [r*Math.cos(t), r*Math.sin(t)];
+    }),
+    star: (sides=5, r1=R*1.0, r2=R*0.45)=> sampleContour(sides*2, i=>{
+      const t = Math.PI*i/sides;
+      const r = (i%2? r2: r1);
+      return [r*Math.cos(t), r*Math.sin(t)];
+    }),
+    rose: (k=5, r=R)=> sampleParam(0, 2*Math.PI, i=>{
+      const t = 2*Math.PI*i/(N-1);
+      const rr = r*Math.cos(k*t);
+      return [rr*Math.cos(t), rr*Math.sin(t)];
+    }),
+    lissajous: (ax=3, ay=2, r=R)=> sampleParam(0, 2*Math.PI, i=>{
+      const t = 2*Math.PI*i/(N-1);
+      return [ r*Math.sin(ax*t+Math.PI/4), r*0.8*Math.sin(ay*t) ];
+    }),
+    superellipse: (m=3.2, a=R, b=R*0.9)=> sampleParam(-Math.PI, Math.PI, i=>{
+      const t= -Math.PI + 2*Math.PI*i/(N-1);
+      const cx = Math.sign(Math.cos(t))*Math.pow(Math.abs(Math.cos(t)),2/m)*a;
+      const cy = Math.sign(Math.sin(t))*Math.pow(Math.abs(Math.sin(t)),2/m)*b;
+      return [cx, cy];
+    }),
+    gear: (teeth=12, r=R*0.85)=> sampleContour(teeth*2, i=>{
+      const t = Math.PI*i/teeth;
+      const rr = (i%2? r*0.78 : r*1.08);
+      return [rr*Math.cos(t), rr*Math.sin(t)];
+    }),
+    hypocycloid: (k=3, r=R)=> sampleParam(0, 2*Math.PI, i=>{
+      const t = 2*Math.PI*i/(N-1);
+      const Rb = r, rb = r/k;
+      return [(Rb-rb)*Math.cos(t)+rb*Math.cos((Rb/rb-1)*t),
+              (Rb-rb)*Math.sin(t)-rb*Math.sin((Rb/rb-1)*t)];
+    }),
+  };
+
+  // 均等サンプリング（周長ベース or パラメトリック）
+  function sampleContour(steps, f){ // f(i)->[x,y], i=0..steps-1
+    const pts=[]; for(let i=0;i<steps;i++) pts.push(f(i));
+    pts.push(pts[0]);
+    return resample(pts, N);
+  }
+  function sampleParam(a,b, f){ // 0..N-1 でパラメトリック
+    const pts=[]; for(let i=0;i<N;i++) pts.push(f(i));
+    return pts;
+  }
+  function resample(poly, n){
+    // poly: 連続点列(閉曲線推奨)
+    const seg=[], cum=[0]; let L=0;
+    for(let i=0;i<poly.length-1;i++){
+      const [x1,y1]=poly[i], [x2,y2]=poly[i+1];
+      const d=Math.hypot(x2-x1, y2-y1); seg.push(d); L+=d; cum.push(L);
+    }
+    const out=[];
+    for(let i=0;i<n;i++){
+      const t=L*i/(n-1);
+      let j=0; while(cum[j+1]<t) j++;
+      const ratio=(t-cum[j])/(seg[j]||1);
+      const [x1,y1]=poly[j], [x2,y2]=poly[j+1]||poly[j];
+      out.push([x1+(x2-x1)*ratio, y1+(y2-y1)*ratio]);
+    }
+    return out;
+  }
+
+  // 図形の順番
+  const sequence = [
+    ()=>gen.polygon(7),
+    ()=>gen.star(7),
+    ()=>gen.rose(5),
+    ()=>gen.lissajous(3,2),
+    ()=>gen.superellipse(3.2),
+    ()=>gen.hypocycloid(4),
+    ()=>gen.gear(12),
+    ()=>gen.polygon(12)
+  ];
+
+  // 初期形状と次形状
+  let a = sequence[0](), b = sequence[1]();
+  let idx = 1, morphT = 0;
+  const morphDur = 1100;           // 1回のモーフ時間(ms)
+  const holdDur  = 300;            // 形状ホールド(ms)
+  let last = 0, holdLeft = holdDur;
+
+  function draw(t){
+    ctx.clearRect(0,0,W,H);
+    ctx.save(); ctx.translate(W/2, H/2);
+
+    // ゆっくり回転＋わずかな拡縮でOP感
+    const rot = performance.now()*0.00035;
+    ctx.rotate(rot);
+    const k = morphT;
+    const pts = new Array(N);
+    for(let i=0;i<N;i++){
+      const [x1,y1]=a[i], [x2,y2]=b[i];
+      pts[i] = { x:x1+(x2-x1)*k, y:y1+(y2-y1)*k };
+    }
+
+    // 外周
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for(let i=1;i<N;i++) ctx.lineTo(pts[i].x, pts[i].y);
+    ctx.closePath();
+    ctx.strokeStyle='rgba(148,163,184,.55)';  // slate-300
+    ctx.lineWidth=1.2; ctx.stroke();
+
+    // 内部の近傍接続（ネットワーク風）
+    ctx.lineWidth=1;
+    for(let i=0;i<N;i+=1){
+      for(let j=i+2;j<i+10 && j<N; j+=3){
+        const p=pts[i], q=pts[j];
+        const d2=(p.x-q.x)**2+(p.y-q.y)**2;
+        if(d2< (R*1.35)**2){
+          const op = 0.06 + 0.12*Math.cos((i+j+rot*240)%6);
+          const grd = ctx.createLinearGradient(p.x,p.y,q.x,q.y);
+          grd.addColorStop(0,'rgba(37,99,235,'+op+')');   // brand
+          grd.addColorStop(1,'rgba(139,92,246,'+op+')'); // brand-2
+          ctx.strokeStyle=grd;
+          ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.stroke();
+        }
+      }
+    }
+
+    // ノードの微光
+    for(let i=0;i<N;i+=6){
+      ctx.fillStyle='rgba(139,92,246,.9)';
+      ctx.beginPath(); ctx.arc(pts[i].x, pts[i].y, 1.8, 0, Math.PI*2); ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function tick(ts){
+    if(!last) last=ts;
+    const dt = ts-last; last=ts;
+
+    if(holdLeft>0){ holdLeft -= dt; }
+    else{
+      morphT += dt/morphDur;
+      if(morphT>=1){
+        morphT = 0;
+        a = b;
+        idx = (idx+1)%sequence.length;
+        b = sequence[idx]();
+        holdLeft = holdDur;
+      }
+    }
+
+    draw(ts);
+    if(ts < 4200){ requestAnimationFrame(tick); }
+    else{
+      intro.classList.add('fade-out');
+      setTimeout(()=> intro.remove(), 650);
+    }
+  }
+  requestAnimationFrame(tick);
 })();
+
 
 /* ===== Hero パーティクル ===== */
 (function(){
@@ -532,7 +712,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
   const sub = document.querySelector('.sub');
   const mvvLines = [...document.querySelectorAll('.mvv-line')];
 
-  const INTRO_MS = 1300;
+  const INTRO_MS = 4200;
   await sleep(INTRO_MS + 150);
   await typeNode(eyebrow, eyebrow.dataset.text, [10,24]);
   await typeNode(h1, h1.dataset.text, [24,42]);     // h1：白背景なしで改行OK
