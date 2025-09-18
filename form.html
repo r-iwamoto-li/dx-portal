@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ご相談/ご要望フォーム</title>
+  <!-- CSSを読み込む -->
+  <link rel="stylesheet" href="form_style.css">
+</head>
+<body>
+
+  <h2 class="form-title">
+    ご相談/ご要望フォーム
+  </h2>
+
+  <form 
+    id="contactForm"
+    action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSeDwjKm_8naSOG4VbMcsxKIEKcFzQKLn_CNjanvHVF0347CSw/formResponse"
+    method="POST"
+    class="c-form"
+    target="hidden_iframe"
+    onsubmit="submitted=true;"
+  >
+
+    <div class="c-form__item">
+      <label class="c-form__label" for="field-empcode">
+        社員番号
+      </label>
+      <input
+        name="entry.1696159737"
+        class="c-form__input"
+        id="field-empcode"
+        placeholder="（例）990001"
+        type="text"
+        required="required"
+      />
+    </div>
+
+    <div class="c-form__item">
+      <label class="c-form__label" for="field-name">
+        氏名
+      </label>
+      <input
+        name="entry.279570395"
+        class="c-form__input"
+        id="field-name"
+        placeholder="（例）花咲 詩羽"
+        type="text"
+        required="required"
+      />
+    </div>
+
+    <div class="c-form__item">
+      <label class="c-form__label" for="field-division">
+        所属部署
+      </label>
+      <input
+        name="entry.2067136364"
+        class="c-form__input"
+        id="field-division"
+        placeholder="（例）DX推進室"
+        type="text"
+        required="required"
+      />
+    </div>
+
+    <div class="c-form__item">
+      <label class="c-form__label" for="field-message">
+        ご相談/ご要望
+      </label>
+      <textarea
+        name="entry.879531967"
+        class="c-form__input"
+        id="field-message"
+        placeholder="内容を入力ください"
+      ></textarea>
+    </div>
+
+    <div class="c-form__submit">
+      <button type="submit">送信</button>
+    </div>
+  </form>
+
+  <!-- Googleフォームの応答を隠すためのiframe -->
+  <iframe name="hidden_iframe" style="display:none;"></iframe>
+
+  <script>
+    let submitted = false;
+    // iframeのロード完了時にサンクスページへリダイレクト
+    document.querySelector("iframe[name='hidden_iframe']").addEventListener("load", function() {
+      if (submitted) {
+        window.location.href = "thanks.html"; // 任意のサンクスページに置き換え
+      }
+    });
+  </script>
+
+</body>
+</html>
