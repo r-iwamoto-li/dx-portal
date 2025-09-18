@@ -61,6 +61,7 @@ a{color:inherit;text-decoration:none}
   background:#fff;border:1px solid rgba(15,23,42,.06);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:transform .15s ease, box-shadow .15s ease
 }
 .card:hover{transform:translateY(-2px); box-shadow:0 16px 36px rgba(2,6,23,.16)}
+/* 画像は全カード同サイズ（16:10）で統一 */
 .card-thumb{aspect-ratio: 16/10; background:#e5e7eb; display:grid; place-items:center; position:relative}
 .card-thumb img{width:100%;height:100%;object-fit:cover}
 .card-status{
@@ -73,6 +74,7 @@ a{color:inherit;text-decoration:none}
 .card-tags{display:flex;gap:8px;flex-wrap:wrap}
 .tag{font-size:11px;font-weight:800;padding:4px 8px;border-radius:999px;background:var(--chip);border:1px solid rgba(15,23,42,.06)}
 .card-meta{display:flex;align-items:center;gap:8px;color:#6b7280;font-size:12px}
+.card-meta .small{opacity:.9}
 
 /* ===== Footer ===== */
 footer{padding:28px 0 36px;border-top:1px solid rgba(15,23,42,.06);margin-top:40px}
@@ -116,8 +118,7 @@ footer .container{color:#6b7280;text-align:center;font-size:14px}
   <!-- ===== Page Header ===== -->
   <header class="page-hero container">
     <h1>プロジェクト一覧</h1>
-
-    <!-- カテゴリタブはJSで生成されます -->
+    <p class="small">カテゴリタブで絞り込み／最終活動日は各ページの「活動履歴」から自動取得</p>
     <div id="tabs" class="tabs" role="tablist" aria-label="カテゴリ"></div>
   </header>
 
@@ -131,87 +132,203 @@ footer .container{color:#6b7280;text-align:center;font-size:14px}
   </footer>
 
 <script>
-/* ===== Mock data (TOPのリンクに対応) =====
-   - tag は複数可。例: ["経営データ","基盤"] */
+/* ====== 設定 ======
+ cover は以下どれでもOK
+  1) 直接画像URL（PNG/JPG/SVG 等）
+  2) GitHub blob URL: https://github.com/{user}/{repo}/blob/{branch}/path/to/img.png
+  3) 短縮: gh:{user}/{repo}/{branch}/path/to/img.png
+*/
 const PROJECTS = [
   {
     id:"project-overview",
-    title:"概況",
+    title:"概況（Management Overview）",
     href:"project-overview.html",
-    cover:"https://images.unsplash.com/photo-1551281044-8a5bc166fc5e?auto=format&fit=crop&w=1200&q=60",
+    cover:"gh:r-iwamoto-li/dx-portal/main/assets/projects/overview.png",
     status:"運用中",
     tags:["経営データ","ダッシュボード"],
-    lastActivity:"2025-09-10"
+    lastActivity:"" // 空なら自動取得
   },
   {
     id:"project-login-security",
     title:"事業推進会議",
     href:"project-login-security.html",
-    cover:"https://thumb.ac-illust.com/57/57fef45999b1bc0de24b14e7b3eaea8a_t.jpegauto=format&fit=crop&w=1200&q=60",
+    cover:"https://github.com/r-iwamoto-li/dx-portal/blob/main/assets/projects/meeting.jpg",
     status:"運用中",
     tags:["経営データ","売上・利益"],
-    lastActivity:"2025-09-16"
+    lastActivity:""
   },
-  { id:"project-payments", title:"空き工数管理", href:"project-payments.html",
-    cover:"https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=1200&q=60",
-    status:"進行中", tags:["人材管理","プロジェクト管理"], lastActivity:"2025-08-29"
+  {
+    id:"project-payments",
+    title:"空き工数管理",
+    href:"project-payments.html",
+    cover:"https://raw.githubusercontent.com/r-iwamoto-li/dx-portal/main/assets/projects/capacity.jpg",
+    status:"進行中",
+    tags:["人材管理","プロジェクト管理"],
+    lastActivity:""
   },
-  { id:"project-voucher", title:"XXX", href:"project-voucher.html",
-    cover:"https://images.unsplash.com/photo-1612198182422-3f3f77a5d4d1?auto=format&fit=crop&w=1200&q=60",
-    status:"計画中", tags:["未定"], lastActivity:"2025-09-12"
+  {
+    id:"project-voucher",
+    title:"クーポン管理（仮）",
+    href:"project-voucher.html",
+    cover:"gh:r-iwamoto-li/dx-portal/main/assets/projects/voucher.png",
+    status:"計画中",
+    tags:["マーケ"],
+    lastActivity:""
   },
-  { id:"project-points", title:"XXX", href:"project-points.html",
-    cover:"https://images.unsplash.com/photo-1612198182422-3f3f77a5d4d1?auto=format&fit=crop&w=1200&q=60",
-    status:"計画中", tags:["未定"], lastActivity:"2025-09-14"
+  {
+    id:"project-points",
+    title:"ポイント（仮）",
+    href:"project-points.html",
+    cover:"gh:r-iwamoto-li/dx-portal/main/assets/projects/points.jpg",
+    status:"計画中",
+    tags:["ロイヤリティ","マーケ"],
+    lastActivity:""
   },
-  { id:"project-orders", title:"XXX", href:"project-orders.html",
-    cover:"https://images.unsplash.com/photo-1515165562835-c3b8c8df0b9b?auto=format&fit=crop&w=1200&q=60",
-    status:"計画中", tags:["未定"], lastActivity:"2025-09-05"
+  {
+    id:"project-orders",
+    title:"注文（仮）",
+    href:"project-orders.html",
+    cover:"gh:r-iwamoto-li/dx-portal/main/assets/projects/orders.jpg",
+    status:"運用中",
+    tags:["EC","物流"],
+    lastActivity:""
   }
 ];
 
-/* ===== Build tabs from tags ===== */
+/* ===== GitHub 画像URL -> raw 変換 ===== */
+function toRawGitUrl(u){
+  if(!u) return u;
+  // gh:owner/repo/branch/path/to/file
+  if(/^gh:/.test(u)){
+    const rest = u.replace(/^gh:/,'');
+    const [owner, repo, branch, ...path] = rest.split('/');
+    return `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path.join('/')}`;
+  }
+  // https://github.com/.../blob/{branch}/path
+  if(/^https?:\/\/github\.com\/.+\/blob\//.test(u)){
+    return u.replace(/^https?:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)$/,'https://raw.githubusercontent.com/$1/$2/$3/$4');
+  }
+  return u; // すでに raw か外部画像
+}
+
+/* ===== タブ生成 ===== */
 const tabsWrap = document.getElementById('tabs');
 const cardsWrap = document.getElementById('cards');
 const allTags = Array.from(new Set(PROJECTS.flatMap(p=>p.tags))).sort();
 const TAB_ALL = "All";
-
-// URLハッシュ #tag=経営データ の形を使う
 const getHashTag = ()=> decodeURIComponent((location.hash.match(/tag=([^&]+)/)||[])[1]||"");
 
-/* Render Tabs */
 function renderTabs(activeTag){
   tabsWrap.innerHTML="";
-  const tags = [TAB_ALL, ...allTags];
+  const tags=[TAB_ALL, ...allTags];
   tags.forEach(tag=>{
-    const btn = document.createElement('button');
+    const btn=document.createElement('button');
     btn.type="button";
-    btn.className = "tab" + ((activeTag===tag) || (!activeTag && tag===TAB_ALL) ? " active":"");
-    btn.textContent = tag===TAB_ALL ? "すべて" : tag;
+    btn.className="tab"+((activeTag===tag)||(!activeTag && tag===TAB_ALL)?" active":"");
+    btn.textContent= tag===TAB_ALL ? "すべて" : tag;
     btn.setAttribute('role','tab');
-    btn.onclick = ()=>{
-      if(tag===TAB_ALL){ history.replaceState(null,"", location.pathname); }
-      else{ location.hash = "tag=" + encodeURIComponent(tag); }
+    btn.onclick=()=>{
+      if(tag===TAB_ALL){ history.replaceState(null,"",location.pathname); }
+      else{ location.hash = "tag="+encodeURIComponent(tag); }
       update();
     };
     tabsWrap.appendChild(btn);
   });
 }
 
-/* Render Cards */
-function renderCards(activeTag){
+/* ===== 日付抽出ユーティリティ ===== */
+function parseDateString(s){
+  // 2025-09-14 or 2025/09/14 or 2025.09.14
+  let m = s.match(/(\d{4})[\/\-.](\d{1,2})[\/\-.](\d{1,2})/);
+  if(m){
+    const y=+m[1], mo=+m[2], d=+m[3];
+    return new Date(Date.UTC(y, mo-1, d));
+  }
+  // 2025年09月14日
+  m = s.match(/(\d{4})\s*年\s*(\d{1,2})\s*月\s*(\d{1,2})\s*日/);
+  if(m){
+    const y=+m[1], mo=+m[2], d=+m[3];
+    return new Date(Date.UTC(y, mo-1, d));
+  }
+  return null;
+}
+
+function formatISO(d){
+  if(!d) return "";
+  const y=d.getUTCFullYear();
+  const m=String(d.getUTCMonth()+1).padStart(2,'0');
+  const da=String(d.getUTCDate()).padStart(2,'0');
+  return `${y}-${m}-${da}`;
+}
+
+/* ===== プロジェクトページから最新日付を取得 ===== */
+const activityCache = new Map(); // href -> YYYY-MM-DD
+
+async function getLatestActivityDate(href){
+  if(activityCache.has(href)) return activityCache.get(href);
+  try{
+    const res = await fetch(href, {cache:"no-store"});
+    const html = await res.text();
+    const doc = new DOMParser().parseFromString(html, "text/html");
+
+    // 「活動履歴」セクションの近辺テキストを優先して抽出
+    let scope = doc;
+    const candidates = [...doc.querySelectorAll("*")].filter(el=>{
+      const t = (el.textContent||"").trim();
+      return /活動履歴|更新履歴|History|Changelog/i.test(t);
+    });
+    if(candidates.length){
+      // セクション自身＋次の兄弟数個をまとめる
+      const wrap = document.createElement('div');
+      candidates.slice(0,2).forEach(el=>{
+        wrap.appendChild(el.cloneNode(true));
+        for(let i=0;i<3 && el.nextElementSibling;i++){
+          wrap.appendChild(el.nextElementSibling.cloneNode(true));
+        }
+      });
+      scope = wrap;
+    }
+
+    const text = scope.textContent || "";
+    const dateStrings = text.match(/\d{4}[\/\-.]\d{1,2}[\/\-.]\d{1,2}|\d{4}\s*年\s*\d{1,2}\s*月\s*\d{1,2}\s*日/g) || [];
+
+    // もし見つからなければ、ページ内の <time datetime> を拾う
+    const timeDates = [...doc.querySelectorAll("time[datetime]")].map(t=>new Date(t.getAttribute("datetime")));
+    timeDates.forEach(d=>dateStrings.push(formatISO(d)));
+
+    let latest = null;
+    for(const s of dateStrings){
+      const d = parseDateString(s);
+      if(d && (!latest || d>latest)) latest = d;
+    }
+    const iso = latest ? formatISO(latest) : "";
+    activityCache.set(href, iso);
+    return iso;
+  }catch(e){
+    console.warn("活動日取得エラー:", href, e);
+    activityCache.set(href, "");
+    return "";
+  }
+}
+
+/* ===== カード描画 ===== */
+async function renderCards(activeTag){
   const list = activeTag && activeTag!==TAB_ALL
     ? PROJECTS.filter(p=>p.tags.includes(activeTag))
     : PROJECTS;
 
   cardsWrap.innerHTML="";
-  list.forEach(p=>{
+  for(const p of list){
     const a = document.createElement('a');
     a.href = p.href; a.className="card"; a.setAttribute('aria-label', p.title);
 
-    // thumb
+    // thumb（GitHubパスをrawに補正）
     const th = document.createElement('div'); th.className="card-thumb";
-    const img = document.createElement('img'); img.src=p.cover; img.alt="";
+    const img = document.createElement('img');
+    img.loading = "lazy";
+    img.decoding = "async";
+    img.src = toRawGitUrl(p.cover);
+    img.alt = "";
     const st = document.createElement('div'); st.className="card-status"; st.textContent = p.status;
     th.append(img, st);
 
@@ -223,25 +340,33 @@ function renderCards(activeTag){
     p.tags.forEach(t=>{ const s=document.createElement('span'); s.className="tag"; s.textContent=t; tags.appendChild(s) });
 
     const meta = document.createElement('div'); meta.className="card-meta";
-    meta.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                      <span>最終活動日: ${p.lastActivity}</span>`;
+    const span = document.createElement('span'); span.textContent = "最終活動日: ";
+    const dateEl = document.createElement('strong'); dateEl.textContent = p.lastActivity || "読込中…";
+    meta.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`;
+    meta.append(span, dateEl);
 
     body.append(title, tags, meta);
     a.append(th, body);
     cardsWrap.appendChild(a);
-  });
+
+    // 非同期で最終活動日を取得して更新
+    if(!p.lastActivity){
+      getLatestActivityDate(p.href).then(dt=>{
+        if(dt) dateEl.textContent = dt;
+        else   dateEl.textContent = "—";
+      });
+    }
+  }
 }
 
-/* Update via hash */
+/* ===== 起動＆タブ制御 ===== */
 function update(){
   const tag = getHashTag();
   renderTabs(tag||TAB_ALL);
   renderCards(tag);
 }
 window.addEventListener('hashchange', update);
-
-/* Boot */
-document.getElementById('year').textContent = new Date().getFullYear?.() || new Date().getFullYear;
+document.getElementById('year').textContent = new Date().getFullYear();
 update();
 </script>
 </body>
