@@ -1,0 +1,67 @@
+/* フォームタイトル用 */
+.form-title {
+  margin: 50px auto;
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #3c4e77;
+}
+
+/* フォーム全体 */
+.c-form {
+  max-width: 400px;
+  margin: 0 auto;
+}
+.c-form__item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+.c-form__label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #3c4e77;
+  align-self: flex-start;
+  padding: 5px;
+}
+.c-form__input {
+  font-size: 14px;
+  color: #333;
+  background-color: #ecf0f3;
+  border: solid 1px #ecf0f3;
+  border-radius: 8px;
+  padding: 8px;
+}
+.c-form__input:focus-visible {
+  outline: #6a91c1 auto 1px;
+}
+textarea.c-form__input {
+  height: 160px;
+}
+.c-form__input::placeholder {
+  font-size: 14px;
+  color: #888888;
+}
+
+.c-form__submit {
+  margin-top: 40px;
+  text-align: center;
+}
+.c-form__submit button {
+  width: 100%;
+  max-width: 400px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #252525;
+  border: solid 1px #252525;
+  border-radius: 25px;
+  padding: 6px;
+  cursor: pointer;
+}
+.c-form__submit button:hover {
+  color: #fff;
+  background-color: #3c4e77;
+  border-color: #3c4e77;
+}
