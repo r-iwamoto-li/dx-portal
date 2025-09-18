@@ -163,4 +163,100 @@ const KNOWLEDGE = [
     title: "ダッシュボードUX 10の原則",
     excerpt: "視線誘導・配色・比較可能性・アフォーダンスなど、意思決定スピードを上げるための設計原則をまとめました。",
     href: "knowledge-dashboard-ux.html",
-    cover: "https://raw.githubusercontent.com/r-iwamoto-li/dx-portal/main/asset
+    cover: "https://raw.githubusercontent.com/r-iwamoto-li/dx-portal/main/assets/knowledge/dashboard-ux.jpg",
+    tags: ["ダッシュボード","設計","UX"],
+    date: "2025-08-28",
+    author: "BIチーム"
+  }
+];
+
+/* ===== GitHub画像URL -> raw変換 ===== */
+function toRawGitUrl(u){
+  if(!u) return u;
+  if(/^gh:/.test(u)){
+    const rest = u.replace(/^gh:/,'');
+    const [owner, repo, branch, ...path] = rest.split('/');
+    return `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path.join('/')}`;
+  }
+  if(/^https?:\/\/github\.com\/.+\/blob\//.test(u)){
+    return u.replace(/^https?:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)$/,'https://raw.githubusercontent.com/$1/$2/$3/$4');
+  }
+  return u;
+}
+
+/* ===== タブ生成 ===== */
+const tabsWrap = document.getElementById('tabs');
+const listWrap = document.getElementById('list');
+const allTags = Array.from(new Set(KNOWLEDGE.flatMap(n=>n.tags))).sort();
+const TAB_ALL = "All";
+const getHashTag = ()=> decodeURIComponent((location.hash.match(/tag=([^&]+)/)||[])[1]||"");
+
+function renderTabs(activeTag){
+  tabsWrap.innerHTML="";
+  const tags=[TAB_ALL, ...allTags];
+  tags.forEach(tag=>{
+    const btn=document.createElement('button');
+    btn.type="button";
+    btn.className="tab"+((activeTag===tag)||(!activeTag && tag===TAB_ALL)?" active":"");
+    btn.textContent= tag===TAB_ALL ? "すべて" : tag;
+    btn.setAttribute('role','tab');
+    btn.onclick=()=>{
+      if(tag===TAB_ALL){ history.replaceState(null,"",location.pathname); }
+      else{ location.hash = "tag="+encodeURIComponent(tag); }
+      update();
+    };
+    tabsWrap.appendChild(btn);
+  });
+}
+
+/* ===== リスト描画 ===== */
+function renderList(activeTag){
+  const items = activeTag && activeTag!==TAB_ALL
+    ? KNOWLEDGE.filter(n=>n.tags.includes(activeTag))
+    : KNOWLEDGE;
+
+  listWrap.innerHTML="";
+  items.forEach(n=>{
+    const a=document.createElement('a');
+    a.href=n.href; a.className="k-item"; a.setAttribute('aria-label', n.title);
+
+    // Thumb
+    const th=document.createElement('div'); th.className="k-thumb";
+    const wrap=document.createElement('div'); wrap.className="imgwrap";
+    const img=document.createElement('img'); img.src=toRawGitUrl(n.cover); img.alt="";
+    wrap.appendChild(img);
+    const bdg=document.createElement('div'); bdg.className="k-badge"; bdg.textContent="記事";
+    th.append(wrap, bdg);
+
+    // Body
+    const body=document.createElement('div'); body.className="k-body";
+    const title=document.createElement('div'); title.className="k-title"; title.textContent=n.title;
+    const excerpt=document.createElement('p'); excerpt.className="k-excerpt"; excerpt.textContent=n.excerpt;
+
+    const tags=document.createElement('div'); tags.className="k-tags";
+    n.tags.forEach(t=>{ const s=document.createElement('span'); s.className="tag"; s.textContent=t; tags.appendChild(s) });
+
+    const meta=document.createElement('div'); meta.className="k-meta";
+    const left=document.createElement('div'); left.className="k-row";
+    left.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg> <span>${n.date}</span> <span> / ${n.author}</span>`;
+    const more=document.createElement('div'); more.className="k-more"; more.textContent="READ MORE";
+    meta.append(left, more);
+
+    body.append(title, excerpt, tags, meta);
+    a.append(th, body);
+    listWrap.appendChild(a);
+  });
+}
+
+/* ===== 起動＆タブ制御 ===== */
+function update(){
+  const tag = getHashTag();
+  renderTabs(tag||TAB_ALL);
+  renderList(tag);
+}
+window.addEventListener('hashchange', update);
+document.getElementById('year').textContent = new Date().getFullYear();
+update();
+</script>
+</body>
+</html>
