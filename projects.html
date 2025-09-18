@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>進行中プロジェクト一覧 | DX推進ポータル</title>
+<meta name="description" content="DX推進ポータル | プロジェクト一覧" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0f1a; --surface:#ffffff; --text:#121416; --muted:#6b7280;
+  --brand:#2563eb; --brand-2:#8b5cf6; --shadow:0 10px 30px rgba(2,6,23,.14);
+  --radius:16px; --chip:#eef2ff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Inter","Noto Sans JP",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+  color:var(--text); background:#f7f9fc; line-height:1.6; overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+.container{max-width:1200px;margin:0 auto;padding:0 20px}
+
+/* ===== Top Nav (TOPと同じ) ===== */
+.topnav-wrap{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.75);backdrop-filter:blur(10px);border-bottom:1px solid rgba(15,23,42,.06)}
+.topnav{display:flex;gap:14px;align-items:center;justify-content:center;padding:10px 8px}
+.pill{
+  display:flex;gap:24px;align-items:center;justify-content:center;
+  background:#f4f6fb;border:1px solid rgba(15,23,42,.06);
+  border-radius:46px;padding:8px 14px;box-shadow:var(--shadow)
+}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 14px;border-radius:28px;font-size:12px;color:#3b4252;font-weight:600;transition:transform .2s ease, background .2s ease, box-shadow .2s ease}
+.nav-item:hover{background:#fff;transform:translateY(-2px)}
+.nav-item.active{background:linear-gradient(135deg,rgba(37,99,235,.12),rgba(139,92,246,.12));color:var(--brand);box-shadow:0 6px 16px rgba(37,99,235,.18)}
+.nav-ico{width:22px;height:22px;display:grid;place-items:center}
+
+/* ===== Page Header (簡易) ===== */
+.page-hero{padding:28px 0 6px}
+.page-hero h1{font-family:"Noto Sans JP";font-size:28px;margin:10px 0 4px}
+.page-hero p{color:#475569;margin:0}
+
+/* ===== Filter Tabs ===== */
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 22px}
+.tab{
+  border:1px solid rgba(15,23,42,.08); background:#fff;
+  padding:8px 12px;border-radius:999px;font-weight:700;font-size:13px;color:#0f172a;
+  cursor:pointer; transition:all .15s ease;
+}
+.tab:hover{transform:translateY(-1px)}
+.tab.active{background:linear-gradient(135deg,rgba(37,99,235,.12),rgba(139,92,246,.12)); color:#1d4ed8; border-color:transparent}
+
+/* ===== Cards Grid ===== */
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+@media (max-width: 1100px){ .grid{grid-template-columns:repeat(3,1fr)} }
+@media (max-width: 800px){ .grid{grid-template-columns:repeat(2,1fr)} }
+@media (max-width: 520px){ .grid{grid-template-columns:1fr} }
+
+.card{
+  background:#fff;border:1px solid rgba(15,23,42,.06);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:transform .15s ease, box-shadow .15s ease
+}
+.card:hover{transform:translateY(-2px); box-shadow:0 16px 36px rgba(2,6,23,.16)}
+.card-thumb{aspect-ratio: 16/10; background:#e5e7eb; display:grid; place-items:center; position:relative}
+.card-thumb img{width:100%;height:100%;object-fit:cover}
+.card-status{
+  position:absolute;left:10px;top:10px;padding:6px 10px;border-radius:999px;
+  background:#111827;color:#fff;font-weight:800;font-size:11px;letter-spacing:.02em
+}
+
+.card-body{padding:14px 14px 12px;display:flex;flex-direction:column;gap:10px}
+.card-title{font-weight:800}
+.card-tags{display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:11px;font-weight:800;padding:4px 8px;border-radius:999px;background:var(--chip);border:1px solid rgba(15,23,42,.06)}
+.card-meta{display:flex;align-items:center;gap:8px;color:#6b7280;font-size:12px}
+
+/* ===== Footer ===== */
+footer{padding:28px 0 36px;border-top:1px solid rgba(15,23,42,.06);margin-top:40px}
+footer .container{color:#6b7280;text-align:center;font-size:14px}
+</style>
+</head>
+<body>
+
+  <!-- ===== Top Navigation ===== -->
+  <div class="topnav-wrap">
+    <nav class="topnav container">
+      <div class="pill">
+        <a class="nav-item" href="index.html#home">
+          <span class="nav-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+          </span><span>HOME</span>
+        </a>
+        <a class="nav-item active" href="projects.html">
+          <span class="nav-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h5l2 3h11v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 7V5a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v3"/></svg>
+          </span><span>プロジェクト</span>
+        </a>
+        <a class="nav-item" href="index.html#narrative">
+          <span class="nav-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+              <path d="M3.5 6.5V18c4-.9 7-.9 10 .6"/><path d="M3.5 6.5C3.5 5.7 4.2 5 5 5h5c1.2 0 2.3.4 3 1"/>
+              <path d="M20.5 6.5V18c-4-.9-7-.9-10 .6"/><path d="M20.5 6.5C20.5 5.7 19.8 5 19 5h-5c-1.2 0-2.3.4-3 1"/>
+              <path d="M12 6v13"/><path d="M6.5 9.5c1.7-.5 3.3-.5 5 0"/><path d="M6.5 13c1.7-.5 3.3-.5 5 0"/><path d="M6.5 16.5c1.7-.5 3.3-.5 5 0"/><path d="M12.5 9.5c1.7-.5 3.3-.5 5 0"/><path d="M12.5 13c1.7-.5 3.3-.5 5 0"/><path d="M12.5 16.5c1.7-.5 3.3-.5 5 0"/>
+            </svg>
+          </span><span>ナレッジ</span>
+        </a>
+        <a class="nav-item" href="form.html">
+          <span class="nav-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
+          </span><span>問合せ</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <!-- ===== Page Header ===== -->
+  <header class="page-hero container">
+    <h1>プロジェクト一覧</h1>
+    <p>TOPの「進行中プロジェクト」を拡張表示。カテゴリで絞り込みできます。</p>
+
+    <!-- カテゴリタブはJSで生成されます -->
+    <div id="tabs" class="tabs" role="tablist" aria-label="カテゴリ"></div>
+  </header>
+
+  <!-- ===== Cards ===== -->
+  <main class="container">
+    <section id="cards" class="grid" aria-live="polite"></section>
+  </main>
+
+  <footer>
+    <div class="container">Copyright © <span id="year"></span>. All rights reserved.</div>
+  </footer>
+
+<script>
+/* ===== Mock data (TOPのリンクに対応) =====
+   - tag は複数可。例: ["経営データ","基盤"] */
+const PROJECTS = [
+  {
+    id:"project-overview",
+    title:"概況（Management Overview）",
+    href:"project-overview.html",
+    cover:"https://images.unsplash.com/photo-1551281044-8a5bc166fc5e?auto=format&fit=crop&w=1200&q=60",
+    status:"進行中",
+    tags:["経営データ","ダッシュボード"],
+    lastActivity:"2025-09-10"
+  },
+  {
+    id:"project-login-security",
+    title:"Login and security",
+    href:"project-login-security.html",
+    cover:"https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&w=1200&q=60",
+    status:"進行中",
+    tags:["基盤","認証"],
+    lastActivity:"2025-09-16"
+  },
+  { id:"project-payments", title:"My payments", href:"project-payments.html",
+    cover:"https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=1200&q=60",
+    status:"計画中", tags:["決済","会計"], lastActivity:"2025-08-29"
+  },
+  { id:"project-voucher", title:"My voucher", href:"project-voucher.html",
+    cover:"https://images.unsplash.com/photo-1607082349566-187342175e2f?auto=format&fit=crop&w=1200&q=60",
+    status:"進行中", tags:["クーポン","マーケ"], lastActivity:"2025-09-12"
+  },
+  { id:"project-points", title:"My points", href:"project-points.html",
+    cover:"https://images.unsplash.com/photo-1612198182422-3f3f77a5d4d1?auto=format&fit=crop&w=1200&q=60",
+    status:"進行中", tags:["ロイヤリティ","マーケ"], lastActivity:"2025-09-14"
+  },
+  { id:"project-orders", title:"My orders", href:"project-orders.html",
+    cover:"https://images.unsplash.com/photo-1515165562835-c3b8c8df0b9b?auto=format&fit=crop&w=1200&q=60",
+    status:"運用中", tags:["EC","物流"], lastActivity:"2025-09-05"
+  }
+];
+
+/* ===== Build tabs from tags ===== */
+const tabsWrap = document.getElementById('tabs');
+const cardsWrap = document.getElementById('cards');
+const allTags = Array.from(new Set(PROJECTS.flatMap(p=>p.tags))).sort();
+const TAB_ALL = "All";
+
+// URLハッシュ #tag=経営データ の形を使う
+const getHashTag = ()=> decodeURIComponent((location.hash.match(/tag=([^&]+)/)||[])[1]||"");
+
+/* Render Tabs */
+function renderTabs(activeTag){
+  tabsWrap.innerHTML="";
+  const tags = [TAB_ALL, ...allTags];
+  tags.forEach(tag=>{
+    const btn = document.createElement('button');
+    btn.type="button";
+    btn.className = "tab" + ((activeTag===tag) || (!activeTag && tag===TAB_ALL) ? " active":"");
+    btn.textContent = tag===TAB_ALL ? "すべて" : tag;
+    btn.setAttribute('role','tab');
+    btn.onclick = ()=>{
+      if(tag===TAB_ALL){ history.replaceState(null,"", location.pathname); }
+      else{ location.hash = "tag=" + encodeURIComponent(tag); }
+      update();
+    };
+    tabsWrap.appendChild(btn);
+  });
+}
+
+/* Render Cards */
+function renderCards(activeTag){
+  const list = activeTag && activeTag!==TAB_ALL
+    ? PROJECTS.filter(p=>p.tags.includes(activeTag))
+    : PROJECTS;
+
+  cardsWrap.innerHTML="";
+  list.forEach(p=>{
+    const a = document.createElement('a');
+    a.href = p.href; a.className="card"; a.setAttribute('aria-label', p.title);
+
+    // thumb
+    const th = document.createElement('div'); th.className="card-thumb";
+    const img = document.createElement('img'); img.src=p.cover; img.alt="";
+    const st = document.createElement('div'); st.className="card-status"; st.textContent = p.status;
+    th.append(img, st);
+
+    // body
+    const body = document.createElement('div'); body.className="card-body";
+    const title = document.createElement('div'); title.className="card-title"; title.textContent = p.title;
+
+    const tags = document.createElement('div'); tags.className="card-tags";
+    p.tags.forEach(t=>{ const s=document.createElement('span'); s.className="tag"; s.textContent=t; tags.appendChild(s) });
+
+    const meta = document.createElement('div'); meta.className="card-meta";
+    meta.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                      <span>最終活動日: ${p.lastActivity}</span>`;
+
+    body.append(title, tags, meta);
+    a.append(th, body);
+    cardsWrap.appendChild(a);
+  });
+}
+
+/* Update via hash */
+function update(){
+  const tag = getHashTag();
+  renderTabs(tag||TAB_ALL);
+  renderCards(tag);
+}
+window.addEventListener('hashchange', update);
+
+/* Boot */
+document.getElementById('year').textContent = new Date().getFullYear?.() || new Date().getFullYear;
+update();
+</script>
+</body>
+</html>
