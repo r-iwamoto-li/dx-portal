@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ナレッジ一覧 | DX推進ポータル</title>
+<meta name="description" content="DX推進ポータル | ナレッジ一覧" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0f1a; --surface:#ffffff; --text:#121416; --muted:#6b7280;
+  --brand:#2563eb; --brand-2:#8b5cf6; --shadow:0 10px 30px rgba(2,6,23,.14);
+  --radius:16px; --chip:#eef2ff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Inter","Noto Sans JP",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+  color:var(--text); background:#f7f9fc; line-height:1.6; overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+.container{max-width:1200px;margin:0 auto;padding:0 20px}
+
+/* ===== Top Nav (TOPと同じ) ===== */
+.topnav-wrap{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.75);backdrop-filter:blur(10px);border-bottom:1px solid rgba(15,23,42,.06)}
+.topnav{display:flex;gap:14px;align-items:center;justify-content:center;padding:10px 8px}
+.pill{
+  display:flex;gap:24px;align-items:center;justify-content:center;
+  background:#f4f6fb;border:1px solid rgba(15,23,42,.06);
+  border-radius:46px;padding:8px 14px;box-shadow:var(--shadow)
+}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 14px;border-radius:28px;font-size:12px;color:#3b4252;font-weight:600;transition:transform .2s ease, background .2s ease, box-shadow .2s ease}
+.nav-item:hover{background:#fff;transform:translateY(-2px)}
+.nav-item.active{background:linear-gradient(135deg,rgba(37,99,235,.12),rgba(139,92,246,.12));color:var(--brand);box-shadow:0 6px 16px rgba(37,99,235,.18)}
+.nav-ico{width:22px;height:22px;display:grid;place-items:center}
+
+/* ===== Page Header ===== */
+.page-hero{padding:28px 0 6px}
+.page-hero h1{font-family:"Noto Sans JP";font-size:28px;margin:10px 0 4px}
+.page-hero p{color:#475569;margin:0}
+
+/* ===== Filter Tabs ===== */
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 22px}
+.tab{
+  border:1px solid rgba(15,23,42,.08); background:#fff;
+  padding:8px 12px;border-radius:999px;font-weight:700;font-size:13px;color:#0f172a;
+  cursor:pointer; transition:all .15s ease;
+}
+.tab:hover{transform:translateY(-1px)}
+.tab.active{background:linear-gradient(135deg,rgba(37,99,235,.12),rgba(139,92,246,.12)); color:#1d4ed8; border-color:transparent}
+
+/* ===== Knowledge list ===== */
+.k-list{display:grid;gap:22px}
+.k-item{
+  display:grid; grid-template-columns:320px 1fr; gap:24px; align-items:stretch;
+  background:#fff; border:1px solid rgba(15,23,42,.06); border-radius:18px; box-shadow:var(--shadow); overflow:hidden;
+}
+@media (max-width: 840px){
+  .k-item{grid-template-columns:1fr}
+}
+.k-thumb{position:relative; background:#e5e7eb}
+.k-thumb .imgwrap{width:100%; height:100%; aspect-ratio:4/3; display:block; overflow:hidden}
+.k-thumb img{width:100%;height:100%;object-fit:cover; display:block}
+.k-badge{
+  position:absolute;left:10px;top:10px;padding:6px 10px;border-radius:999px;
+  background:#111827;color:#fff;font-weight:800;font-size:11px;letter-spacing:.02em
+}
+.k-body{padding:16px 18px; display:flex; flex-direction:column; gap:8px}
+.k-title{font-weight:800; font-size:18px}
+.k-excerpt{color:#475569; font-size:14px; margin-top:4px}
+.k-tags{display:flex; gap:8px; flex-wrap:wrap; margin-top:6px}
+.tag{font-size:11px;font-weight:800;padding:4px 8px;border-radius:999px;background:var(--chip);border:1px solid rgba(15,23,42,.06)}
+.k-meta{display:flex; gap:12px; align-items:center; color:#6b7280; font-size:12px; margin-top:8px}
+.k-more{margin-left:auto; font-size:12px; letter-spacing:.08em; font-weight:900}
+.k-row{display:flex; gap:10px; align-items:center}
+.k-row svg{opacity:.8}
+
+/* ===== Footer ===== */
+footer{padding:28px 0 36px;border-top:1px solid rgba(15,23,42,.06);margin-top:40px}
+footer .container{color:#6b7280;text-align:center;font-size:14px}
+</style>
+</head>
+<body>
+
+  <!-- ===== Top Navigation ===== -->
+  <div class="topnav-wrap">
+    <nav class="topnav container">
+      <div class="pill">
+        <a class="nav-item" href="index.html#home">
+          <span class="nav-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+          </span><span>HOME</span>
+        </a>
+        <a class="nav-item" href="projects.html">
+          <span class="nav-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h5l2 3h11v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 7V5a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v3"/></svg>
+          </span><span>プロジェクト</span>
+        </a>
+        <a class="nav-item active" href="knowledge.html">
+          <span class="nav-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
+              <path d="M3.5 6.5V18c4-.9 7-.9 10 .6"/><path d="M3.5 6.5C3.5 5.7 4.2 5 5 5h5c1.2 0 2.3.4 3 1"/>
+              <path d="M20.5 6.5V18c-4-.9-7-.9-10 .6"/><path d="M20.5 6.5C20.5 5.7 19.8 5 19 5h-5c-1.2 0-2.3.4-3 1"/>
+              <path d="M12 6v13"/><path d="M6.5 9.5c1.7-.5 3.3-.5 5 0"/><path d="M6.5 13c1.7-.5 3.3-.5 5 0"/><path d="M6.5 16.5c1.7-.5 3.3-.5 5 0"/><path d="M12.5 9.5c1.7-.5 3.3-.5 5 0"/><path d="M12.5 13c1.7-.5 3.3-.5 5 0"/><path d="M12.5 16.5c1.7-.5 3.3-.5 5 0"/>
+            </svg>
+          </span><span>ナレッジ</span>
+        </a>
+        <a class="nav-item" href="form.html">
+          <span class="nav-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
+          </span><span>問合せ</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <!-- ===== Page Header ===== -->
+  <header class="page-hero container">
+    <h1>ナレッジ</h1>
+    <p>タグで絞り込みできます。サムネイルは4:3で統一表示。</p>
+    <div id="tabs" class="tabs" role="tablist" aria-label="カテゴリ"></div>
+  </header>
+
+  <!-- ===== List ===== -->
+  <main class="container">
+    <section id="list" class="k-list" aria-live="polite"></section>
+  </main>
+
+  <footer>
+    <div class="container">Copyright © <span id="year"></span>. All rights reserved.</div>
+  </footer>
+
+<script>
+/* =======================
+   データ（必要に応じて編集）
+   cover は通常URL / GitHub blob URL / gh:owner/repo/branch/path 形式OK
+======================= */
+const KNOWLEDGE = [
+  {
+    id: "kpi-design",
+    title: "経営KPIの設計パターンと落とし穴",
+    excerpt: "全社KPIを分解して部門・現場の行動指標に落とすまでの設計手順と、よくある失敗を具体例で解説。",
+    href: "knowledge-kpi-design.html",
+    cover: "gh:r-iwamoto-li/dx-portal/main/assets/knowledge/kpi.jpg",
+    tags: ["経営データ","ダッシュボード","設計"],
+    date: "2025-09-10",
+    author: "DX推進室"
+  },
+  {
+    id: "data-governance",
+    title: "データガバナンス運用チェックリスト（社内版）",
+    excerpt: "データ利用申請・品質基準・棚卸しの3観点で、四半期ごとに見直すための実務チェック項目。",
+    href: "knowledge-data-governance.html",
+    cover: "https://github.com/r-iwamoto-li/dx-portal/blob/main/assets/knowledge/governance.png",
+    tags: ["基盤","運用"],
+    date: "2025-09-05",
+    author: "DataOps"
+  },
+  {
+    id: "dashboard-ux",
+    title: "ダッシュボードUX 10の原則",
+    excerpt: "視線誘導・配色・比較可能性・アフォーダンスなど、意思決定スピードを上げるための設計原則をまとめました。",
+    href: "knowledge-dashboard-ux.html",
+    cover: "https://raw.githubusercontent.com/r-iwamoto-li/dx-portal/main/asset
