@@ -45,11 +45,11 @@ button[disabled]{opacity:.8;cursor:not-allowed}
 .fx .bars{position:absolute;inset:0;opacity:0;
   background:
     repeating-linear-gradient(0deg,
-      rgba(0,0,0,.22) 0 1px, transparent 1px 10px),         /* 黒の細ライン */
+      rgba(0,0,0,.22) 0 1px, transparent 1px 10px),
     repeating-linear-gradient(0deg,
-      rgba(255,0,0,.22) 0 1px, transparent 1px 14px),       /* 赤 */
+      rgba(255,0,0,.22) 0 1px, transparent 1px 14px),
     repeating-linear-gradient(0deg,
-      rgba(0,70,255,.22) 0 1px, transparent 1px 18px);      /* 青 */
+      rgba(0,70,255,.22) 0 1px, transparent 1px 18px);
   animation:barsMove .9s linear infinite}
 @keyframes barsMove{from{background-position-y:0}to{background-position-y:220px}}
 .fx .scan{position:absolute;inset:0;opacity:0;background:linear-gradient(transparent 50%,rgba(0,0,0,.08) 51%);background-size:100% 4px}
@@ -65,8 +65,8 @@ body.glitch-on .fx .scan{opacity:.35}
 .btnbar{margin-top:10px;display:flex;gap:8px;justify-content:flex-end}
 .small{font-size:12px;color:#333}
 
-/* ==== 最終確認モーダル ==== */
-.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:10}
+/* ==== 最終確認モーダル（OKのみ） ==== */
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:10;background:rgba(0,0,0,.0)}
 .modal.show{display:flex}
 .win98{min-width:320px;background:#c0c0c0;border:3px outset #fff;color:#000;box-shadow:0 20px 40px rgba(0,0,0,.35)}
 .titlebar{background:#000080;color:#fff;padding:4px 8px;font-weight:700;display:flex;align-items:center;justify-content:space-between}
@@ -160,15 +160,14 @@ body.glitch-on .fx .scan{opacity:.35}
 </div>
 <div class="crt"></div>
 
-<!-- 最終確認モーダル -->
+<!-- 最終確認モーダル（OKのみ） -->
 <div id="popup" class="modal" aria-hidden="true">
   <div class="win98" role="dialog" aria-modal="true" aria-labelledby="ttl">
     <div class="titlebar"><span id="ttl">Microsoft Windows</span><span class="minibox" aria-hidden="true"></span></div>
     <div class="dialog">
       <p>DXポータルの最新バージョンに接続します。よろしいですか？</p>
       <div class="btnrow">
-        <button id="ok" class="btn98">OK</button>
-        <button id="cancel" class="btn98">Cancel</button>
+        <button id="ok" class="btn98" autofocus>OK</button>
       </div>
     </div>
   </div>
@@ -182,7 +181,7 @@ const DEST_URL = 'index.html';
 const T_GLITCH = 3000;          // クラッシュ開始
 const T_POPUP_START_DELAY = 1200;
 const ERR_TOTAL = 10;           // 個数
-const ERR_INTERVAL = 140;       // 高速化（以前より速い）
+const ERR_INTERVAL = 90;        // ★ 以前より少し高速に
 
 setTimeout(() => {
   document.body.classList.add('glitch-on');
@@ -202,7 +201,6 @@ function rampErrorsGrid(total=10, interval=140){
   const cellW = w / cols;
   const cellH = h / rows;
 
-  // グリッド中心を並べ、軽いジッターを与えてシャッフル
   const points = [];
   let idx = 0;
   for(let r=0; r<rows; r++){
@@ -210,12 +208,11 @@ function rampErrorsGrid(total=10, interval=140){
       if(idx++ >= total) break;
       const cx = pad + c*cellW + cellW/2;
       const cy = pad + r*cellH + cellH/2;
-      const jx = (Math.random()-0.5) * cellW * 0.55; // ほどよい散り
+      const jx = (Math.random()-0.5) * cellW * 0.55;
       const jy = (Math.random()-0.5) * cellH * 0.55;
       points.push([cx + jx, cy + jy]);
     }
   }
-  // 表示順をランダム化
   shuffle(points);
 
   let i = 0;
@@ -228,7 +225,7 @@ function rampErrorsGrid(total=10, interval=140){
 
 function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]] }}
 
-/* Win98風エラー（そのまま） */
+/* Win98風エラー */
 function createErrorWin(x,y){
   const el = document.createElement('div');
   el.className = 'err98';
@@ -254,16 +251,26 @@ function createErrorWin(x,y){
   el.querySelector('.close').addEventListener('click', ()=> el.remove());
 }
 
-/* 最終モーダル */
+/* ===== 最終モーダル（OKのみ・フォーカストラップ） ===== */
 function showFinalModal(){
   const m = document.getElementById('popup');
+  const okBtn = document.getElementById('ok');
   m.classList.add('show');
   m.setAttribute('aria-hidden','false');
+  okBtn.focus();
+
+  // Tab/Escなどで抜けられないよう最低限のトラップ
+  m.addEventListener('keydown', (e)=>{
+    if(e.key === 'Tab'){ e.preventDefault(); okBtn.focus(); }
+    if(e.key === 'Escape'){ e.preventDefault(); } // 無効
+  });
+  // 背景クリックでも閉じない
+  m.addEventListener('click', (e)=>{
+    const dialog = m.querySelector('.win98');
+    if(!dialog.contains(e.target)){ e.stopPropagation(); }
+  }, true);
 }
 document.getElementById('ok').addEventListener('click', ()=> location.href = DEST_URL);
-document.getElementById('cancel').addEventListener('click', ()=> {
-  document.getElementById('popup').classList.remove('show');
-});
 </script>
 
 </body>
