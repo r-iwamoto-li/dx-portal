@@ -3,525 +3,275 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>DX推進ポータル</title>
-<meta name="description" content="Link innovation | DX推進ポータル" />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<title>DX PORTAL - Legacy Splash</title>
 <style>
-:root{
-  --bg:#0b0f1a; --surface:#ffffff; --text:#121416; --muted:#6b7280;
-  --brand:#2563eb; --brand-2:#8b5cf6; --shadow:0 10px 30px rgba(2,6,23,.14);
-  --radius:16px;
-}
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
-body{
-  font-family:"Inter","Noto Sans JP",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
-  color:var(--text); background:#f7f9fc; line-height:1.6; overflow-x:hidden;
-}
-a{color:inherit;text-decoration:none}
-.container{max-width:1200px;margin:0 auto;padding:0 20px}
+html,body{height:100%;margin:0}
+body{font:14px/1.6 "MS UI Gothic","MS Sans Serif",system-ui,sans-serif;color:#000;background:#fff;overflow:hidden}
 
-/* ===== Top Nav ===== */
-.topnav-wrap{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.75);backdrop-filter:blur(10px);border-bottom:1px solid rgba(15,23,42,.06)}
-.topnav{display:flex;gap:14px;align-items:center;justify-content:center;padding:10px 8px}
-.pill{
-  display:flex;gap:24px;align-items:center;justify-content:center;
-  background:#f4f6fb;border:1px solid rgba(15,23,42,.06);
-  border-radius:46px;padding:8px 14px;box-shadow:var(--shadow)
-}
-.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 14px;border-radius:28px;font-size:12px;color:#3b4252;font-weight:600;transition:transform .2s ease, background .2s ease, box-shadow .2s ease}
-.nav-item:hover{background:#fff;transform:translateY(-2px)}
-.nav-item.active{background:linear-gradient(135deg,rgba(37,99,235,.12),rgba(139,92,246,.12));color:var(--brand);box-shadow:0 6px 16px rgba(37,99,235,.18)}
-.nav-ico{width:22px;height:22px;display:grid;place-items:center}
+/* ==== 常時のCRT感（控えめ） ==== */
+.crt{position:fixed;inset:0;pointer-events:none;z-index:2;
+  background:radial-gradient(ellipse at center,rgba(0,0,0,0) 60%,rgba(0,0,0,.16) 96%),
+             repeating-linear-gradient(0deg,rgba(0,0,0,.045) 0 2px,transparent 3px 4px);
+  mix-blend-mode:multiply}
 
-/* ===== Hero ===== */
-.hero{position:relative;isolation:isolate}
-.hero-media{position:relative;height:420px;overflow:hidden;background:#0f1226;border-bottom-left-radius:24px;border-bottom-right-radius:24px}
-.hero-media img{
-  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.9;transform:scale(1.06); transition:transform 9s cubic-bezier(.2,.8,.2,1);
-}
-.hero-media::after{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background: radial-gradient(1200px 480px at 20% 20%, rgba(37,99,235,.35), transparent 50%),
-              radial-gradient(900px 420px at 80% 30%, rgba(139,92,246,.35), transparent 55%),
-              linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.85) 82%);
-}
-.hero-media canvas#fx{position:absolute;inset:0;mix-blend-mode:screen;opacity:.9;z-index:1}
-.hero-inner{position:relative;z-index:2}
-.hero-grid{display:grid;grid-template-columns:1.25fr .9fr;gap:48px;align-items:center;margin-top:-320px;padding:0 0 48px}
-.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid rgba(15,23,42,.06);backdrop-filter: blur(6px);font-size:12px;font-weight:700;letter-spacing:.06em}
-.hero h1{font-family:"Noto Sans JP";font-size:48px;line-height:1.2;margin:16px 0 10px;letter-spacing:.02em}
-.hero h1 .glow{display:inline-block;filter:drop-shadow(0 4px 14px rgba(37,99,235,.55))}
-.hero p.sub{color:#2f3947;font-weight:500}
-.cta{margin-top:24px}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;background:#111827;color:#fff;font-weight:700;box-shadow:var(--shadow);transform:translateZ(0);transition:transform .15s ease}
-.btn:hover{transform:translateY(-1px)}
+/* ==== レガシーUI（前回と同じ・一部省略） ==== */
+#desk{position:fixed;inset:0;display:grid;grid-template-rows:auto 1fr auto;z-index:0}
+.banner{background:#000080;color:#fff;padding:6px 10px;font-weight:700;display:flex;gap:10px;align-items:center;justify-content:space-between;box-shadow:inset 0 -2px 0 rgba(255,255,255,.25)}
+.banner .marq{white-space:nowrap;overflow:hidden}
+.banner .marq span{display:inline-block;padding-left:100%;animation:marq 22s linear infinite}
+@keyframes marq{100%{transform:translateX(-100%)}}
+.nav{display:flex;gap:8px;align-items:center}
+.nav a{color:#fff;text-decoration:none;background:#1a45c5;padding:3px 8px;border:2px outset #7da3ff}
+.nav a:hover{filter:brightness(1.1)}
+.counter{font-weight:700}
+.main{display:grid;grid-template-columns:260px 1fr 300px;gap:10px;padding:10px}
+.box{background:#f8f8f8;border:3px groove #c0c0c0;padding:10px;min-height:0;overflow:auto}
+.box h3{margin:0 0 6px;font-size:16px;border-bottom:2px inset #c0c0c0;padding-bottom:4px}
+a.fake{color:#00f;text-decoration:underline}
+a.fake:hover{text-decoration:none}
+label,input,select,button{font:inherit}
+input[type="text"]{border:2px inset #fff;padding:2px 4px;width:100%;background:#fff}
+button.btn98{margin-top:6px;padding:6px 12px;background:#e0e0e0;color:#000;cursor:default;border:3px outset #fff;box-shadow:inset -2px -2px #808080,inset 2px 2px #fff}
+button.btn98:hover{filter:brightness(1.05)}
+button.btn98:active{border:3px inset #fff}
+button[disabled]{opacity:.8;cursor:not-allowed}
+.badge{display:inline-block;font-weight:700;background:#ff0;border:2px ridge #c0c000;padding:0 6px}
+.kpi{display:grid;grid-template-columns:120px 1fr;gap:4px 8px;font-size:13px}
+.kpi div:nth-child(odd){font-weight:700}
+.foot{background:#f0f0f0;border-top:3px ridge #c0c0c0;padding:6px 10px;text-align:center}
 
-/* ===== Main ===== */
-main{padding:56px 0}
-.grid-2{display:grid;grid-template-columns:1.1fr 1fr;gap:32px}
-h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
-.card{position:relative;background:#fff;border:1px solid rgba(15,23,42,.06);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
-.card::before{
-  content:"";position:absolute;inset:-1px;border-radius:calc(var(--radius) + 1px);padding:1px;background:
-  linear-gradient(90deg, rgba(37,99,235,.35), rgba(139,92,246,.35), rgba(37,99,235,.35));
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
-  animation:borderShift 8s linear infinite; pointer-events:none;
-}
-@keyframes borderShift{0%{background-position:0 0}100%{background-position:200% 0}}
-.list{padding:8px 0;margin:0}
-.list li{list-style:none;display:flex;align-items:center;gap:12px;padding:14px 16px}
-.list li + li{border-top:1px dashed rgba(15,23,42,.08)}
-.dot{width:8px;height:8px;border-radius:999px;background:linear-gradient(135deg,var(--brand),var(--brand-2))}
-.title{font-weight:700}
-.badge{margin-left:auto;font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid rgba(15,23,42,.08);background:#111827;color:#fff}
-.toolbar{display:flex;align-items:center;gap:10px;justify-content:flex-end}
-.select{position:relative}
-.select select{appearance:none;border:1px solid rgba(15,23,42,.12);padding:8px 32px 8px 12px;border-radius:10px;background:#fff;font-weight:600}
-.select svg{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;pointer-events:none}
-.comment{display:grid;grid-template-columns:48px 1fr;gap:14px;padding:16px}
-.comment + .comment{border-top:1px dashed rgba(15,23,42,.08)}
-.avatar{width:48px;height:48px;border-radius:999px;background:#e5e7eb;display:grid;place-items:center;font-weight:800;color:#374151}
-.c-name{font-weight:700}
-.c-meta{color:#6b7280;font-size:12px}
-.actions{display:flex;gap:12px;font-size:13px}
-.stars{margin-left:auto;display:flex;gap:4px}
-.star{width:16px;height:16px}
+/* ==== クラッシュ演出（ひび無し／水平ノイズ） ==== */
+.fx{position:fixed;inset:0;pointer-events:none;z-index:5}
+.fx .bars{position:absolute;inset:0;opacity:0;
+  background:
+    repeating-linear-gradient(0deg,
+      rgba(0,0,0,.22) 0 1px, transparent 1px 10px),
+    repeating-linear-gradient(0deg,
+      rgba(255,0,0,.22) 0 1px, transparent 1px 14px),
+    repeating-linear-gradient(0deg,
+      rgba(0,70,255,.22) 0 1px, transparent 1px 18px);
+  animation:barsMove .9s linear infinite}
+@keyframes barsMove{from{background-position-y:0}to{background-position-y:220px}}
+.fx .scan{position:absolute;inset:0;opacity:0;background:linear-gradient(transparent 50%,rgba(0,0,0,.08) 51%);background-size:100% 4px}
+body.glitch-on .fx .bars{opacity:.55}
+body.glitch-on .fx .scan{opacity:.35}
 
-/* ===== Reveal ===== */
-.reveal{opacity:0;transform:translateY(16px) scale(.98);filter:blur(6px);transition:opacity .7s ease, transform .7s ease, filter .7s ease}
-.reveal.on{opacity:1;transform:none;filter:none}
+/* ==== Win98風エラー（傾きなし） ==== */
+.err98{position:fixed;z-index:8;width:300px;background:#c0c0c0;border:3px outset #fff;color:#000;box-shadow:0 12px 24px rgba(0,0,0,.35);transform:translate(-50%,-50%)}
+.err98 .title{background:#000080;color:#fff;padding:3px 6px;font-weight:700;font-size:13px}
+.err98 .inner{background:#f0f0f0;border:3px ridge #c0c0c0;padding:10px}
+.err98 .row{display:flex;align-items:center;gap:10px}
+.xmark{width:18px;height:18px;background:#d00;color:#fff;border-radius:50%;display:grid;place-items:center;font-weight:900}
+.btnbar{margin-top:10px;display:flex;gap:8px;justify-content:flex-end}
+.small{font-size:12px;color:#333}
 
-/* ===== Intro Shutter ===== */
-.intro{position:fixed;inset:0;background:#06080f;z-index:999;display:grid;grid-template-columns:repeat(10,1fr);gap:2px;overflow:hidden}
-.intro .bar{background:#0b1020;transform:translateY(0);animation:barOut .9s cubic-bezier(.2,.8,.2,1) forwards;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
-.intro .bar:nth-child(odd){background:#0c1428}
-@keyframes barOut{to{transform:translateY(-110%)}}
-.intro.is-break .bar{animation:barBreak .6s cubic-bezier(.55,.05,.2,.99) forwards}
-@keyframes barBreak{to{transform:translateY(110%)}}
-.intro .logo{
-  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%); color:#dbeafe; font-weight:900;
-  letter-spacing:.08em; text-shadow:0 0 20px rgba(37,99,235,.45);
-  opacity:.95; font-size:18px; user-select:none;
-}
+/* ==== 最終確認モーダル（OKのみ） ==== */
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:10;background:rgba(0,0,0,.0)}
+.modal.show{display:flex}
+.win98{min-width:320px;background:#c0c0c0;border:3px outset #fff;color:#000;box-shadow:0 20px 40px rgba(0,0,0,.35)}
+.titlebar{background:#000080;color:#fff;padding:4px 8px;font-weight:700;display:flex;align-items:center;justify-content:space-between}
+.titlebar .minibox{width:14px;height:14px;background:#c0c0c0;border:2px outset #fff}
+.dialog{background:#f0f0f0;border:3px ridge #c0c0c0;padding:12px}
+.btnrow{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+.btn98{font:700 13px/1 "MS Sans Serif";padding:6px 14px;background:#e0e0e0;color:#000;border:3px outset #fff;box-shadow:inset -2px -2px #808080,inset 2px 2px #fff;cursor:pointer}
+.btn98:active{border:3px inset #fff}
 
-/* ===== Typing & Glitch（共通） ===== */
-.typer{position:relative;display:inline-block}
-.typer::after{content:"";position:absolute;right:-2px;bottom:0;width:10px;height:1.15em;background:linear-gradient(#111827,#111827) no-repeat center/2px 1em;animation:blink .9s steps(1,end) infinite}
-@keyframes blink{50%{opacity:0}}
-.glitch-burst{position:relative;filter:contrast(1.08)}
-.glitch-burst::before,
-.glitch-burst::after{content:attr(data-glitch);position:absolute;left:0;top:0;pointer-events:none;mix-blend-mode:screen;opacity:.0}
-.glitch-burst::before{color:#ff2a6d}
-.glitch-burst::after {color:#29adff}
-.glitch-burst.on::before{opacity:.9;transform:translate(-1px,0)}
-.glitch-burst.on::after {opacity:.9;transform:translate(1px,0)}
-.scanlines{position:fixed;inset:0;pointer-events:none;z-index:35;mix-blend-mode:multiply;opacity:0;background:repeating-linear-gradient(0deg, rgba(0,0,0,.06) 0px, rgba(0,0,0,.06) 1px, transparent 2px, transparent 4px);animation:lines .18s steps(2,end) infinite}
-@keyframes lines{to{background-position-y:4px}}
-.scanlines.on{opacity:.45; animation-duration:.12s}
-
-/* ===== 3行メッセージ（動的装飾） ===== */
-.mv-copy{background:transparent;border:none;backdrop-filter:none;padding:8px 0;box-shadow:none}
-.mvv-lines{display:grid;gap:10px}
-.mvv-line{position:relative;display:block;font-weight:700;color:#0f172a}
-.mvv-line.alive::after{
-  content:""; position:absolute; left:0; right:0; bottom:-4px; height:2px;
-  background:linear-gradient(90deg, transparent, rgba(37,99,235,.55), transparent);
-  animation:scan 1.8s ease-in-out infinite; border-radius:2px;
-}
-@keyframes scan{0%{transform:translateX(-40%)}50%{transform:translateX(40%)}100%{transform:translateX(-40%)}}
-
-/* ===== 文字ラップ ===== */
-/* 連結白背景のブロック（h1では使わない） */
-.charify:not(.no-bg) .ink-bg{
-  display:inline-block;
-  background:#fff;
-  color:#0f172a;
-  padding:4px 6px;
-  border-radius:8px;
-  box-shadow:0 1px 0 rgba(0,0,0,.05);
-  box-decoration-break:clone;
-  -webkit-box-decoration-break:clone;
-}
-.char{display:inline-block}
-
-/* ===== ランダム方向・ランダム間隔の強ノイズ ===== */
-.char.glitch{
-  /* JSから --gx/--gy/--grot を毎回ランダム設定 */
-  transform: translate(var(--gx,0px), var(--gy,0px)) rotate(var(--grot,0deg));
-  text-shadow: calc(var(--sx,-2px)) 0 rgba(255,42,109,.65),
-               calc(var(--cx,  2px)) 0 rgba(41,173,255,.65);
-  animation: flashHue 140ms linear;
-  will-change: transform, text-shadow, filter;
-}
-@keyframes flashHue{
-  0%{filter:contrast(1.05) saturate(1.05)}
-  50%{filter:contrast(1.25) saturate(1.25)}
-  100%{filter:contrast(1.05) saturate(1.05)}
-}
-
-/* ===== Footer ===== */
-footer{padding:28px 0 36px;border-top:1px solid rgba(15,23,42,.06)}
-footer .container{color:#6b7280;text-align:center;font-size:14px}
+/* RWD */
+@media (max-width:1100px){.main{grid-template-columns:1fr 1fr}}
+@media (max-width:760px){.main{grid-template-columns:1fr}.err98{width:86vw}}
 </style>
 </head>
 <body>
-  <!-- Intro Shutter -->
-  <div class="intro" id="intro">
-    <div class="logo">DX PORTAL • INITIALIZING…</div>
-    <div class="bar" style="animation-delay:0.00s"></div>
-    <div class="bar" style="animation-delay:0.05s"></div>
-    <div class="bar" style="animation-delay:0.10s"></div>
-    <div class="bar" style="animation-delay:0.15s"></div>
-    <div class="bar" style="animation-delay:0.20s"></div>
-    <div class="bar" style="animation-delay:0.25s"></div>
-    <div class="bar" style="animation-delay:0.30s"></div>
-    <div class="bar" style="animation-delay:0.35s"></div>
-    <div class="bar" style="animation-delay:0.40s"></div>
-    <div class="bar" style="animation-delay:0.45s"></div>
-  </div>
-  <div class="scanlines" id="scanlines"></div>
 
-  <!-- ===== Top Navigation ===== -->
-  <div class="topnav-wrap">
-    <nav class="topnav container">
-      <div class="pill" id="magnet">
-        <a class="nav-item active" href="index.html" aria-current="page">
-          <span class="nav-ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
-          </span>
-          <span>HOME</span>
-        </a>
-        <a class="nav-item" href="projects.html">
-          <span class="nav-ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h5l2 3h11v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 7V5a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v3"/></svg>
-          </span>
-          <span>プロジェクト</span>
-        </a>
-        <a class="nav-item" href="knowledge.html">
-          <span class="nav-ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
-              <path d="M3.5 6.5V18c4-.9 7-.9 10 .6"/><path d="M3.5 6.5C3.5 5.7 4.2 5 5 5h5c1.2 0 2.3.4 3 1"/>
-              <path d="M20.5 6.5V18c-4-.9-7-.9-10 .6"/><path d="M20.5 6.5C20.5 5.7 19.8 5 19 5h-5c-1.2 0-2.3.4-3 1"/>
-              <path d="M12 6v13"/><path d="M6.5 9.5c1.7-.5 3.3-.5 5 0"/><path d="M6.5 13c1.7-.5 3.3-.5 5 0"/><path d="M6.5 16.5c1.7-.5 3.3-.5 5 0"/><path d="M12.5 9.5c1.7-.5 3.3-.5 5 0"/><path d="M12.5 13c1.7-.5 3.3-.5 5 0"/><path d="M12.5 16.5c1.7-.5 3.3-.5 5 0"/>
-            </svg>
-          </span>
-          <span>ナレッジ</span>
-        </a>
-        <a class="nav-item" href="form.html">
-          <span class="nav-ico" aria-hidden>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
-          </span>
-          <span>問合せ</span>
-        </a>
-      </div>
-    </nav>
+<!-- === 使い古しDXポータル（中身は前回と同等） === -->
+<div id="desk">
+  <div class="banner">
+    <div class="nav">
+      <a href="#" onclick="return false">HOME</a>
+      <a href="#" onclick="return false">プロジェクト</a>
+      <a href="#" onclick="return false">ナレッジ</a>
+      <a href="#" onclick="return false">掲示板</a>
+    </div>
+    <div class="marq"><span>【重要】Internet Explorer 5.0をご利用の方へ：ActiveXの設定を更新してください —— DX Innovation News</span></div>
+    <div class="counter">Visitors: 001,294,882</div>
   </div>
 
-  <!-- ===== Hero ===== -->
-  <section id="home" class="hero">
-    <div class="hero-media">
-      <img id="heroImg" src="https://raw.githubusercontent.com/r-iwamoto-li/dx-portal/9ec9a663d1166b703e5e36f653841ad459a546d3/360_F_743682104_ti07mGClxONYK6SVRGLr7WT7A8Tz070X.jpg" alt="DX Portal hero background" />
-      <canvas id="fx"></canvas>
-    </div>
-    <div class="hero-inner container">
-      <div class="hero-grid">
-        <div class="reveal">
-          <span class="eyebrow typer" data-text="DX Innovation"></span>
-          <!-- h1 は白背景なしの文字分割（no-bg） -->
-          <h1 id="headline" class="glitch-burst typer charify no-bg" data-glitch="" data-text="常識を疑え\n“標準”を再定義"></h1>
-          <p class="sub typer" data-text="Question the norm, reconstruct the standard"></p>
-          <div class="cta"><a class="btn" href="form.html">お問い合せ</a></div>
-        </div>
+  <div class="main">
+    <aside class="box">
+      <h3>クイックリンク</h3>
+      <ul style="margin:0 0 10px 18px">
+        <li><a class="fake" href="#" onclick="return false">経営ダッシュボード</a></li>
+        <li><a class="fake" href="#" onclick="return false">SFA入力マニュアル（Word97）</a></li>
+        <li><a class="fake" href="#" onclick="return false">在庫一覧（CSV）</a></li>
+        <li><a class="fake" href="#" onclick="return false">勤怠入力（要ActiveX）</a></li>
+      </ul>
+      <h3>サイト内検索</h3>
+      <input type="text" placeholder="例）売上 日次" />
+      <button class="btn98" disabled>検索</button>
+      <p class="small">※検索は現在メンテナンス中です。</p>
+    </aside>
 
-        <!-- 3行だけ残す（こちらは白背景ありのまま） -->
-        <div class="mv-copy reveal">
-          <div class="mvv-lines">
-            <div class="mvv-line typer charify" data-text="デジタルの力で業務を再構築し、組織の可能性を余さず引き出す。"></div>
-            <div class="mvv-line typer charify" data-text="すべての業務と人を“デジタルネイティブ化”し、進化し続ける企業を目指す。"></div>
-            <div class="mvv-line typer charify" data-text="挑戦を称え、共創を楽しみ、成果にこだわる。"></div>
-          </div>
-        </div>
+    <main class="box">
+      <h3>DXポータルサイト</h3>
+      <p>長年ご利用ありがとうございます。資産の都合により機能の一部を縮小して運用しています。最新DXポータルは別系統にて提供中です。</p>
+      <h3>更新履歴</h3>
+      <ul style="margin:0 0 10px 18px">
+        <li>2000-02-14 コンテンツミラーリング開始（夜間のみ）</li>
+        <li>1999-10-01 KPIレポートに“交通費”項目を追加</li>
+        <li>1999-07-07 BBSのスパム対策を実施（英数字のみ）</li>
+        <li>1998-12-24 年末年始の運用体制について</li>
+      </ul>
+      <h3>お知らせ</h3>
+      <div style="display:grid;gap:8px">
+        <div style="background:#ffffcc;border:2px ridge #c0c000;padding:6px"><strong>注意：</strong> Netscape Navigator 4.7では一部表示が崩れます。</div>
+        <div style="background:#e6f2ff;border:2px ridge #98b2e6;padding:6px">新入社員向けオンボーディング資料（PowerPoint 97）を公開しました。</div>
+      </div>
+    </main>
+
+    <aside class="box">
+      <h3>システム稼働状況</h3>
+      <div class="kpi">
+        <div>会計DWH</div><div>稼働中（遅延 12分）</div>
+        <div>SFA</div><div>稼働中（警告）</div>
+        <div>在庫DB</div><div>バックアップ中</div>
+        <div>人事基盤</div><div>稼働中</div>
+      </div>
+      <h3 style="margin-top:10px">KPI（参考）</h3>
+      <div class="kpi">
+        <div>今月売上</div><div>¥ 128,443,200</div>
+        <div>粗利率</div><div>34.1 %</div>
+        <div>案件進捗</div><div>75 %</div>
+      </div>
+      <h3 style="margin-top:10px">スポンサー</h3>
+      <div style="display:grid;gap:6px">
+        <div style="background:#fff;border:3px outset #fff;padding:8px;text-align:center">🎉 <span class="badge">NEW</span> 社内掲示板 v2.0 β</div>
+        <div style="background:#fff;border:3px outset #fff;padding:8px;text-align:center">📦 配送トラッキング（要Java）</div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="foot">Copyright © 1998–2000 DX Portal — All rights reserved.</div>
+</div>
+
+<!-- オーバーレイ（ノイズのみ） -->
+<div class="fx">
+  <div class="bars"></div>
+  <div class="scan"></div>
+</div>
+<div class="crt"></div>
+
+<!-- 最終確認モーダル（OKのみ） -->
+<div id="popup" class="modal" aria-hidden="true">
+  <div class="win98" role="dialog" aria-modal="true" aria-labelledby="ttl">
+    <div class="titlebar"><span id="ttl">Microsoft Windows</span><span class="minibox" aria-hidden="true"></span></div>
+    <div class="dialog">
+      <p>DXポータルの最新バージョンに接続します。よろしいですか？</p>
+      <div class="btnrow">
+        <button id="ok" class="btn98" autofocus>OK</button>
       </div>
     </div>
-  </section>
-
-  <!-- ===== Main ===== -->
-  <main class="container">
-    <div class="grid-2">
-      <!-- Projects -->
-      <section id="projects" class="reveal">
-        <h2>進行中プロジェクト</h2>
-        <div class="card">
-          <ul class="list">
-            <li><a class="project-link" href="project-overview.html"><span class="dot"></span><span class="title">概況データ　</span><span class="badge">運用中</span></a></li>
-            <li><a class="project-link" href="project-Businessmaterials.html"><span class="dot"></span><span class="title">事業推進会議資料　</span><span class="badge">運用中</span></a></li>
-            <li><a class="project-link" href="project-Manhourmanagements.html"><span class="dot"></span><span class="title">空き工数管理　</span><span class="badge">進行中</span></a></li>
-            <li><a class="project-link" href="project-voucher.html"><span class="dot"></span><span class="title">coming soon　</span></a></li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- News -->
-      <section aria-labelledby="news-title" class="reveal">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <h2 id="news-title">お知らせ</h2>
-          <div class="toolbar">
-            <div class="select">
-              <select aria-label="ソート">
-                <option>Newest</option><option>Oldest</option><option>Most liked</option>
-              </select>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-            </div>
-          </div>
-        </div>
-        <div class="card" role="list">
-          <article class="comment" role="listitem">
-            <div class="avatar" aria-hidden="true">OB</div>
-            <div>
-              <div style="display:flex;align-items:center;gap:12px">
-                <span class="c-name">DXポータルサイト公開！</span>
-                <span class="c-meta">2025/9/26</span>
-                <div class="stars" aria-label="rating: 5 of 5">
-                  <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
-                  <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
-                  <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
-                  <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
-                  <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
-                </div>
-              </div>
-              <p style="margin:.4rem 0 0.6rem">全社のDX推進に関する情報・施策・リソースを掲載！ぜひ引き続きチェックしてください！</p>
-              <div class="actions"><a href="#">Like</a> <a href="#">Reply</a></div>
-            </div>
-          </article>
-
-          <article class="comment" role="listitem">
-            <div class="avatar" aria-hidden="true">OB</div>
-            <div>
-              <div style="display:flex;align-items:center;gap:12px">
-                <span class="c-name">Osbaldo Beahan</span>
-                <span class="c-meta">about 1 hour ago</span>
-                <div class="stars" aria-label="rating: 4 of 5">
-                  <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
-                  <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
-                  <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
-                  <svg class="star" viewBox="0 0 24 24" fill="currentColor" opacity=".35"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
-                  <svg class="star" viewBox="0 0 24 24" fill="currentColor" opacity=".35"><path d="M12 17.3 5.8 21l1.6-7-5.4-4.7 7.1-.6L12 2l2.9 6.7 7.1.6-5.4 4.7 1.6 7z"/></svg>
-                </div>
-              </div>
-              <p style="margin:.4rem 0 0.6rem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id neque mattis molestie eget phasellus tellus amet duis in.</p>
-              <div class="actions"><a href="#">Like</a> <a href="#">Reply</a></div>
-            </div>
-          </article>
-        </div>
-      </section>
-    </div>
-  </main>
-
-  <footer class="reveal">
-    <div class="container">Copyright © <span id="year"></span>. All rights reserved.</div>
-  </footer>
+  </div>
+</div>
 
 <script>
-/* ===== Intro Shutter ===== */
-(function(){
-  const intro = document.getElementById('intro');
-  setTimeout(()=> intro.classList.add('is-break'), 700);
-  setTimeout(()=> intro.remove(), 1300);
-})();
+/* ===== 遷移先 ===== */
+const DEST_URL = 'top.html';
 
-/* ===== Hero パーティクル ===== */
-(function(){
-  const c = document.getElementById('fx'), ctx = c.getContext('2d',{alpha:true});
-  let W=0,H=0, dpr = Math.min(2, window.devicePixelRatio||1);
-  const P=[], MAX=90;
-  function resize(){ W = c.clientWidth = c.parentElement.clientWidth; H = c.clientHeight = c.parentElement.clientHeight; c.width = W*dpr; c.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0) }
-  function add(n=MAX){ P.length=0; for(let i=0;i<n;i++){ P.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.6,vy:(Math.random()-.5)*.6,r:1.4+Math.random()*1.3}); } }
-  function loop(){
-    ctx.clearRect(0,0,W,H);
-    ctx.strokeStyle='rgba(37,99,235,.08)'; ctx.lineWidth=1;
-    for(let y=0;y<H;y+=48){ctx.beginPath();ctx.moveTo(0,y+.5);ctx.lineTo(W,y+.5);ctx.stroke()}
-    for(let x=0;x<W;x+=64){ctx.beginPath();ctx.moveTo(x+.5,0);ctx.lineTo(x+.5,H);ctx.stroke()}
-    for(let i=0;i<P.length;i++){
-      const a=P[i]; a.x+=a.vx; a.y+=a.vy;
-      if(a.x<0||a.x>W) a.vx*=-1; if(a.y<0||a.y>H) a.vy*=-1;
-      ctx.fillStyle='rgba(139,92,246,.85)'; ctx.beginPath(); ctx.arc(a.x,a.y,a.r,0,Math.PI*2); ctx.fill();
-      for(let j=i+1;j<P.length;j++){
-        const b=P[j], dx=a.x-b.x, dy=a.y-b.y, dist=dx*dx+dy*dy;
-        if(dist<9000){
-          const op = 1 - dist/9000;
-          const g = ctx.createLinearGradient(a.x,a.y,b.x,b.y);
-          g.addColorStop(0,'rgba(37,99,235,'+ (0.35*op) +')');
-          g.addColorStop(1,'rgba(139,92,246,'+ (0.35*op) +')');
-          ctx.strokeStyle=g; ctx.lineWidth=1.2*op; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
-        }
-      }
+/* ===== タイムライン ===== */
+const T_GLITCH = 3000;          // クラッシュ開始
+const T_POPUP_START_DELAY = 1200;
+const ERR_TOTAL = 10;           // 個数
+const ERR_INTERVAL = 90;        // ★ 以前より少し高速に
+
+setTimeout(() => {
+  document.body.classList.add('glitch-on');
+  setTimeout(() => rampErrorsGrid(ERR_TOTAL, ERR_INTERVAL), T_POPUP_START_DELAY);
+}, T_GLITCH);
+
+/* ===== 均等配置＋微ジッターでバラけさせる ===== */
+function rampErrorsGrid(total=10, interval=140){
+  const pad = 60;                          // 画面端の安全マージン
+  const w = Math.max(320, innerWidth  - pad*2);
+  const h = Math.max(220, innerHeight - pad*2);
+
+  // グリッド数（画面比から列行数を決定）
+  const cols = Math.ceil(Math.sqrt(total * (w/h)));
+  const rows = Math.ceil(total / cols);
+
+  const cellW = w / cols;
+  const cellH = h / rows;
+
+  const points = [];
+  let idx = 0;
+  for(let r=0; r<rows; r++){
+    for(let c=0; c<cols; c++){
+      if(idx++ >= total) break;
+      const cx = pad + c*cellW + cellW/2;
+      const cy = pad + r*cellH + cellH/2;
+      const jx = (Math.random()-0.5) * cellW * 0.55;
+      const jy = (Math.random()-0.5) * cellH * 0.55;
+      points.push([cx + jx, cy + jy]);
     }
-    requestAnimationFrame(loop);
   }
-  window.addEventListener('resize', ()=>{resize(); add()});
-  resize(); add(); loop();
-})();
+  shuffle(points);
 
-/* ===== Reveal on scroll ===== */
-const io = new IntersectionObserver((ents)=>{ ents.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target)} }) },{threshold:.18});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  let i = 0;
+  const timer = setInterval(()=>{
+    const [x,y] = points[i++];
+    createErrorWin(x,y);
+    if(i>=points.length){ clearInterval(timer); setTimeout(showFinalModal, 700); }
+  }, interval);
+}
 
-/* ===== Parallax zoom ===== */
-const heroImg = document.getElementById('heroImg');
-window.addEventListener('scroll', ()=>{ const y = Math.min(1, window.scrollY/600); heroImg.style.transform = `scale(${1.06 + y*0.06}) translateY(${y*10}px)`; });
+function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]] }}
 
-/* ===== Magnet nav ===== */
-(function(){
-  const wrap=document.getElementById('magnet');
-  const items=[...wrap.querySelectorAll('.nav-item')];
-  wrap.addEventListener('mousemove', e=>{
-    const rect = wrap.getBoundingClientRect();
-    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
-    items.forEach(it=>{
-      const r = it.getBoundingClientRect();
-      const cx = r.left - rect.left + r.width/2;
-      const cy = r.top  - rect.top  + r.height/2;
-      const dx = (mx-cx)/r.width, dy=(my-cy)/r.height;
-      it.style.transform = `translate(${dx*6}px,${dy*6}px)`;
-    });
+/* Win98風エラー */
+function createErrorWin(x,y){
+  const el = document.createElement('div');
+  el.className = 'err98';
+  el.style.left = x + 'px';
+  el.style.top  = y + 'px';
+  el.innerHTML = `
+    <div class="title">System Error</div>
+    <div class="inner">
+      <div class="row">
+        <div class="xmark">×</div>
+        <div>
+          <div>Runtime error.</div>
+          <div>Press Ok to Continue.</div>
+          <div>Press Cancel to Quit.</div>
+        </div>
+      </div>
+      <div class="btnbar">
+        <button class="btn98">OK</button>
+        <button class="btn98 close">Cancel</button>
+      </div>
+    </div>`;
+  document.body.appendChild(el);
+  el.querySelector('.close').addEventListener('click', ()=> el.remove());
+}
+
+/* ===== 最終モーダル（OKのみ・フォーカストラップ） ===== */
+function showFinalModal(){
+  const m = document.getElementById('popup');
+  const okBtn = document.getElementById('ok');
+  m.classList.add('show');
+  m.setAttribute('aria-hidden','false');
+  okBtn.focus();
+
+  // Tab/Escなどで抜けられないよう最低限のトラップ
+  m.addEventListener('keydown', (e)=>{
+    if(e.key === 'Tab'){ e.preventDefault(); okBtn.focus(); }
+    if(e.key === 'Escape'){ e.preventDefault(); } // 無効
   });
-  wrap.addEventListener('mouseleave', ()=>items.forEach(it=>it.style.transform=''));
-})();
-
-/* ===== 年自動挿入 ===== */
-document.getElementById('year').textContent = new Date().getFullYear();
-
-/* ===== Typing + 文字分割 + ランダムノイズ ===== */
-(async function(){
-  const scan = document.getElementById('scanlines');
-
-  const toHTMLBr = s => s.replace(/\n/g,'<br>'); // 改行を <br> に
-  const sleep = ms => new Promise(r=>setTimeout(r,ms));
-  const rand  = (a,b)=> Math.floor(Math.random()*(b-a+1))+a;
-  function scramble(s, rate=0.25){
-    const pool = 'アイウエオカキクケコサシスセソﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789*#=+<>';
-    return s.split('').map(ch => Math.random()<rate ? pool[rand(0,pool.length-1)] : ch).join('');
-  }
-
-  // h1用：白背景なしのプレーン文字分割
-  function wrapCharsPlain(html){
-    const PLACE='[[BR]]';
-    const withMarks = html.replace(/<br\s*\/?>/gi, PLACE);
-    const chars=[...withMarks];
-    let out = '';
-    for(let i=0;i<chars.length;i++){
-      if(withMarks.slice(i, i + PLACE.length) === PLACE){out += '<br>';i += PLACE.length - 1;continue;}
-      const ch = chars[i]===' ' ? '&nbsp;' : chars[i];
-      out += `<span class="char">${ch}</span>`;
-    }
-    return out;
-  }
-
-  // 白背景あり：文章を連結白背景の中に1文字ずつ
-  function wrapForInk(html){
-    const PLACE='[[BR]]';
-    const withMarks = html.replace(/<br\s*\/?>/gi, PLACE);
-    const chars=[...withMarks];
-    let out = '<span class="ink"><span class="ink-bg">';
-    for(let i=0;i<chars.length;i++){
-      if(withMarks.slice(i, i + PLACE.length) === PLACE){out += '</span></span><br><span class="ink"><span class="ink-bg">';i += PLACE.length - 1;continue;}
-      const ch = chars[i]===' ' ? '&nbsp;' : chars[i];
-      out += `<span class="char">${ch}</span>`;
-    }
-    out += '</span></span>';
-    return out;
-  }
-
-  async function typeNode(el, text, speed=[16,38], noiseEvery=rand(10,18)){
-    const norm = text.replace(/\\n/g, '\n'); // \n → 実改行
-    el.classList.add('typer');
-    el.setAttribute('data-glitch', norm.replace(/\n/g,' '));
-
-    let out='', tick=0;
-    for(let i=0;i<norm.length;i++){
-      out += norm[i];
-      const html = toHTMLBr(out);
-      if(el.classList.contains('charify')){
-        // h1 は no-bg なのでプレーン、その他は白背景
-        el.innerHTML = el.classList.contains('no-bg') ? wrapCharsPlain(html) : wrapForInk(html);
-      }else{
-        el.innerHTML = html;
-      }
-      tick++;
-
-      // タイプ中の小ノイズ
-      if(tick % noiseEvery === 0 && i < norm.length-1){
-        const keep = out.slice(0,-Math.min(6,out.length));
-        const mess = scramble(out.slice(-Math.min(6,out.length)), .7);
-        const html2 = toHTMLBr(keep + mess);
-        el.innerHTML = el.classList.contains('charify')
-          ? (el.classList.contains('no-bg') ? wrapCharsPlain(html2) : wrapForInk(html2))
-          : html2;
-        el.classList.add('glitch-burst','on'); scan.classList.add('on');
-        await sleep(70);
-        el.classList.remove('on'); scan.classList.remove('on');
-      }
-      await sleep(rand(speed[0],speed[1]));
-    }
-    el.classList.remove('typer');
-    el.classList.add('alive');
-
-    // 文字単位ノイズ（ランダム間隔＆ランダム方向）
-    if(el.classList.contains('charify')) startPerCharNoise(el);
-  }
-
-  function startPerCharNoise(container){
-    const getChars = ()=>[...container.querySelectorAll('.char')];
-
-    (function loop(){
-      const nextIn = rand(900, 2200);      // 発火間隔を毎回ランダム化
-      setTimeout(()=>{
-        const chars = getChars();
-        if(chars.length){
-          const burst = rand(1,3);       // 同時にゆらす文字数
-          for(let i=0;i<burst;i++){
-            const t = chars[rand(0, chars.length-1)];
-            // ランダム方向（x,y）、回転、RGBズレ幅もランダム
-            const gx = rand(-3,3), gy = rand(-3,3), rot = rand(-6,6)/10;
-            const sx = rand(-3,-1), cx = rand(1,3);
-            t.style.setProperty('--gx', gx+'px');
-            t.style.setProperty('--gy', gy+'px');
-            t.style.setProperty('--grot', rot+'deg');
-            t.style.setProperty('--sx', sx+'px');
-            t.style.setProperty('--cx', cx+'px');
-            t.classList.add('glitch');
-            setTimeout(()=>{
-              t.classList.remove('glitch');
-              t.style.removeProperty('--gx'); t.style.removeProperty('--gy'); t.style.removeProperty('--grot');
-              t.style.removeProperty('--sx'); t.style.removeProperty('--cx');
-            }, rand(110, 200));
-          }
-        }
-        loop(); // 次回もランダム間隔で
-      }, nextIn);
-    })();
-  }
-
-  // ===== シーケンス =====
-  const eyebrow = document.querySelector('.eyebrow');
-  const h1 = document.getElementById('headline');
-  const sub = document.querySelector('.sub');
-  const mvvLines = [...document.querySelectorAll('.mvv-line')];
-
-  const INTRO_MS = 1300;
-  await sleep(INTRO_MS + 150);
-  await typeNode(eyebrow, eyebrow.dataset.text, [10,24]);
-  await typeNode(h1, h1.dataset.text, [24,42]);     // h1：白背景なしで改行OK
-  await typeNode(sub, sub.dataset.text, [12,24]);
-
-  for(const line of mvvLines){
-    await typeNode(line, line.dataset.text, [12,28]);
-    await sleep(80);
-  }
-})();
+  // 背景クリックでも閉じない
+  m.addEventListener('click', (e)=>{
+    const dialog = m.querySelector('.win98');
+    if(!dialog.contains(e.target)){ e.stopPropagation(); }
+  }, true);
+}
+document.getElementById('ok').addEventListener('click', ()=> location.href = DEST_URL);
 </script>
+
 </body>
 </html>
