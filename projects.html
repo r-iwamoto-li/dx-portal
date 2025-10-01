@@ -62,14 +62,37 @@ a{color:inherit;text-decoration:none}
 }
 .card:hover{transform:translateY(-2px); box-shadow:0 16px 36px rgba(2,6,23,.16)}
 /* 画像は全カード同サイズ（16:10）で統一 */
-.card-thumb{width: 100%;height: 180px; background:#e5e7eb; display:grid; place-items:center; position:relative}
-.card-thumb img{width:100%;height:100%;object-fit:cover;object-position: center;}
+.card-thumb{
+  width:100%;
+  height:180px;          /* ← 統一サイズ */
+  flex:0 0 180px;        /* ← フレックスで縮まないよう固定 */
+  background:#e5e7eb;
+  display:grid;
+  place-items:center;
+  position:relative;
+  overflow:hidden;       /* 念のためはみ出し防止 */
+}
+.card-thumb img{
+  display:block;         /* ← 画像の下の“謎の隙間”を消す（インライン余白対策） */
+  width:100%;
+  height:100%;
+  object-fit:cover;      /* ← 枠いっぱいに見せる */
+  object-position:center;
+}
 .card-status{
   position:absolute;left:10px;top:10px;padding:6px 10px;border-radius:999px;
   background:#111827;color:#fff;font-weight:800;font-size:11px;letter-spacing:.02em
 }
 
-.card-body{padding:14px 14px 12px;display:flex;flex-direction:column;gap:10px}
+.card-body{
+  position:relative;
+  z-index:1;             /* ← 万一の重なり対策（サムネ上にテキストが乗らない） */
+  padding:14px 14px 12px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  flex:1 0 auto;
+}
 .card-title{font-weight:800}
 .card-tags{display:flex;gap:8px;flex-wrap:wrap}
 .tag{font-size:11px;font-weight:800;padding:4px 8px;border-radius:999px;background:var(--chip);border:1px solid rgba(15,23,42,.06)}
