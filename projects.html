@@ -87,17 +87,17 @@ footer .container{color:#6b7280;text-align:center;font-size:14px}
   <div class="topnav-wrap">
     <nav class="topnav container">
       <div class="pill">
-        <a class="nav-item" href="index.html#home">
+        <a class="nav-item" href="top.html">
           <span class="nav-ico" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
           </span><span>HOME</span>
         </a>
-        <a class="nav-item active" href="projects.html#projects">
+        <a class="nav-item active" href="projects.html">
           <span class="nav-ico" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h5l2 3h11v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 7V5a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v3"/></svg>
           </span><span>プロジェクト</span>
         </a>
-        <a class="nav-item" href="knowledge.html#knowledge">
+        <a class="nav-item" href="knowledge.html">
           <span class="nav-ico" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22">
               <path d="M3.5 6.5V18c4-.9 7-.9 10 .6"/><path d="M3.5 6.5C3.5 5.7 4.2 5 5 5h5c1.2 0 2.3.4 3 1"/>
@@ -106,7 +106,7 @@ footer .container{color:#6b7280;text-align:center;font-size:14px}
             </svg>
           </span><span>ナレッジ</span>
         </a>
-        <a class="nav-item" href="form.html#form">
+        <a class="nav-item" href="form.html">
           <span class="nav-ico" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
           </span><span>問合せ</span>
@@ -142,53 +142,53 @@ const PROJECTS = [
     id:"project-overview",
     title:"概況（Management Overview）",
     href:"project-overview.html",
-    cover:"https://raw.githubusercontent.com/r-iwamoto-li/dx-portal/9ec9a663d1166b703e5e36f653841ad459a546d3/360_F_743682104_ti07mGClxONYK6SVRGLr7WT7A8Tz070X.jpg",
+    cover:"https://devio2023-media.developers.io/wp-content/uploads/2024/04/emiki_introduction-2024-amazon-quicksight_8.jpg",
     status:"運用中",
     tags:["経営データ","ダッシュボード"],
     lastActivity:"" // 空なら自動取得
   },
   {
-    id:"project-login-security",
+    id:"project-Businessmaterials",
     title:"事業推進会議",
-    href:"project-login-security.html",
-    cover:"https://raw.githubusercontent.com/r-iwamoto-li/dx-portal/9ec9a663d1166b703e5e36f653841ad459a546d3/360_F_743682104_ti07mGClxONYK6SVRGLr7WT7A8Tz070X.jpg",
+    href:"project-Businessmaterials.html",
+    cover:"https://media.istockphoto.com/id/1184149567/ja/%E3%83%99%E3%82%AF%E3%82%BF%E3%83%BC/%E3%83%93%E3%82%B8%E3%83%8D%E3%82%B9%E5%88%86%E6%9E%90%E3%81%AE%E6%A6%82%E5%BF%B5.jpg?s=612x612&w=0&k=20&c=7HRHby4Rz280xEbD_WoYGAFVcP9jwYJzgFLiI9COrOw=",
     status:"運用中",
     tags:["経営データ","売上・利益"],
     lastActivity:""
   },
   {
-    id:"project-payments",
+    id:"project-Manhourmanagements",
     title:"空き工数管理",
-    href:"project-payments.html",
-    cover:"https://raw.githubusercontent.com/r-iwamoto-li/dx-portal/9ec9a663d1166b703e5e36f653841ad459a546d3/360_F_743682104_ti07mGClxONYK6SVRGLr7WT7A8Tz070X.jpg",
+    href:"project-Manhourmanagements.html",
+    cover:"https://media.istockphoto.com/id/1713118722/ja/%E3%83%99%E3%82%AF%E3%82%BF%E3%83%BC/%E3%82%AC%E3%83%B3%E3%83%88%E3%83%81%E3%83%A3%E3%83%BC%E3%83%88%E3%81%AE%E8%A8%88%E7%94%BB%E3%82%B9%E3%82%B1%E3%82%B8%E3%83%A5%E3%83%BC%E3%83%AB%E3%83%9E%E3%82%A4%E3%83%AB%E3%82%B9%E3%83%88%E3%83%BC%E3%83%B3%E3%81%A8%E6%88%90%E6%9E%9C%E7%89%A9%E3%81%AE%E8%BF%BD%E8%B7%A1%E3%82%BF%E3%82%B9%E3%82%AF%E3%81%AE%E9%80%B2%E6%8D%97%E7%8A%B6%E6%B3%81%E3%81%AE%E6%9B%B4%E6%96%B0%E3%82%B9%E3%82%B1%E3%82%B8%E3%83%A5%E3%83%BC%E3%83%AA%E3%83%B3%E3%82%B0%E3%81%A8%E7%AE%A1%E7%90%86%E3%82%B9%E3%82%AD%E3%83%AB%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%A0%E6%88%A6%E7%95%A5%E3%82%92%E6%93%8D%E4%BD%9C%E3%81%99%E3%82%8B%E3%83%97%E3%83%AD%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E3%83%9E%E3%83%8D%E3%83%BC%E3%82%B8%E3%83%A3%E3%83%BC%E3%83%99.jpg?s=612x612&w=0&k=20&c=CypVsKZ_83MtlBKDlxmhQb2iCARCv8G_A4p78o0yjdU=",
     status:"進行中",
     tags:["人材管理","プロジェクト管理"],
     lastActivity:""
   },
   {
-    id:"project-voucher",
-    title:"XXX",
-    href:"project-voucher.html",
+    id:"projects.html",
+    title:"coming soon",
+    href:"projects.html",
     cover:"https://raw.githubusercontent.com/r-iwamoto-li/dx-portal/9ec9a663d1166b703e5e36f653841ad459a546d3/360_F_743682104_ti07mGClxONYK6SVRGLr7WT7A8Tz070X.jpg",
     status:"計画中",
     tags:["未定"],
     lastActivity:""
   },
   {
-    id:"project-points",
-    title:"XXX",
-    href:"project-points.html",
+    id:"projects.html",
+    title:"coming soon",
+    href:"projects.html",
     cover:"https://raw.githubusercontent.com/r-iwamoto-li/dx-portal/9ec9a663d1166b703e5e36f653841ad459a546d3/360_F_743682104_ti07mGClxONYK6SVRGLr7WT7A8Tz070X.jpg",
     status:"計画中",
     tags:["未定"],
     lastActivity:""
   },
   {
-    id:"project-orders",
-    title:"XXX",
-    href:"project-orders.html",
+    id:"projects.html",
+    title:"coming soon",
+    href:"projects.html",
     cover:"https://raw.githubusercontent.com/r-iwamoto-li/dx-portal/9ec9a663d1166b703e5e36f653841ad459a546d3/360_F_743682104_ti07mGClxONYK6SVRGLr7WT7A8Tz070X.jpg",
-    status:"運用中",
+    status:"計画中",
     tags:["未定"],
     lastActivity:""
   }
