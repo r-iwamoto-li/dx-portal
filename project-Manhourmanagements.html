@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>overview | DX推進ポータル</title>
+  <meta name="description" content="プロジェクト詳細 - overview" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    /* ==== base ==== */
+    :root{
+      --bg:#0b0f1a; --surface:#ffffff; --text:#121416; --muted:#6b7280;
+      --brand:#2563eb; --brand-2:#8b5cf6; --shadow:0 10px 30px rgba(2,6,23,.14);
+      --radius:16px; --ink:#3b4252; --col-left: 320px; --hero-start-offset: 24px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:"Inter","Noto Sans JP",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text); background:#f7f9fc; line-height:1.6;
+    }
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1200px;margin:0 auto;padding:0 20px}
+    .card{background:#fff;border:1px solid rgba(15,23,42,.06);border-radius:16px;box-shadow:var(--shadow)}
+
+    /* top nav */
+    .topnav-wrap{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.75);backdrop-filter: blur(10px);border-bottom:1px solid rgba(15,23,42,.06)}
+    .topnav{display:flex;gap:14px;align-items:center;justify-content:center;padding:10px 8px}
+    .pill{display:flex;gap:24px;align-items:center;justify-content:center;background:#f4f6fb;border:1px solid rgba(15,23,42,.06);border-radius:46px;padding:8px 14px;box-shadow:var(--shadow)}
+    .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 14px;border-radius:28px;font-size:12px;color:var(--ink);font-weight:600;transition:.2s}
+    .nav-item:hover{background:#fff}
+    .nav-item.active{background:linear-gradient(135deg,rgba(37,99,235,.12),rgba(139,92,246,.12));color:var(--brand);box-shadow:0 6px 16px rgba(37,99,235,.18)}
+    .nav-ico{width:22px;height:22px;display:grid;place-items:center}
+    footer{padding:28px 0 56px;color:#6b7280;text-align:center}
+
+    /* sub hero */
+    .subhero{background:#eef2f6;border-bottom:1px solid rgba(15,23,42,.06)}
+    .subhero-inner{
+      display:grid;
+      grid-template-columns: var(--col-left) 1fr;  /* ← 320px 1fr を置換 */
+      gap:40px;
+      align-items:center;
+      padding:48px 0;
+    }
+    .placeholder{
+      width:100%;
+      aspect-ratio:16/10;
+      overflow:hidden;
+      border-radius:var(--radius);                  /* 角丸を.cardと同じに */
+      border:1px solid rgba(15,23,42,.06);         /* 枠を.cardと同じに */
+      box-shadow:var(--shadow);                     /* 影を.cardと同じに */
+      background:#fff;
+    }
+    .placeholder img{
+      width:100%; height:100%; object-fit:cover; display:block;
+    }
+    .subhero-inner .placeholder{
+      margin-left: var(--hero-start-offset);
+      width: calc(var(--col-left) - var(--hero-start-offset));
+      justify-self: start;
+      aspect-ratio:16/10;
+      overflow:hidden;
+      border-radius:var(--radius);
+      border:1px solid rgba(15,23,42,.06);
+      box-shadow:var(--shadow);
+      background:#fff;
+    }
+    .lead h1{font-family:"Noto Sans JP";font-size:48px;line-height:1.2;margin:0 0 10px}
+    .lead p{color:#4b5563;margin:0}
+    .chip{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;background:#fff;border:1px solid rgba(15,23,42,.06);font-size:12px;font-weight:700}
+
+    /* main grid */
+    main{padding:56px 0}
+    .detail-grid{
+      display:grid;
+      grid-template-columns: var(--col-left) 1fr;  /* ← 320px 1fr を置換 */
+      gap:40px;
+    }
+
+    /* sidenav */
+    .sidenav{padding:10px}
+    .sidenav button{
+      width:100%; display:flex; align-items:center; gap:10px;
+      padding:12px 14px; border-radius:12px; color:#111827; font-weight:600;
+      background:transparent; border:none; text-align:left; cursor:pointer;
+    }
+    .sidenav button:hover{background:#f3f4f6}
+    .sidenav button[aria-selected="true"]{background:linear-gradient(135deg,rgba(37,99,235,.09),rgba(139,92,246,.09));color:#1f3aa2}
+    .sidenav .icon{width:18px;height:18px;opacity:.8}
+
+    /* content */
+    h2{font-family:"Noto Sans JP";font-size:28px;margin:0 0 18px}
+    .section{padding:22px}
+    .section + .section{border-top:1px dashed rgba(15,23,42,.08)}
+    .tabpanel{display:block}
+    .tabpanel.hidden{display:none}
+
+    /* form */
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    label{display:block;font-size:11px;letter-spacing:.08em;color:#6b7280;margin:0 0 6px;font-weight:700}
+    .input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(15,23,42,.12);background:#fff;font-size:14px}
+    .input:focus{outline:none;box-shadow:0 0 0 3px rgba(37,99,235,.25)}
+    .input-group{margin-bottom:14px}
+    .actions{display:flex;gap:12px;margin-top:12px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;background:#111827;color:#fff;font-weight:700;border:none;cursor:pointer}
+    .btn-light{background:#fff;color:#111827;border:1px solid rgba(15,23,42,.12)}
+    .verify{white-space:nowrap}
+
+    /* すべてのreadonly入力の見た目を統一 */
+    .input[readonly]{ color:var(--ink); cursor:default; }
+
+    /* responsive */
+    @media (max-width: 980px){
+      .subhero-inner{grid-template-columns:1fr;gap:24px}
+      .detail-grid{grid-template-columns:1fr}
+    }
+
+    /* ==== Activity Log ==== */
+    #tab-activity .activity-head,
+    #tab-activity .activity-row{
+      display:grid; grid-template-columns:140px 160px 1fr; gap:0; align-items:stretch;
+    }
+    #tab-activity .activity-head{
+      padding:6px 0 10px; font-size:12px; letter-spacing:.08em; color:#6b7280;
+      border-bottom:1px solid rgba(15,23,42,.12);
+    }
+    #tab-activity .activity-list{ margin-top:10px; display:flex; flex-direction:column; gap:12px; }
+    #tab-activity .activity-row{
+      background:#fff; border:1px solid rgba(15,23,42,.08); border-radius:12px;
+      box-shadow:var(--shadow); padding:12px 0;
+    }
+    #tab-activity .cell{
+      font-size:14px; padding:12px; border-right:1px solid rgba(15,23,42,.08); display:block;
+    }
+    #tab-activity .cell:last-child{ border-right:none; }
+    /* 長文セルは内部スクロール + 指定色 */
+    #tab-activity .cell .cell-content{
+      color:#3b4252;            /* 参考色 */
+      max-height:96px;
+      overflow:auto;
+      white-space:pre-wrap;
+      word-break:break-word;
+      padding-right:6px;
+    }
+    @media (max-width: 720px){
+      #tab-activity .activity-head{ display:none; }
+      #tab-activity .activity-row{ grid-template-columns:1fr; gap:8px; }
+      #tab-activity .label{ display:inline-block; font-size:11px; color:#6b7280; letter-spacing:.06em; margin-right:6px; }
+    }
+
+    /* ==== Roadmap Timeline ==== */
+    #tab-roadmap .rm-wrap{display:flex;flex-direction:column;gap:22px}
+    #tab-roadmap .rm-track{
+      position:relative;height:10px;border-radius:999px;overflow:hidden;
+      background:linear-gradient(90deg,#f59e0b,#ef4444 35%,#8b5cf6 65%,#2563eb); opacity:.9;
+    }
+    #tab-roadmap .rm-nodes{position:relative;display:flex;justify-content:space-between;align-items:center;margin-top:-18px}
+    #tab-roadmap .rm-node{position:relative;display:grid;place-items:center;gap:6px;min-width:0}
+    #tab-roadmap .rm-dot{
+      width:22px;height:22px;border-radius:999px;display:grid;place-items:center;
+      background:#4f46e5;border:4px solid #fff;box-shadow:0 2px 8px rgba(2,6,23,.18);
+    }
+    #tab-roadmap .rm-dot::after{content:"";width:10px;height:10px;border-radius:999px;background:#1f2937}
+    #tab-roadmap .rm-label{font-weight:700;color:#374151;font-size:13px}
+    #tab-roadmap .rm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:6px}
+    #tab-roadmap .rm-step{
+      background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:14px;
+      box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;gap:10px
+    }
+    #tab-roadmap .rm-step .icon{width:26px;height:26px;color:#4f46e5;opacity:.95}
+    #tab-roadmap .rm-title{font-weight:800;font-size:14px;margin:0;color:#111827}
+    /* 説明：非編集の表示ボックス（文字量で縦伸び） */
+    #tab-roadmap .rm-desc{
+      width:100%; min-height:84px; border-radius:10px; border:1px solid rgba(15,23,42,.12);
+      padding:10px 12px; font-size:13px; color:var(--ink); line-height:1.6;
+      white-space:pre-wrap; word-break:break-word; background:#fff;
+    }
+    #tab-roadmap .rm-desc:focus{outline:none; box-shadow:none;}
+    @media (max-width: 980px){ #tab-roadmap .rm-grid{grid-template-columns:1fr 1fr} }
+    @media (max-width: 640px){ #tab-roadmap .rm-grid{grid-template-columns:1fr} }
+    
+    .lead h1, .lead p, .lead .chip { margin-left:22px; }  /* 好みで */
+
+
+  </style>
+</head>
+<body>
+  <!-- ==== Header ==== -->
+  <div class="topnav-wrap">
+    <nav class="topnav container">
+      <div class="pill">
+        <a class="nav-item" href="top.html">
+          <span class="nav-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+          </span>
+          <span>HOME</span>
+        </a>
+        <a class="nav-item active" href="projects.html">
+          <span class="nav-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h5l2 3h11v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 7V5a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v3"/></svg>
+          </span>
+          <span>プロジェクト</span>
+        </a>
+        <a class="nav-item" href="knowledge.html">
+          <span class="nav-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round"
+                 width="22" height="22">
+              <!-- 開いた本の外形（左ページ） -->
+              <path d="M3.5 6.5V18
+                       c4-.9 7-.9 10 .6" />
+              <path d="M3.5 6.5
+                       C3.5 5.7 4.2 5 5 5h5
+                       c1.2 0 2.3.4 3 1" />
+              <!-- 開いた本の外形（右ページ） -->
+              <path d="M20.5 6.5V18
+                       c-4-.9-7-.9-10 .6" />
+              <path d="M20.5 6.5
+                       C20.5 5.7 19.8 5 19 5h-5
+                       c-1.2 0-2.3.4-3 1" />
+              <!-- 背（センター） -->
+              <path d="M12 6v13" />
+              <!-- 行（左ページ） -->
+              <path d="M6.5 9.5c1.7-.5 3.3-.5 5 0" />
+              <path d="M6.5 13c1.7-.5 3.3-.5 5 0" />
+              <path d="M6.5 16.5c1.7-.5 3.3-.5 5 0" />
+              <!-- 行（右ページ） -->
+              <path d="M12.5 9.5c1.7-.5 3.3-.5 5 0" />
+              <path d="M12.5 13c1.7-.5 3.3-.5 5 0" />
+              <path d="M12.5 16.5c1.7-.5 3.3-.5 5 0" />
+            </svg>
+          </span>
+          <span>ナレッジ</span>
+        </a>
+        <a class="nav-item" href="form.html">
+          <span class="nav-ico" aria-hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
+          </span>
+          <span>問合せ</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <!-- ==== Sub hero ==== -->
+  <section class="subhero">
+    <div class="container subhero-inner">
+      <div class="placeholder card" aria-hidden="true">
+        <img src="https://media.istockphoto.com/id/1713118722/ja/%E3%83%99%E3%82%AF%E3%82%BF%E3%83%BC/%E3%82%AC%E3%83%B3%E3%83%88%E3%83%81%E3%83%A3%E3%83%BC%E3%83%88%E3%81%AE%E8%A8%88%E7%94%BB%E3%82%B9%E3%82%B1%E3%82%B8%E3%83%A5%E3%83%BC%E3%83%AB%E3%83%9E%E3%82%A4%E3%83%AB%E3%82%B9%E3%83%88%E3%83%BC%E3%83%B3%E3%81%A8%E6%88%90%E6%9E%9C%E7%89%A9%E3%81%AE%E8%BF%BD%E8%B7%A1%E3%82%BF%E3%82%B9%E3%82%AF%E3%81%AE%E9%80%B2%E6%8D%97%E7%8A%B6%E6%B3%81%E3%81%AE%E6%9B%B4%E6%96%B0%E3%82%B9%E3%82%B1%E3%82%B8%E3%83%A5%E3%83%BC%E3%83%AA%E3%83%B3%E3%82%B0%E3%81%A8%E7%AE%A1%E7%90%86%E3%82%B9%E3%82%AD%E3%83%AB%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%A0%E6%88%A6%E7%95%A5%E3%82%92%E6%93%8D%E4%BD%9C%E3%81%99%E3%82%8B%E3%83%97%E3%83%AD%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E3%83%9E%E3%83%8D%E3%83%BC%E3%82%B8%E3%83%A3%E3%83%BC%E3%83%99.jpg?s=612x612&w=0&k=20&c=CypVsKZ_83MtlBKDlxmhQb2iCARCv8G_A4p78o0yjdU=" alt="quicksight" />
+      </div>
+      <div class="lead">
+        <div class="chip">人材管理</div><div class="chip">プロジェクト管理</div>
+        <h1>空き工数管理</h1>
+        <p>全社的な未稼働人数の把握することで効率的なリソース活用を目的とした取り組み</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==== Main ==== -->
+  <main class="container">
+    <div class="detail-grid">
+      <!-- left: sidenav -->
+      <aside class="card">
+        <nav class="sidenav" role="tablist" aria-label="Project sections">
+          <button type="button" role="tab" aria-selected="true"  aria-controls="tab-overview" id="tabbtn-overview" data-target="tab-overview">概要</button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="tab-stake"    id="tabbtn-stake"    data-target="tab-stake">ステークホルダー</button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="tab-activity" id="tabbtn-activity" data-target="tab-activity">活動履歴</button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="tab-roadmap"  id="tabbtn-roadmap"  data-target="tab-roadmap">ロードマップ</button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="tab-outcome"  id="tabbtn-outcome"  data-target="tab-outcome">目標・成果</button>
+        </nav>
+      </aside>
+
+      <!-- right: panels -->
+      <section class="card">
+        <!-- 概要 -->
+        <div class="section tabpanel" id="tab-overview" role="tabpanel" aria-labelledby="tabbtn-overview">
+          <h2>概要</h2>
+          <div class="grid-2">
+            <div class="input-group"><label>プロジェクト名</label><input class="input" value="空き工数管理" readonly /></div>
+            <div class="input-group"><label>推進者</label><input class="input" value="岩本 陸" readonly /></div>
+            <div class="input-group"><label>開始日</label><input class="input" value="2025/5/1" readonly /></div>
+            <div class="input-group"><label>ステータス</label><input class="input" value="進行中" readonly /></div>
+          </div>
+          <div class="input-group"><label>説明</label><input class="input" value="全社的な未稼働人数の把握することで人材の最適配置と人材確保を目指す" readonly /></div>
+        </div>
+
+        <!-- ステークホルダー -->
+        <div class="section tabpanel hidden" id="tab-stake" role="tabpanel" aria-labelledby="tabbtn-stake">
+          <h2>ステークホルダー</h2>
+          <div class="grid-2">
+            <div class="input-group"><label>対象部門</label><input class="input" value="人事部門、事業部全体" readonly /></div>
+            <div class="input-group"><label>対象者</label><input class="input" value="経営層、管理職" readonly /></div>
+            <div class="input-group"><label>エンドユーザー</label><input class="input" value="従業員全体" readonly /></div>
+            <div class="input-group"><label>DX推進室メンバー</label><input class="input" value="並木、岩本" readonly /></div>
+          </div>
+        </div>
+
+        <!-- 活動履歴 -->
+        <div class="section tabpanel hidden" id="tab-activity" role="tabpanel" aria-labelledby="tabbtn-activity">
+          <h2>活動履歴</h2>
+          <div class="activity-head">
+            <div>日付</div><div>対応者</div><div>活動内容</div>
+          </div>
+          <div class="activity-list">
+            <div class="activity-row">
+              <div class="cell">2025/05/01</div>
+              <div class="cell">岩本</div>
+              <div class="cell"><div class="cell-content">各部門の空き工数管理シートの仕様把握、集約資料作成</div></div>
+            </div>
+          　<div class="activity-row">
+            <div class="cell">2025/05/29</div>
+              <div class="cell">岩本</div>
+              <div class="cell"><div class="cell-content">各事業部の工数資料の集約ファイル作成され、暫定運用開始</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ロードマップ -->
+        <div class="section tabpanel hidden" id="tab-roadmap" role="tabpanel" aria-labelledby="tabbtn-roadmap">
+          <h2>ロードマップ</h2>
+          <div class="rm-wrap">
+            <div class="rm-track" aria-hidden="true"></div>
+            <div class="rm-nodes">
+              <div class="rm-node"><div class="rm-dot"></div><div class="rm-label">Step 1</div></div>
+              <div class="rm-node"><div class="rm-dot"></div><div class="rm-label">Step 2</div></div>
+              <div class="rm-node"><div class="rm-dot"></div><div class="rm-label">Step 3</div></div>
+              <div class="rm-node"><div class="rm-dot"></div><div class="rm-label">Step 4</div></div>
+            </div>
+
+            <div class="rm-grid">
+              <article class="rm-step">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                  <path d="M19.4 15a1 1 0 0 0 .2 1.1l.1.1a2 2 0 0 1-2.8 2.8l-.1-.1a1 1 0 0 0-1.1-.2 8.6 8.6 0 0 1-1.3.5 1 1 0 0 0-.7.9V21a2 2 0 0 1-4 0v-.1a1 1 0 0 0-.7-.9 8.6 8.6 0 0 1-1.3-.5 1 1 0 0 0-1.1.2l-.1.1A2 2 0 0 1 4.3 18l.1-.1a1 1 0 0 0 .2-1.1 8.6 8.6 0 0 1-.5-1.3 1 1 0 0 0-.9-.7H3a2 2 0 0 1 0-4h.1a1 1 0 0 0 .9-.7c.1-.4.3-.9.5-1.3a1 1 0 0 0-.2-1.1l-.1-.1A2 2 0 1 1 6.1 4l.1.1a1 1 0 0 0 1.1.2 8.6 8.6 0 0 1 1.3-.5 1 1 0 0 0 .7-.9V3a2 2 0 1 1 4 0v.1a1 1 0 0 0 .7.9c.4.1.9.3 1.3.5a1 1 0 0 0 1.1-.2l.1-.1A2 2 0 1 1 20 6.1l-.1.1a1 1 0 0 0-.2 1.1c.2.4.4.9.5 1.3a1 1 0 0 0 .9.7H21a2 2 0 0 1 0 4h-.1a1 1 0 0 0-.9.7c-.1.4-.3.9-.5 1.3Z"/>
+                </svg>
+                <p class="rm-title">準備段階</p>
+                <div class="rm-desc" contenteditable="false">導入目的、要件定義</div>
+              </article>
+
+              <article class="rm-step">
+                <!-- 構築：コード記号 <> -->
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M8 6 3 12l5 6"/><path d="M16 6l5 6-5 6"/>
+                </svg>
+                <p class="rm-title">構築</p>
+                <div class="rm-desc" contenteditable="false">集約ファイル or ツールへの移管設計</div>
+              </article>
+
+              <article class="rm-step">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4z"/></svg>
+                <p class="rm-title">運用開始</p>
+                <div class="rm-desc" contenteditable="false">初期モニタリング、データ精度のチェック</div>
+              </article>
+
+              <article class="rm-step">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+                <p class="rm-title">運用＆改善</p>
+                <div class="rm-desc" contenteditable="false">運用状況をモニタリング、ユースケースに応じて継続的に改善</div>
+              </article>
+            </div>
+          </div>
+        </div>
+
+        <!-- 成果 -->
+        <div class="section tabpanel hidden" id="tab-outcome" role="tabpanel" aria-labelledby="tabbtn-outcome">
+          <h2>目標・成果</h2>
+          <div class="grid-2">
+            <div class="input-group"><label>KPI-1</label><input class="input" value="空き工数管理の集約と対策スピードの向上" readonly /></div>
+            <div class="input-group"><label>KPI-2</label><input class="input" value="ツール移管を行い、リアルタイムでの人材資源の可視化" readonly /></div>
+            <div class="input-group"><label>成果-1</label><input class="input" value="暫定的に集約ファイルでの運用開始" readonly /></div>
+            <div class="input-group"><label>成果-2</label><input class="input" value="未着手" readonly /></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ==== Footer ==== -->
+  <footer>
+  　<div class="container">Copyright © <span id="copy-year">2020</span>. All rights reserved.</div>
+　</footer>
+
+  <!-- ==== Tab Switcher ==== -->
+  <script>
+    const buttons = document.querySelectorAll('[role="tab"]');
+    const panels  = document.querySelectorAll('.tabpanel');
+    function activate(id){
+      panels.forEach(p => p.classList.toggle('hidden', p.id !== id));
+      buttons.forEach(b => b.setAttribute('aria-selected', b.dataset.target === id ? 'true' : 'false'));
+    }
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => activate(btn.dataset.target));
+      btn.addEventListener('keydown', e => {
+        if(e.key === 'ArrowDown' || e.key === 'ArrowRight'){ e.preventDefault(); (btn.nextElementSibling || buttons[0]).focus(); }
+        if(e.key === 'ArrowUp'   || e.key === 'ArrowLeft' ){ e.preventDefault(); (btn.previousElementSibling || buttons[buttons.length-1]).focus(); }
+      });
+    });
+    activate('tab-overview');
+
+    function parseYmd(str){
+      const m = String(str).trim().match(/(\d{4})[\/.-](\d{1,2})[\/.-](\d{1,2})/);
+      if(!m) return 0;
+      return new Date(+m[1], +m[2]-1, +m[3]).getTime();
+    }
+    function sortActivityDesc(){
+      const list = document.querySelector('#tab-activity .activity-list');
+      if(!list) return;
+      const rows = Array.from(list.querySelectorAll('.activity-row'));
+      rows.sort((a,b)=>{
+        const aDateText = a.querySelector('.cell')?.textContent || '';
+        const bDateText = b.querySelector('.cell')?.textContent || '';
+        return parseYmd(bDateText) - parseYmd(aDateText);
+      });
+      rows.forEach(r => list.appendChild(r));
+    }
+    sortActivityDesc();
+    const actList = document.querySelector('#tab-activity .activity-list');
+    if(actList){
+      new MutationObserver(()=>sortActivityDesc()).observe(actList, { childList: true });
+    }
+    document.getElementById('copy-year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
