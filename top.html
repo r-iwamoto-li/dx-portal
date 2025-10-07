@@ -165,6 +165,60 @@ h2{font-family:"Noto Sans JP";font-size:26px;margin:0 0 18px}
 /* ===== Footer ===== */
 footer{padding:28px 0 36px;border-top:1px solid rgba(15,23,42,.06)}
 footer .container{color:#6b7280;text-align:center;font-size:14px}
+/* ===== SP専用（～768px） ===== */
+@media (max-width: 768px){
+
+  /* 余白とナビ */
+  .container{ padding: 0 14px; }
+  .topnav{ padding: 8px 6px; }
+  .pill{
+    gap: 10px; padding: 6px 8px; border-radius: 22px;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;  /* はみ出し時は横スクロール */
+  }
+  .nav-item{
+    gap: 2px; padding: 6px 8px; font-size: 11px;
+    flex: 0 0 auto;                      /* 折り返さず横に並べる */
+  }
+  .nav-ico{ width: 20px; height: 20px; }
+
+  /* ヒーロー：高さと重なり調整 */
+  .hero-media{ height: 260px; }
+  .hero-grid{
+    grid-template-columns: 1fr;          /* 1カラムに */
+    gap: 18px;
+    margin-top: -180px;                  /* 画像との重なりを小さく */
+    padding-bottom: 28px;
+  }
+  .eyebrow{ font-size: 11px; padding: 5px 10px; }
+  .hero h1{
+    font-size: 34px; line-height: 1.18;  /* 見出しを縮小 */
+    margin: 10px 0 6px;
+    word-break: keep-all;                /* 変な場所で改行しにくくする（英語対策） */
+  }
+  .hero p.sub{ font-size: 14px; }
+  .btn{ padding: 10px 16px; }
+
+  /* 3行メッセージ（白い吹き出しっぽい所を少しコンパクトに） */
+  .charify:not(.no-bg) .ink-bg{
+    padding: 3px 5px; border-radius: 6px;
+  }
+
+  /* メイン：2カラム→1カラム、各要素の間隔を詰める */
+  main{ padding: 32px 0; }
+  .grid-2{ grid-template-columns: 1fr; gap: 24px; }
+
+  .list li{ padding: 12px 12px; }
+  .badge{ font-size: 10px; }
+
+  /* コメントカード */
+  .comment{ grid-template-columns: 40px 1fr; gap: 12px; padding: 14px; }
+  .avatar{ width: 40px; height: 40px; }
+  .c-meta{ font-size: 11px; }
+
+  /* フッター文字サイズ微調整 */
+  footer .container{ font-size: 13px; }
+}
+
 </style>
 </head>
 <body>
